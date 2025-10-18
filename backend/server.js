@@ -31,6 +31,9 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
 app.use(express.json());
 app.use(cors());
 app.use("/images", express.static(imagesPath));
+app.get('/', (req, res) => {
+  res.send('API Bibooks en ligne !');
+});
 
 console.log("Configuration SMTP:");
 console.log("MAIL_USER:", process.env.MAIL_USER);
