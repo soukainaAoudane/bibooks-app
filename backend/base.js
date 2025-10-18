@@ -8,7 +8,7 @@ console.log('Variables DB:', {
     host: process.env.HOST,
     user: process.env.USER,
     database: process.env.DATABASE,
-    port: process.env.PORT
+    port: process.env.DB_PORT
 });
 
 const db = mysql.createConnection({
