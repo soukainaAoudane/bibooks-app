@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Détails du livre</title>
+    
+    <!-- Icônes Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <link rel="stylesheet" href="styles/detail.css">
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <button id="profile" aria-label="Voir le profil ou l'administration">
+          <i class="fas fa-cog"></i>
+        </button>
+        
+        <div style="flex-grow: 1;"></div>
+        
+        <div class="header-content">
+          <button id="button">
+            <i id="button-icon" class="fas fa-user"></i>
+            <span id="button-text">Connexion/inscription</span>
+          </button>
+          <p id="nom"></p>
+        </div>
+        
+        <button id="sombre">
+          <i class="fas fa-moon"></i>
+          <span>Mode sombre</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="book-detail">
+        <div class="book-image">
+          <img src="" alt="Couverture du livre" id="img" />
+        </div>
+
+        <div class="book-info">
+          <h1 id="titre"></h1>
+          <h2 id="auteur"></h2>
+          <p id="description" class="book-description"></p>
+
+          <div class="book-meta">
+            <div class="meta-item">
+              <i class="fas fa-tag"></i>
+              <strong>Genre :</strong>
+              <span id="genre"></span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-calendar-alt"></i>
+              <strong>Date de publication :</strong>
+              <span id="date"></span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-euro-sign"></i>
+              <strong>Prix :</strong>
+              <span id="prix"></span> €
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-copy"></i>
+              <strong>Exemplaires disponibles :</strong>
+              <span id="exp"></span>
+            </div>
+          </div>
+
+          <button id="demander-pret">
+            <i class="fas fa-book-open"></i> Demander un prêt
+          </button>
+        </div>
+      </section>
+
+      <section class="similar-books-section">
+        <h2 class="section-title">
+          <i class="fas fa-book-open"></i> Livres similaires
+        </h2>
+        <div class="similar-books" id="livres-similaires"></div>
+      </section>
+
+      <section class="reviews">
+        <h2 class="section-title">
+          <i class="fas fa-comments"></i> Avis des lecteurs
+        </h2>
+        <div class="review-list" id="avis-liste"></div>
+        <div id="avis-lien-container"></div>
+      </section>
+    </main>
+
+    <script src="scripts/detail.js"></script>
+  </body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Auteur - Tableau de bord BiBooks</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="styles/auteur.css">
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header id="header">
+      <button id="profile" aria-label="Voir le profil ou l'administration">
+        <i class="fas fa-cog"></i>
+      </button>
+
+      <div class="bouton">
+        <button id="button">
+          <i id="button-icon" class="fas fa-user"></i>
+          <span id="button-text">Connexion/inscription</span>
+        </button>
+        <p id="nom"></p>
+      </div>
+      <button id="sombre">Sombre</button>
+    </header>
+
+
+    <aside>
+      <nav>
+        <a href="accueil"><i class="fas fa-home"></i> Accueil</a>
+        <a href="ajouter"
+          ><i class="fas fa-plus-circle"></i> Ajouter un livre</a
+        >
+        <a href="liste_livres"
+          ><i class="fas fa-book"></i> Liste des livres</a
+        >
+        <a href="profil"><i class="fas fa-user-cog"></i> Mon profil</a>
+      </nav>
+    </aside>
+
+    <h1>Tableau de Bord Auteur</h1>
+
+
+    <section id="statistiques">
+      <a href="#total">
+      <div class="carte" >
+        <h4>Nombre total des livres publiés</h4>
+        <p id="livres"></p></a>
+      </div>
+
+      <div class="carte">
+        <h4>Nombre de prêts en cours</h4>
+        <p id="pret_cours"></p>
+      </div>
+
+      <div class="carte">
+        <h4>Nombre de demandes en attente</h4>
+        <p id="demandes_attentes"></p>
+      </div>
+    </section>
+
+
+    <section id="total">
+      <h2>Mes Livres</h2>
+      <input
+        type="text"
+        id="chercher-livre"
+        placeholder="Titre, auteur ou genre..."
+      />
+      <button
+        class="cherches"
+        onclick="chercherLivres()"
+        aria-label="Lancer la recherche livres"
+      >
+        <i class="fas fa-search"></i> Rechercher
+      </button>
+      <div id="resultats-livres" class="result"></div>
+      <div class="data-container" id="data-livres"></div>
+    </section>
+
+
+    <div id="popup">
+      <div class="contenu">
+        <h2>Modifier le livre</h2>
+        <form id="form">
+          <div class="form-group">
+            <label for="titre">Titre:</label>
+            <input type="text" id="titre" required />
+          </div>
+
+          <div class="form-group">
+            <label for="auteur">Auteur:</label>
+            <input type="text" id="auteur" required />
+          </div>
+
+          <div class="form-group">
+            <label for="genre">Genre:</label>
+            <select id="genre" required>
+              <option value="Roman">Roman</option>
+              <option value="Conte">Conte</option>
+              <option value="Fantasy">Fantasy</option>
+              <option value="Horreur">Horreur</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="Description">Description:</label>
+            <textarea name="description" id="Description"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="date">Date de publication:</label>
+            <input type="date" id="date" required />
+          </div>
+
+          <div class="form-group">
+            <label for="prix">Prix (€):</label>
+            <input type="number" id="prix" step="0.01" min="0" required />
+          </div>
+
+          <div class="form-group">
+            <label for="image">Image:</label>
+            <div class="file-input-container">
+              <button type="button" class="file-input-button">
+                <i class="fas fa-upload"></i> Choisir une image
+              </button>
+              <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
+                required
+              />
+              <div class="file-name" id="fileName">
+                Aucune image sélectionnée
+              </div>
+            </div>
+            <img src="#" alt="Aperçu de l'image" id="imgPreview" />
+          </div>
+
+          <div class="form-group">
+            <label for="exp">Exemplaires disponibles:</label>
+            <input type="number" id="exp" min="0" required />
+          </div>
+
+          <div class="buttons">
+            <button type="submit" class="enregistrer">
+              <i class="fas fa-save"></i> Enregistrer
+            </button>
+            <button type="button" class="fermer" onclick="fermer()">
+              <i class="fas fa-times"></i> Annuler
+            </button>
+          </div>
+        </form>
+        <p id="modification"></p>
+      </div>
+    </div>
+
+    <script src="scripts/auteur.js"></script>
+  </body>
+</html>

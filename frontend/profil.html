@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mon Profil - BiBooks</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="styles/profil.css">
+</head>
+
+<body>
+  <main>
+    <!-- HEADER -->
+    <header id="header">
+      <button id="profile" title="Mon Profil">
+        <i class="fas fa-user-circle"></i>
+      </button>
+      <h1>BiBooks</h1>
+      <div class="bouton">
+        <button id="button">
+          <i id="button-icon" class="fas fa-user"></i>
+          <span id="button-text">Connexion/Inscription</span>
+        </button>
+        <p id="nom"></p>
+      </div>
+      <button id="sombre">Sombre</button>
+    </header>
+
+    <!-- NAVIGATION -->
+    <aside>
+      <nav>
+        <a class="nav" href="accueil"><i class="fas fa-home"></i> Accueil</a>
+        <a class="nav" href="liste_livres"><i class="fas fa-book"></i> Liste des livres</a>
+        <a id="pro" class="nav" href="profil" class="active"><i class="fas fa-user-cog"></i> Mon profil</a>
+      </nav>
+    </aside>
+
+    <!-- PROFIL -->
+    <section id="profil">
+      <h1>Mon Profil</h1>
+      <div class="profile-card">
+        <div class="profile-avatar" id="profile-avatar"></div>
+        <div class="profile-name" id="nom_affichage"></div>
+        <div class="profile-email" id="email"></div>
+        <div class="profile-actions">
+          <button onclick="document.querySelector('.popup').style.display = 'flex'">
+            <i class="fas fa-edit"></i> Modifier le profil
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATISTIQUES -->
+    <section>
+      <h2>Mes Statistiques</h2>
+      <div id="statistiques">
+        <div class="carte"><a href="#emprunt">
+          <h4>Livres empruntés</h4>
+          <p><i class="fas fa-book"></i> <span id="emp">0</span></p>
+        </a></div>
+        <div class="carte"><a href="#demande">
+          <h4>Demandes envoyés</h4>
+          <p><i class="fas fa-history"></i> <span id="demandes">0</span></p>
+        </a></div>
+        <div class="carte"><a href="#rendu">
+          <h4>Livres rendu</h4>
+          <p><i class="fas fa-book"></i> <span id="rend">0</span></p>
+        </a></div>
+        <div class="carte"><a href="#favorie">
+          <h4>Liste des favories</h4>
+          <p><i class="fas fa-heart"></i> <span id="fav">0</span></p>
+        </a></div>
+      </div>
+    </section>
+
+    <!-- MES EMPRUNTS -->
+    <section id="emprunt">
+      <h2>Mes Emprunts</h2>
+      <div class="data-container" id="mes-emprunts"></div>
+    </section>
+
+    <section id="demande">
+      <h2>Mes Demandes</h2>
+      <label for="filtre-statut-demande"></label>
+      <select id="filtre-statut-demande" onchange="afficherDemandes(utilisateur)">
+        <option value="tout">Tous</option>
+        <option value="en attente">En attente</option>
+        <option value="accepté">Accepté</option>
+        <option value="refusé">Refusé</option>
+      </select>
+      <div id="resultats-demandes" class="result"></div>
+      <div class="data-container" id="mes-demandes"></div>
+    </section>
+
+    <section id="rendu">
+      <h2>Mes Livres rendu</h2>
+      <div class="data-container" id="mes-rendu"></div>
+    </section>
+
+    <section id="favorie">
+      <h2>Mes livres favories</h2>
+      <div class="data-container" id="mes-favories"></div>
+    </section>
+
+    <!--MODIFICATION PROFILE -->
+    <div class="popup">
+      <div class="popup-content">
+        <h2>Modifier le profil</h2>
+        <form>
+          <label>Nom</label>
+          <input type="text" id="nom_modifier" required />
+
+          <label>Email</label>
+          <input type="email" id="email_modifier" required />
+
+          <label>Ancien mot de passe</label>
+          <input type="password" id="password" required />
+
+          <label>Nouveau mot de passe</label>
+          <input type="password" id="nouveau_password" />
+
+          <div class="popup-buttons">
+            <button type="button" onclick="fermer()">Annuler</button>
+            <button type="submit">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="scripts/profil.js"></script>
+</body>
+</html>

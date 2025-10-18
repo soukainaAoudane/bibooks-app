@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BiBooks - Connexion/Inscription</title>
+    <link rel="stylesheet" href="styles/connexion.css">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Section Image -->
+        <div class="image-section">
+            <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
+                 alt="Bibliothèque moderne avec étagères de livres" 
+                 class="library-image">
+            <div class="image-text">
+                <h2>Bienvenue sur BiBooks</h2>
+                <p>Votre bibliothèque numérique moderne</p>
+            </div>
+        </div>
+        
+        <!-- Section Formulaire -->
+        <div class="form-section">
+            <div class="container" role="main">
+                <h1>BiBooks</h1>
+                
+                <div class="tabs">
+                    <div class="tab active" id="login-tab">Connexion</div>
+                    <div class="tab" id="register-tab">Inscription</div>
+                </div>
+                
+                <!-- Formulaire de Connexion -->
+                <div class="tab-content active" id="login-form">
+                    <form id="connexionForm" aria-describedby="login-message">
+                        <input
+                            type="email"
+                            id="login-email"
+                            placeholder="Votre email"
+                            required
+                            aria-label="Adresse email"
+                        />
+                        <input
+                            type="password"
+                            id="login-psd"
+                            placeholder="Mot de passe"
+                            required
+                            aria-label="Mot de passe"
+                        />
+                        <p id="login-message" class="message" aria-live="polite" role="alert"></p>
+                        <button type="submit">Connexion</button>
+                    </form>
+                    
+                    <div class="switch-form">
+                        <span>Pas encore de compte ? </span>
+                        <a href="#" id="show-register">S'inscrire</a>
+                    </div>
+                </div>
+                
+                <!-- Formulaire d'Inscription -->
+                <div class="tab-content" id="register-form">
+                    <form id="inscriptionForm" novalidate aria-describedby="register-message">
+                        <input
+                            type="text"
+                            id="register-nom"
+                            placeholder="Votre nom"
+                            required
+                            aria-required="true"
+                            aria-label="Nom complet"
+                        />
+                        <input
+                            type="email"
+                            id="register-email"
+                            placeholder="Votre email"
+                            required
+                            aria-required="true"
+                            aria-label="Adresse email"
+                        />
+                        <input
+                            type="password"
+                            id="register-psd1"
+                            placeholder="Mot de passe"
+                            required
+                            aria-required="true"
+                            aria-label="Mot de passe"
+                        />
+                        <input
+                            type="password"
+                            id="register-psd2"
+                            placeholder="Confirmer le mot de passe"
+                            required
+                            aria-required="true"
+                            aria-label="Confirmation du mot de passe"
+                        />
+                        <label for="register-role">Rôle :</label>
+                        <select id="register-role" required>
+                            <option value="user" selected>Utilisateur</option>
+                            <option value="auteur">Auteur</option>
+                        </select>
+                        <p id="register-message" class="message" aria-live="polite" role="alert"></p>
+                        <button type="submit">S'inscrire</button>
+                    </form>
+                    
+                    <div class="switch-form">
+                        <span>Déjà un compte ? </span>
+                        <a href="#" id="show-login">Se connecter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/connexion.js"></script>
+</body>
+</html>

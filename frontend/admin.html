@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin - Tableau de bord BiBooks</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+   <link rel="stylesheet" href="styles/admin.css">
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header id="header">
+      <button id="profile" aria-label="Voir le profil ou l'administration">
+        <i class="fas fa-cog"></i>
+      </button>
+
+      <div class="bouton">
+        <button id="button">
+          <i id="button-icon" class="fas fa-user"></i>
+          <span id="button-text">Connexion/inscription</span>
+        </button>
+        <p id="nom"></p>
+      </div>
+      <button id="sombre">Sombre</button>
+    </header>
+
+    <!-- NAVIGATION -->
+    <aside>
+      <nav>
+        <a href="accueil"><i class="fas fa-home"></i> Accueil</a>
+        <a href="liste_livres" id="livre"
+          ><i class="fas fa-book"></i> Liste des livres</a
+        >
+        <a href="ajouter"><i class="fas fa-add"></i> Ajouter un livre</a>
+      </nav>
+    </aside>
+
+    <h1>Tableau de Bord Administrateur</h1>
+
+    <!-- STATISTIQUES -->
+    <section id="statistiques">
+      <a href="#total">
+      <div class="carte">
+          <h4>Nombre total de livres</h4>
+          <p id="livres"></p
+        ></a>
+      </div>
+
+      <div class="carte">
+        <a href="#prets">
+          <h4>Nombre de prêts effectué</h4>
+          <p id="pret_cours"></p
+        ></a>
+      </div>
+
+      <div class="carte">
+        <a href="#demande">
+          <h4>Nombre de demandes en attente</h4>
+          <p id="demandes_attentes"></p
+        ></a>
+      </div>
+
+      <div class="carte">
+        <a href="#uti">
+          <h4>Nombre d'utilisateurs actifs</h4>
+          <p id="utilisateurs_actifs"></p
+        ></a>
+      </div>
+    </section>
+
+    <!-- LIVRES -->
+    <section id="total">
+      <h2>Livres</h2>
+      <input
+        type="text"
+        id="chercher-livre"
+        placeholder="Titre, auteur ou genre..."
+      />
+      <button
+        class="cherches"
+        onclick="chercherLivres()"
+        aria-label="Lancer la recherche livres"
+      >
+        <i class="fas fa-search"></i> Rechercher
+      </button>
+      <div id="resultats-livres" class="result"></div>
+      <div class="livres"></div>
+      <div class="data-container" id="data-livres"></div>
+    </section>
+
+    <!--DEMANDES-->
+    <section id="demande">
+      <h2>Demandes de prêt</h2>
+      <input
+        type="text"
+        id="chercher-demande"
+        placeholder="Nom emprunteur..."
+      />
+      <button
+        class="cherches"
+        onclick="chercherDemandes()"
+        aria-label="Lancer la recherche demandes"
+      >
+        <i class="fas fa-search"></i> Rechercher
+      </button>
+      <label for="filtre-statut-demande"></label>
+      <select id="filtre-statut-demande" onchange="afficherDemandes()">
+        <option value="tout">Tous</option>
+        <option value="en attente">En attente</option>
+        <option value="accepté">Accepté</option>
+        <option value="refusé">Refusé</option>
+      </select>
+      <div id="resultats-demandes" class="result"></div>
+
+      <div class="data-container" id="data-demandes"></div>
+    </section>
+
+    <!-- PRÊTS -->
+    <section id="prets">
+      <h2>Prêts en cours</h2>
+      <input type="text" id="chercher-pret" placeholder="Nom emprunteur..." />
+      <button
+        class="cherches"
+        onclick="chercherPrets()"
+        aria-label="Lancer la recherche prêts"
+      >
+        <i class="fas fa-search"></i> Rechercher
+      </button>
+
+      <label for="filtre-statut-pret"></label>
+      <select id="filtre-statut-pret" onchange="afficherPrets()">
+        <option value="tout">Tous</option>
+        <option value="en cours">En cours</option>
+        <option value="en retard">En retard</option>
+        <option value="retourné">Retourné</option>
+      </select>
+
+      <div id="resultats-prets" class="result"></div>
+
+      <div class="data-container" id="data-prets"></div>
+    </section>
+
+    <!-- PRÊTS EXPIRÉS -->
+    <section>
+      <h2>Prêts expirés</h2>
+      <div class="data-container" id="data-expire"></div>
+    </section>
+
+    <!-- UTILISATEURS -->
+    <section id="uti">
+      <h2>Utilisateurs</h2>
+      <input
+        type="text"
+        id="chercher-utilisateur"
+        placeholder="Nom utilisateur..."
+      />
+      <button
+        class="cherches"
+        onclick="chercherUtilisateurs()"
+        aria-label="Lancer la recherche utilisateurs"
+      >
+        <i class="fas fa-search"></i> Rechercher
+      </button>
+
+      <label for="filtre-role-utilisateur"></label>
+      <select id="filtre-role-utilisateur" onchange="afficherUtilisateurs()">
+        <option value="tout">Tous</option>
+        <option value="utilisateur">Utilisateur</option>
+        <option value="auteur">Auteur</option>
+      </select>
+
+      <div id="resultats-utilisateurs" class="result"></div>
+
+      <div class="data-container" id="data-utilisateur"></div>
+    </section>
+
+    <script src="scripts/admin.js"></script>
+  </body>
+</html>

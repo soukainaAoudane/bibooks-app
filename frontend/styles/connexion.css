@@ -1,0 +1,214 @@
+/* Styles de base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  background-color: lightblue;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #222;
+  padding: 20px;
+}
+
+.main-container {
+  display: flex;
+  max-width: 900px;
+  width: 100%;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 75, 153, 0.5);
+  overflow: hidden;
+  min-height: 550px;
+}
+
+.image-section {
+  flex: 1;
+  background: linear-gradient(135deg, #004d99, #00b4d8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  position: relative;
+}
+
+.image-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.library-image {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  object-fit: cover;
+}
+
+.image-text {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.image-text h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.image-text p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.form-section {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  transition: transform 0.4s;
+}
+
+.container:hover {
+  transform: scale(1.01);
+}
+
+h1 {
+  color: #3366cc;
+  margin-bottom: 25px;
+  text-align: center;
+  font-size: 28px;
+}
+
+/* Styles des onglets */
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #b2bec3;
+}
+
+.tab {
+  padding: 12px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #555;
+  transition: all 0.3s;
+  text-align: center;
+  flex: 1;
+}
+
+.tab.active {
+  color: #004d99;
+  border-bottom: 3px solid #00b4d8;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Styles communs aux formulaires */
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 18px;
+  border-radius: 8px;
+  border: 1.5px solid #b2bec3;
+  font-size: 16px;
+  background: #f8fafc;
+  transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus {
+  border-color: #004d99;
+  background: #fff;
+  outline: none;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background-color: #00b4d8;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+  background-color: #004d99;
+  transform: scale(1.02);
+}
+
+.message {
+  margin: 15px 0;
+  min-height: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.error {
+  color: red;
+}
+
+.success {
+  color: green;
+}
+
+.switch-form {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.switch-form a {
+  color: #004d99;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.switch-form a:hover {
+  color: #00b4d8;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    max-width: 450px;
+  }
+
+  .image-section {
+    display: none;
+  }
+
+  .form-section {
+    padding: 30px 20px;
+  }
+}

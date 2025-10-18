@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestion des Livres</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+   <link rel="stylesheet" href="styles/liste_livres.css">
+  </head>
+  <body>
+    <!-- Header -->
+    <header id="header">
+      <button id="profile" title="profile">
+        <i class="fas fa-cog"></i>
+      </button>
+
+      <div class="bouton">
+        <button id="button">
+          <i id="button-icon" class="fas fa-user"></i>
+          <span id="button-text">Connexion/inscription</span>
+        </button>
+        <p id="nom"></p>
+      </div>
+    </header>
+
+    <div class="chercher">
+      <h3>Rechercher un livre:</h3>
+      <input
+        type="text"
+        id="chercher"
+        placeholder="Rechercher par titre, auteur ou genre..."
+      />
+      <p id="cherche"></p>
+    </div>
+
+    <div id="aj" style="display: none">
+      <a href="ajouter"><i class="fas fa-plus"></i> Ajouter un livre</a>
+    </div>
+
+    <div id="listeLivres"></div>
+
+    <div id="popup">
+      <div class="contenu">
+        <h2>Modifier le livre</h2>
+        <form id="form">
+          <label for="titre">Titre:</label>
+          <input type="text" id="titre" required />
+
+          <label for="auteur">Auteur:</label>
+          <input type="text" id="auteur" required />
+
+          <label for="genre">Genre:</label>
+          <select id="genre" required>
+            <option value="Roman">Roman</option>
+            <option value="Conte">Conte</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Horreur">Horreur</option>
+          </select>
+
+          <label for="Description">Déscription:</label>
+          <textarea name="description" id="Description"></textarea>
+
+          <label for="date">Date de publication:</label>
+          <input type="date" id="date" required />
+
+          <label for="prix">Prix (€):</label>
+          <input type="number" id="prix" step="0.01" min="0" required />
+
+          <label for="image">Image:</label>
+          <div class="file-input-container">
+            <button type="button" class="file-input-button">
+              <i class="fas fa-upload"></i> Choisir une image
+            </button>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              accept="image/*"
+              required
+            />
+            <div class="file-name" id="fileName">Aucune image sélectionnée</div>
+          </div>
+          <img src="#" alt="Aperçu de l'image" id="imgPreview" />
+
+          <label for="exp">Exemplaires disponibles:</label>
+          <input type="number" id="exp" min="0" required />
+
+          <div class="buttons">
+            <button type="submit" class="enregistrer">
+              <i class="fas fa-save"></i> Enregistrer
+            </button>
+            <button type="button" class="fermer" onclick="fermer()">
+              <i class="fas fa-times"></i> Annuler
+            </button>
+          </div>
+        </form>
+        <p id="modification"></p>
+      </div>
+    </div>
+
+    <script src="scripts/liste_livres.js"></script>
+  </body>
+</html>

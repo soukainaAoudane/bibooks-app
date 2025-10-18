@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Évaluation de livre | BiBooks</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+   <link rel="stylesheet" href="styles/laisser_avis.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="book-panel">
+        <img
+          src=""
+          alt="Couverture du livre"
+          class="book-cover"
+          id="livre-image"
+          onerror="this.src='https://via.placeholder.com/220x320?text=Couverture+non+disponible'"
+        />
+        <div class="book-info">
+          <h1 class="book-title" id="livre-titre"></h1>
+          <p class="book-author" id="livre-auteur"></p>
+          <p class="book-genre" id="livre-genre"></p>
+        </div>
+      </div>
+
+      <div class="form-panel">
+        <div class="form-header">
+          <h2 class="form-title">Votre évaluation</h2>
+          <p class="form-subtitle">Partagez votre expérience de lecture</p>
+        </div>
+
+        <form id="review-form">
+          <div class="form-group">
+            <label for="nom" class="form-label required">Votre nom</label>
+            <input type="text" id="nom" class="form-input" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Votre email</label>
+            <input type="email" id="email" class="form-input" />
+          </div>
+
+          <div class="rating-container">
+            <label class="form-label required">Note</label>
+            <div class="rating">
+              <input type="radio" name="rating" id="star5" value="5" required />
+              <label for="star5" title="Excellent"
+                ><i class="fas fa-star"></i
+              ></label>
+
+              <input type="radio" name="rating" id="star4" value="4" />
+              <label for="star4" title="Très bon"
+                ><i class="fas fa-star"></i
+              ></label>
+
+              <input type="radio" name="rating" id="star3" value="3" />
+              <label for="star3" title="Moyen"
+                ><i class="fas fa-star"></i
+              ></label>
+
+              <input type="radio" name="rating" id="star2" value="2" />
+              <label for="star2" title="Passable"
+                ><i class="fas fa-star"></i
+              ></label>
+
+              <input type="radio" name="rating" id="star1" value="1" />
+              <label for="star1" title="Mauvais"
+                ><i class="fas fa-star"></i
+              ></label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="avis" class="form-label required"
+              >Votre avis détaillé</label
+            >
+            <textarea
+              id="avis"
+              class="form-input form-textarea"
+              placeholder="Décrivez votre expérience avec ce livre..."
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-paper-plane"></i> Publier l'évaluation
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="scripts/laisser_avis.js"></script>
+  </body>
+</html>

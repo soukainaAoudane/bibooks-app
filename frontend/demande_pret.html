@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demande de prêt | BiBooks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/demande_pret.css">
+</head>
+<body>
+    <div class="container">
+        <header id="header">
+            <button id="profile" aria-label="Voir le profil ou l'administration">
+                <i class="fas fa-cog"></i>
+            </button>
+
+            <h1>BiBooks</h1>
+
+            <div class="header-buttons">
+                <button id="button" class="btn">
+                    <i id="button-icon" class="fas fa-user"></i>
+                    <span id="button-text">Connexion/inscription</span>
+                </button>
+
+                <p id="nom"></p>
+
+                <button id="sombre" class="btn">
+                    <i class="fas fa-moon"></i>
+                    <span>Mode sombre</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <h2>Navigation</h2>
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li><a href="accueil"><i class="fas fa-home"></i> Accueil</a></li>
+                        <li><a href="liste_livres"><i class="fas fa-book"></i> Liste des livres</a></li>
+                        <li class="hidden"><a href="admin"><i class="fas fa-user-shield"></i> Administration</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <main class="content">
+                <div class="formulaire">
+                    <h1><i class="fas fa-book-open"></i> Demande de prêt</h1>
+
+                    <div id="message_demande" class="message"></div>
+
+                    <form id="form-demande">
+                        <div class="form-row">
+                            <div class="form-group form-group-wide">
+                                <label for="livre_select_demande" class="required">Livre à emprunter</label>
+                                <select id="livre_select_demande" required>
+                                    <option value="">-- Sélectionner un livre --</option>
+                                </select>
+                                <p id="availability-text" class="book-availability"></p>
+                                <img id="livre-image" src="" alt="Image du livre">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nom_emprunteur" class="required">Votre nom complet</label>
+                                <input
+                                    type="text"
+                                    id="nom_emprunteur"
+                                    placeholder="Entrez votre nom et prénom"
+                                    required
+                                />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="date_pret_demande" class="required">Date de prêt</label>
+                                <input type="date" id="date_pret_demande" required />
+                                <p class="info-text">
+                                    <i class="fas fa-info-circle"></i> La date de prêt ne peut pas être dans le passé
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date_retour_demande" class="required">Date de retour prévue</label>
+                                <input type="date" id="date_retour_demande" required />
+                                <p class="info-text">
+                                    <i class="fas fa-info-circle"></i> Durée maximale de prêt : 30 jours
+                                </p>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane"></i> Envoyer la demande
+                        </button>
+                    </form>
+                </div>
+
+                <div class="retour">
+                    <a href="accueil"><i class="fas fa-arrow-left"></i> Retour à l'accueil</a>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="scripts/demande_pret.js"></script>
+</body>
+</html>

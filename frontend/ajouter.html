@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Livre | BiBooks en ligne</title>
+    <meta name="description" content="Ajoutez un nouveau livre à la BiBooks">
+    <link rel="icon" href="ktob.jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/ajouter.css">
+</head>
+<body>
+    <div class="container">
+        <header id="header">
+            <button id="profile" aria-label="Voir le profil ou l'administration">
+                <i class="fas fa-cog"></i>
+            </button>
+
+            <h1>BiBooks
+
+            </h1>
+
+            <div class="header-buttons">
+                <button id="button" class="btn">
+                    <i id="button-icon" class="fas fa-user"></i>
+                    <span id="button-text">Connexion/inscription</span>
+                </button>
+
+                <p id="nom"></p>
+
+                <button id="sombre" class="btn">
+                    <i class="fas fa-moon"></i>
+                    <span>Mode sombre</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <h2>Navigation</h2>
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li><a href="accueil"><i class="fas fa-home"></i> Accueil</a></li>
+                        <li><a href="liste_livres"><i class="fas fa-book"></i> Liste des livres</a></li>
+                        <li><a href="admin"><i class="fas fa-user-shield"></i> Administration</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <main class="content">
+                <div class="formulaire">
+                    <h1>Ajouter un Nouveau Livre</h1>
+
+                    <div id="ajout" class="message"></div>
+
+                    <form id="ajoutForm" enctype="multipart/form-data" method="post">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="titre" class="required">Titre du livre</label>
+                                <input type="text" id="titre" name="titre" required placeholder="Titre du livre">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="auteur" class="required">Auteur</label>
+                                <input type="text" id="auteur" name="auteur" required placeholder="Nom de l'auteur">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="genre" class="required">Genre</label>
+                                <select id="genre" name="genre" required>
+                                    <option value="">-- Sélectionnez un genre --</option>
+                                    <option value="Roman">Roman</option>
+                                    <option value="Conte">Conte</option>
+                                    <option value="Fantasy">Fantasy</option>
+                                    <option value="Horreur">Horreur</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="date" class="required">Date de publication</label>
+                                <input type="date" id="date" name="date" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="prix" class="required">Prix (€)</label>
+                                <input type="number" id="prix" name="prix" min="0" step="0.01" required placeholder="0.00">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exp" class="required">Exemplaires</label>
+                                <input type="number" id="exp" name="exp" min="1" required placeholder="1">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group form-group-wide">
+                                <label for="Description">Description</label>
+                                <textarea id="Description" name="description" placeholder="Description du livre..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group form-group-wide">
+                                <label for="image" class="required">Couverture du livre</label>
+                                <div class="file-input-container">
+                                    <div class="file-input-button">
+                                        <i class="fas fa-image"></i>
+                                        <span>Choisir une image</span>
+                                        <input type="file" id="image" name="image" accept="image/*" required>
+                                    </div>
+                                    <div id="file-name" class="file-name"></div>
+                                </div>
+                                <img src="#" alt="Aperçu de la couverture" id="imgPreview">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-plus-circle"></i> Ajouter le livre
+                        </button>
+                    </form>
+                </div>
+
+                <div class="retour">
+                    <a href="accueil"><i class="fas fa-arrow-left"></i> Retour à l'accueil</a>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="scripts/ajouter.js"></script>
+</body>
+</html>
