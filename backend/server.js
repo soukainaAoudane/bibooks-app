@@ -1,3 +1,14 @@
+// AJOUTEZ CE CODE AU TRÈS DÉBUT DU FICHIER
+process.on('uncaughtException', (error) => {
+    console.error('💥 ERREUR CRITIQUE:', error.message);
+    console.error('Stack:', error.stack);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('❌ PROMESSE REJETÉE:', reason);
+});
+
+console.log('🚀 Démarrage de server.js...');
 // Déclaration des variables utilisées
 const axios = require("axios"); //une librairei qui permet de faire dees requetes htttp
 const express = require("express");
@@ -6,11 +17,11 @@ const cors = require("cors");
 const port = process.env.PORT || 3001;
 const db = require("./base.js");
 const path = require("path");
-const imagesPath = path.join(__dirname, "..", "frontend", "images");
+const imagesPath = path.join(__dirname, "images");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const multer = require("multer");
-app.use(express.static(path.join(__dirname, "..", "frontend")));
+app.use(express.static(path.join(__dirname, "public"))); // ou supprimez cette ligne
 
 
 // Chargement des variables d'environnement
