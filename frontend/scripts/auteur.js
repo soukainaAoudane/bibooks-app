@@ -76,6 +76,8 @@
           });
 
 
+       setupImagePreview();
+    setupFileInputButton();
           afficherStatistiques();
           afficherLivres();
           exemplairesFinies(livres,utilisateur);
@@ -328,6 +330,51 @@
           `;
         });
       }
+// Fonction pour l'aperçu de l'image
+function setupImagePreview() {
+  const imageInput = document.getElementById("image");
+  const imgPreview = document.getElementById("imgPreview");
+  const fileName = document.getElementById("fileName");
+
+  imageInput.addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    
+    if (file) {
+      // Afficher le nom du fichier
+      fileName.textContent = file.name;
+      
+      // Aperçu de l'image
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        imgPreview.src = e.target.result;
+        imgPreview.style.display = 'block';
+      }
+      reader.readAsDataURL(file);
+    } else {
+      fileName.textContent = "Aucune image sélectionnée";
+      imgPreview.style.display = 'none';
+    }
+  });
+}
+
+// Fonction pour simuler le clic sur l'input file
+function setupFileInputButton() {
+  const fileInputButton = document.querySelector('.file-input-button');
+  const fileInput = document.getElementById('image');
+
+  fileInputButton.addEventListener('click', function() {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', function() {
+    const fileName = document.getElementById('fileName');
+    if (this.files.length > 0) {
+      fileName.textContent = this.files[0].name;
+    } else {
+      fileName.textContent = "Aucune image sélectionnée";
+    }
+  });
+}
 
       function fermer() {
         document.getElementById("popup").style.display = "none";
