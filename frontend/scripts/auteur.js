@@ -186,72 +186,104 @@
       }
 
       async function modifierLivre(id) {
-        try {
-          const response = await fetch(`${urlLivres}/${id}`);
-          if (!response.ok) throw new Error("Livre non trouvé");
+  try {
+    const response = await fetch(`${urlLivres}/${id}`);
+    if (!response.ok) throw new Error("Livre non trouvé");
 
-          const livre = await response.json();
+    const livre = await response.json();
 
+    // Remplir le formulaire
+    document.getElementById("titre").value = livre.titre;
+    document.getElementById("auteur").value = livre.auteur;
+    document.getElementById("genre").value = livre.genre;
+    document.getElementById("Description").value = livre.description || "";
+    document.getElementById("date").value = new Date(livre.date).toISOString().split("T")[0] || "";
+    document.getElementById("prix").value = livre.prix || 0;
+    document.getElementById("exp").value = livre.exp || 0;
+    
+    // Afficher l'image actuelle
+    const imgPreview = document.getElementById("imgPreview");
+    if (livre.img) {
+      imgPreview.src = `images/${livre.img}`;
+      imgPreview.style.display = 'block';
+    } else {
+      imgPreview.style.display = 'none';
+    }
 
-          document.getElementById("titre").value = livre.titre;
-          document.getElementById("auteur").value = livre.auteur;
-          document.getElementById("genre").value = livre.genre;
-          document.getElementById("Description").value =
-            livre.description || "";
-          document.getElementById("date").value = new Date(livre.date).toISOString().split("T")[0] || "";
-          document.getElementById("prix").value = livre.prix || 0;
-          document.getElementById("exp").value = livre.exp || 0;
-          document.getElementById("imgPreview").src = `images/${livre.img}` || "#";
+    // Afficher la popup
+    document.getElementById("popup").style.display = "flex";
 
-          document.getElementById("popup").style.display = "flex";
+    // Gérer la soumission du formulaire
+    const form = document.getElementById("form");
+    
+    // Réinitialiser l'événement de soumission
+    form.onsubmit = async (e) => {
+      e.preventDefault();
 
-
-          const form = document.getElementById("form");
-          form.onsubmit = async (e) => {
-            e.preventDefault();
-
-            const updatedLivre = {
-              titre: document.getElementById("titre").value,
-              auteur: document.getElementById("auteur").value,
-              genre: document.getElementById("genre").value,
-              description: document.getElementById("Description").value,
-              date: document.getElementById("date").value,
-              prix: parseFloat(document.getElementById("prix").value),
-              exp: parseInt(document.getElementById("exp").value),
-              img: livre.img,
-            };
-
-            try {
-              const updateResponse = await fetch(`${urlLivres}/${id}`, {
-                method: "PATCH",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(updatedLivre),
-              });
-
-              if (!updateResponse.ok) throw new Error("Erreur mise à jour");
-
-
-              const index = livres.findIndex((l) => l.id === id);
-              if (index !== -1) {
-                livres[index] = { ...livres[index], ...updatedLivre };
-              }
-
-              afficherLivres();
-              afficherStatistiques();
-              fermer();
-            } catch (error) {
-              console.error("Erreur:", error);
-              alert("Erreur lors de la modification");
-            }
-          };
-        } catch (error) {
-          console.error("Erreur:", error);
-          alert("Erreur lors du chargement du livre");
-        }
+      // Créer FormData pour gérer les fichiers
+      const formData = new FormData();
+      
+      // Ajouter tous les champs texte
+      formData.append('titre', document.getElementById("titre").value);
+      formData.append('auteur', document.getElementById("auteur").value);
+      formData.append('genre', document.getElementById("genre").value);
+      formData.append('description', document.getElementById("Description").value);
+      formData.append('date', document.getElementById("date").value);
+      formData.append('prix', document.getElementById("prix").value);
+      formData.append('exp', document.getElementById("exp").value);
+      
+      // Gérer l'image : si une nouvelle image est sélectionnée
+      const imageInput = document.getElementById("image");
+      if (imageInput.files.length > 0) {
+        formData.append('image', imageInput.files[0]);
+      } else {
+        // Garder l'ancienne image si aucune nouvelle n'est sélectionnée
+        formData.append('img', livre.img);
       }
 
+      try {
+        const updateResponse = await fetch(`${urlLivres}/${id}`, {
+          method: "PUT", // Utiliser PUT au lieu de PATCH pour gérer les fichiers
+          body: formData // Utiliser FormData au lieu de JSON
+          // NE PAS mettre Content-Type, le navigateur le fera automatiquement
+        });
+
+        if (!updateResponse.ok) throw new Error("Erreur mise à jour");
+
+        const result = await updateResponse.json();
+        
+        // Mettre à jour la liste des livres
+        const index = livres.findIndex((l) => l.id === id);
+        if (index !== -1) {
+          livres[index] = { 
+            ...livres[index], 
+            titre: document.getElementById("titre").value,
+            auteur: document.getElementById("auteur").value,
+            genre: document.getElementById("genre").value,
+            description: document.getElementById("Description").value,
+            date: document.getElementById("date").value,
+            prix: parseFloat(document.getElementById("prix").value),
+            exp: parseInt(document.getElementById("exp").value),
+            img: result.nouvelleImage || livre.img // Utiliser la nouvelle image si elle existe
+          };
+        }
+
+        afficherLivres();
+        afficherStatistiques();
+        fermer();
+        showToast("Livre modifié avec succès", "success");
+        
+      } catch (error) {
+        console.error("Erreur:", error);
+        showToast("Erreur lors de la modification", "error");
+      }
+    };
+
+  } catch (error) {
+    console.error("Erreur:", error);
+    showToast("Erreur lors du chargement du livre", "error");
+  }
+}
       function chercherLivres(){
         const utilisateur=JSON.parse(localStorage.getItem('utilisateur'));
         const motClee=document.getElementById('chercher-livre').value.trim().toLowerCase();
