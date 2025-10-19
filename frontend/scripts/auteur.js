@@ -192,22 +192,26 @@
 
     const livre = await response.json();
 
-    // Remplir le formulaire
+    // Remplir le formulaire avec les données du livre
     document.getElementById("titre").value = livre.titre;
     document.getElementById("auteur").value = livre.auteur;
     document.getElementById("genre").value = livre.genre;
     document.getElementById("Description").value = livre.description || "";
-    document.getElementById("date").value = new Date(livre.date).toISOString().split("T")[0] || "";
+    document.getElementById("date").value = livre.date ? new Date(livre.date).toISOString().split("T")[0] : "";
     document.getElementById("prix").value = livre.prix || 0;
-    document.getElementById("exp").value = livre.exp || 0;
-    
+    document.getElementById("exp").value = livre.exp || 1;
+
     // Afficher l'image actuelle
     const imgPreview = document.getElementById("imgPreview");
+    const fileName = document.getElementById("fileName");
+    
     if (livre.img) {
       imgPreview.src = `images/${livre.img}`;
       imgPreview.style.display = 'block';
+      fileName.textContent = livre.img;
     } else {
       imgPreview.style.display = 'none';
+      fileName.textContent = "Aucune image sélectionnée";
     }
 
     // Afficher la popup
@@ -216,7 +220,6 @@
     // Gérer la soumission du formulaire
     const form = document.getElementById("form");
     
-    // Réinitialiser l'événement de soumission
     form.onsubmit = async (e) => {
       e.preventDefault();
 
@@ -232,31 +235,35 @@
       formData.append('prix', document.getElementById("prix").value);
       formData.append('exp', document.getElementById("exp").value);
       
-      // Gérer l'image : si une nouvelle image est sélectionnée
+      // Gérer l'image
       const imageInput = document.getElementById("image");
       if (imageInput.files.length > 0) {
+        // Nouvelle image sélectionnée
         formData.append('image', imageInput.files[0]);
-      } else {
-        // Garder l'ancienne image si aucune nouvelle n'est sélectionnée
+      } else if (livre.img) {
+        // Garder l'ancienne image
         formData.append('img', livre.img);
       }
 
       try {
         const updateResponse = await fetch(`${urlLivres}/${id}`, {
-          method: "PUT", // Utiliser PUT au lieu de PATCH pour gérer les fichiers
-          body: formData // Utiliser FormData au lieu de JSON
-          // NE PAS mettre Content-Type, le navigateur le fera automatiquement
+          method: "PUT",
+          body: formData // FormData pour gérer les fichiers
+          // Pas de Content-Type, le navigateur le gère automatiquement
         });
 
-        if (!updateResponse.ok) throw new Error("Erreur mise à jour");
+        if (!updateResponse.ok) {
+          const errorText = await updateResponse.text();
+          throw new Error(`Erreur serveur: ${errorText}`);
+        }
 
         const result = await updateResponse.json();
         
-        // Mettre à jour la liste des livres
-        const index = livres.findIndex((l) => l.id === id);
+        // Mettre à jour la liste des livres localement
+        const index = livres.findIndex((l) => l.id == id);
         if (index !== -1) {
           livres[index] = { 
-            ...livres[index], 
+            ...livres[index],
             titre: document.getElementById("titre").value,
             auteur: document.getElementById("auteur").value,
             genre: document.getElementById("genre").value,
@@ -271,11 +278,11 @@
         afficherLivres();
         afficherStatistiques();
         fermer();
-        showToast("Livre modifié avec succès", "success");
+        showToast("Livre modifié avec succès !", "success");
         
       } catch (error) {
-        console.error("Erreur:", error);
-        showToast("Erreur lors de la modification", "error");
+        console.error("Erreur modification:", error);
+        showToast("Erreur lors de la modification: " + error.message, "error");
       }
     };
 
