@@ -6,9 +6,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     let livreSelectionne = null;
     
     // URLs API
-    const urlPrets = "http://localhost:3001/prets";
-    const urlDemandes = "http://localhost:3001/demandes";
-    const urlLivres = "http://localhost:3001/livres";
+    const urlPrets = "https://bibooks-app.up.railway.app/prets";
+    const urlDemandes = "https://bibooks-app.up.railway.app/demandes";
+    const urlLivres = "https://bibooks-app.up.railway.app/livres";
     
     // État de connexion
     const connecté = localStorage.getItem("connecté");
@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (connecté === "oui" && utilisateur) {
                 try {
                     // Vérifier les demandes existantes
-                    const responseDemandes = await fetch("http://localhost:3001/demandes");
+                    const responseDemandes = await fetch("https://bibooks-app.up.railway.app/demandes");
                     const demandes = await responseDemandes.json();
                     
                     const demandeExistante = demandes.find(
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
 
                     // Vérifier les prêts existants
-                    const responsePrets = await fetch("http://localhost:3001/prets");
+                    const responsePrets = await fetch("https://bibooks-app.up.railway.app/prets");
                     const prets = await responsePrets.json();
                     
                     const livreEmprunte = prets.find(
@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function fetchAvis(livreId) {
         try {
-            const res = await fetch(`http://localhost:3001/avis?livre_id=${livreId}`);
+            const res = await fetch(`https://bibooks-app.up.railway.app/avis?livre_id=${livreId}`);
             if (!res.ok) return [];
             return await res.json();
         } catch (error) {
