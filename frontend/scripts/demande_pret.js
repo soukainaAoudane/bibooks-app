@@ -448,7 +448,7 @@ document.getElementById("form-demande").addEventListener("submit", async functio
         }
 const now = new Date();
         // Méthode 1 : Simple et efficace
-        const dateDemande = now.toISOString().slice(0, 19).replace('T', ' ');
+        const dateDemande = now.toISOString().split("T")[0];
         onsole.log("Date formatée pour MySQL:", dateDemande);
         // Préparer les données pour l'API
         const demandeData = {
