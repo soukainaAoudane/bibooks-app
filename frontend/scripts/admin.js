@@ -1,14 +1,14 @@
       let livres = [];
-      const urlLivres = "http://localhost:3001/livres";
+      const urlLivres = "https://bibooks-app.up.railway.app/livres";
 
       let demandes = [];
-      const urlDemandes = "http://localhost:3001/demandes";
+      const urlDemandes = "https://bibooks-app.up.railway.app/demandes";
 
       let prets = [];
-      const urlPrets = "http://localhost:3001/prets";
+      const urlPrets = "https://bibooks-app.up.railway.app/prets";
 
       let utilisateurs = [];
-      const urlUtilisateurs = "http://localhost:3001/utilisateurs";
+      const urlUtilisateurs = "https://bibooks-app.up.railway.app/utilisateurs";
 
       function showToast(message, type = "success") {
         const toast = document.createElement("div");
@@ -392,7 +392,7 @@
 
           const email = emprunteur.email;
 
-          await fetch("http://localhost:3001/pret-confirme", {
+          await fetch("https://bibooks-app.up.railway.app/pret-confirme", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ nom: emprunteur.nom, email, datePret, dateRetour }),
@@ -445,7 +445,7 @@
         document.getElementById("demandes_attentes").textContent =
           demandes.filter((d) => d.statut === "en attente").length;
 
-           await fetch("http://localhost:3001/pret-refus", {
+           await fetch("https://bibooks-app.up.railway.app/pret-refus", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ nom: emprunteur.nom, email }),
