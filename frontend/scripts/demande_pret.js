@@ -447,10 +447,9 @@ document.getElementById("form-demande").addEventListener("submit", async functio
             return;
         }
 const today = new Date();
-const dateDemande = today.getFullYear() + "-" +
-  String(today.getMonth() + 1).padStart(2, '0') + "-" +
-  String(today.getDate()).padStart(2, '0');
-        console.log("Date formatée pour MySQL:", dateDemande);
+const dateDemande = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+
+console.log("Date demande formatée:", dateDemande);
         // Préparer les données pour l'API
         const demandeData = {
     nom: nom,
