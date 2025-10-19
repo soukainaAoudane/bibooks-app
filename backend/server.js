@@ -1314,33 +1314,7 @@ app.get("/laisser_avis", (req, res) => {
 });
 
 app.use((req, res) => {
-  const fs = require('fs');
-  const file404 = path.join(__dirname, "..", "frontend", "404.html");
-  
-  // Si c'est une route API, retourner JSON
-  if (req.path.startsWith('/api') || req.path.startsWith('/livres') || 
-      req.path.startsWith('/utilisateurs') || req.path.startsWith('/demandes') ||
-      req.path.startsWith('/prets') || req.path.startsWith('/avis') ||
-      req.path.startsWith('/init-urgence') || req.path.startsWith('/check-tables')) {
-    return res.status(404).json({ error: 'Endpoint non trouvé' });
-  }
-  
-  // Si le fichier 404 existe, le servir
-  if (fs.existsSync(file404)) {
-    res.status(404).sendFile(file404);
-  } else {
-    // Sinon, créer une réponse 404 simple
-    res.status(404).send(`
-      <html>
-        <head><title>404 - Page non trouvée</title></head>
-        <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-          <h1>404 - Page non trouvée</h1>
-          <p>La page que vous recherchez n'existe pas.</p>
-          <a href="/" style="color: #00b4d8;">Retour à l'accueil</a>
-        </body>
-      </html>
-    `);
-  }
+ res.sendFile(path.join(__dirnamee, "..","frontend", "404.html"));
 });
 
 app.listen(port, '0.0.0.0', () => {
