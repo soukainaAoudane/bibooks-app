@@ -133,47 +133,126 @@ app.get('/init-urgence', (req, res) => {
     };
 
     // Fonction pour insérer les données initiales
-    const insertInitialData = (response) => {
-        const initialData = [
-            // Admin
-            `INSERT IGNORE INTO utilisateurs (nom, email, mot_de_passe, role) 
-             VALUES ('Admin', 'admin@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin')`,
-            
-            // Livres
-            `INSERT IGNORE INTO livres (titre, auteur, genre, img, date, prix, exp, description) VALUES
- ('Les Misérables', 'Victor Hugo', 'Roman', 'miserables.png', '1862-04-03', 15.99, 5, 'Une fresque sociale bouleversante qui suit la rédemption de Jean Valjean dans une France marquée par l’injustice et la pauvreté.'),
- ('Le Petit Prince', 'Saint-Exupéry', 'Conte', 'le_petit_prince.png', '1943-04-06', 10.50, 8, 'Un conte poétique et universel sur l’enfance, l’amour et le sens de la vie à travers les yeux d’un petit prince voyageur.'),
- ('Harry Potter', 'J.K. Rowling', 'Fantasy', 'harry_potter.png', '1997-06-26', 20.00, 10, 'Le jeune Harry découvre qu’il est un sorcier et entame une aventure magique à Poudlard pour affronter le redoutable Voldemort.'),
- ('Dracula', 'Bram Stoker', 'Horreur', 'dracula.png', '1897-05-26', 12.00, 4, 'L’histoire glaçante du comte Dracula qui terrorise Londres, un classique du roman gothique et du mythe vampirique.'),
- ('Crime et Châtiment', 'Fiodor Dostoïevski', 'Roman', 'crime_et_chatiment.png', '1867-01-01', 14.99, 6, 'Un drame psychologique intense où un étudiant pauvre commet un meurtre et se débat avec ses tourments moraux.'),
- ('L''Étranger', 'Albert Camus', 'Roman', 'letranger.png', '1942-05-19', 13.50, 7, 'Un récit percutant sur l’absurdité de la vie, raconté à travers l’indifférence de Meursault face à son crime et à son procès.')`,
+// Fonction pour insérer les données initiales - VERSION CORRIGÉE ET SÉCURISÉE
+const insertInitialData = (response) => {
+    console.log('📝 Insertion des données initiales...');
+    
+    // 1. Insérer l'admin d'abord
+    const sqlAdmin = `INSERT IGNORE INTO utilisateurs (nom, email, mot_de_passe, role) 
+                     VALUES ('Admin', 'admin@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin')`;
+    
+    db.query(sqlAdmin, (err, result) => {
+        if (err) {
+            console.error('❌ Erreur insertion admin:', err.message);
+            // Continuer malgré l'erreur admin
+        } else {
+            console.log('✅ Admin inséré avec succès');
+        }
+        
+        // 2. Insérer les livres UN PAR UN (plus sûr)
+        const livres = [
+            {
+                titre: "Les Misérables",
+                auteur: "Victor Hugo",
+                genre: "Roman",
+                img: "miserables.png",
+                date: "1862-04-03",
+                prix: 15.99,
+                exp: 5,
+                description: "Une fresque sociale bouleversante qui suit la rédemption de Jean Valjean dans une France marquée par l''injustice et la pauvreté."
+            },
+            {
+                titre: "Le Petit Prince", 
+                auteur: "Saint-Exupéry",
+                genre: "Conte",
+                img: "le_petit_prince.png",
+                date: "1943-04-06",
+                prix: 10.50,
+                exp: 8,
+                description: "Un conte poétique et universel sur l''enfance, l''amour et le sens de la vie à travers les yeux d''un petit prince voyageur."
+            },
+            {
+                titre: "Harry Potter",
+                auteur: "J.K. Rowling", 
+                genre: "Fantasy",
+                img: "harry_potter.png",
+                date: "1997-06-26",
+                prix: 20.00,
+                exp: 10,
+                description: "Le jeune Harry découvre qu''il est un sorcier et entame une aventure magique à Poudlard pour affronter le redoutable Voldemort."
+            },
+            {
+                titre: "Dracula",
+                auteur: "Bram Stoker",
+                genre: "Horreur", 
+                img: "dracula.png",
+                date: "1897-05-26",
+                prix: 12.00,
+                exp: 4,
+                description: "L''histoire glaçante du comte Dracula qui terrorise Londres, un classique du roman gothique et du mythe vampirique."
+            },
+            {
+                titre: "Crime et Châtiment",
+                auteur: "Fiodor Dostoïevski",
+                genre: "Roman",
+                img: "crime_et_chatiment.png", 
+                date: "1867-01-01",
+                prix: 14.99,
+                exp: 6,
+                description: "Un drame psychologique intense où un étudiant pauvre commet un meurtre et se débat avec ses tourments moraux."
+            },
+            {
+                titre: "L'Étranger",
+                auteur: "Albert Camus",
+                genre: "Roman",
+                img: "letranger.png",
+                date: "1942-05-19", 
+                prix: 13.50,
+                exp: 7,
+                description: "Un récit percutant sur l''absurdité de la vie, raconté à travers l''indifférence de Meursault face à son crime et à son procès."
+            }
         ];
 
-        let dataInserted = 0;
-        const dataErrors = [];
+        let livresInseres = 0;
+        const erreursLivres = [];
 
-        initialData.forEach((sql, index) => {
-            db.query(sql, (err, result) => {
+        // Insérer chaque livre individuellement
+        livres.forEach((livre, index) => {
+            const sqlLivre = `INSERT IGNORE INTO livres (titre, auteur, genre, img, date, prix, exp, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+            
+            db.query(sqlLivre, [
+                livre.titre,
+                livre.auteur, 
+                livre.genre,
+                livre.img,
+                livre.date,
+                livre.prix,
+                livre.exp,
+                livre.description
+            ], (err, result) => {
                 if (err) {
-                    console.error(`❌ Données ${index + 1} échouées:`, err.message);
-                    dataErrors.push(`Données ${index + 1}: ${err.message}`);
+                    console.error(`❌ Livre ${index + 1} échoué:`, err.message);
+                    erreursLivres.push(`Livre ${index + 1} (${livre.titre}): ${err.message}`);
                 } else {
-                    console.log(`✅ Données ${index + 1} insérées`);
-                    dataInserted++;
+                    console.log(`✅ Livre ${index + 1} inséré: ${livre.titre}`);
+                    livresInseres++;
                 }
 
-                if (dataInserted + dataErrors.length === initialData.length) {
+                // Quand tous les livres sont traités
+                if (livresInseres + erreursLivres.length === livres.length) {
                     response.json({
                         message: '🎉 BASE DE DONNÉES INITIALISÉE AVEC SUCCÈS!',
                         tables_created: created,
-                        data_inserted: dataInserted,
-                        admin: 'admin@gmail.com / admin',
+                        admin_insere: true,
+                        livres_inseres: livresInseres,
+                        erreurs_livres: erreursLivres.length > 0 ? erreursLivres : null,
                         test_url: '/livres'
                     });
                 }
             });
         });
-    };
+    });
+};
 
     // Démarrer la création des tables
     createNextTable(0);
