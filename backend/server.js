@@ -26,14 +26,175 @@ app.use(express.static(path.join(__dirname, "public"))); // ou supprimez cette l
 
 // Chargement des variables d'environnement
 dotenv.config({ path: path.resolve(__dirname, ".env") });
+// 🚨 ROUTE D'INITIALISATION URGENTE - À AJOUTER IMMÉDIATEMENT
+app.get('/init-urgence', (req, res) => {
+    console.log('🚨 INITIALISATION URGENTE DES TABLES');
+    
+    const tables = [
+        // Table utilisateurs
+        `CREATE TABLE IF NOT EXISTS utilisateurs (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nom VARCHAR(100) NOT NULL,
+            email VARCHAR(150) UNIQUE NOT NULL,
+            mot_de_passe VARCHAR(255) NOT NULL,
+            role ENUM('admin', 'auteur', 'user') DEFAULT 'user',
+            date_inscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )`,
+        
+        // Table livres
+        `CREATE TABLE IF NOT EXISTS livres (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            titre VARCHAR(255) NOT NULL,
+            auteur VARCHAR(150) NOT NULL,
+            genre VARCHAR(100),
+            img VARCHAR(255),
+            date DATE,
+            prix DECIMAL(10,2) DEFAULT 0.00,
+            exp INT DEFAULT 1,
+            description TEXT,
+            date_ajout TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )`,
+        
+        // Table demandes
+        `CREATE TABLE IF NOT EXISTS demandes (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nom VARCHAR(100) NOT NULL,
+            livre_id INT NOT NULL,
+            date_pret DATE NOT NULL,
+            date_retour DATE NOT NULL,
+            statut ENUM('en attente', 'accepté', 'refusé') DEFAULT 'en attente',
+            date_demande TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )`,
+        
+        // Table prets
+        `CREATE TABLE IF NOT EXISTS prets (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            livre_id INT NOT NULL,
+            utilisateur_id INT NOT NULL,
+            nom VARCHAR(100) NOT NULL,
+            date_pret DATE NOT NULL,
+            date_retour DATE NOT NULL,
+            statut ENUM('en cours', 'retourné', 'en retard') DEFAULT 'en cours',
+            date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )`,
+        
+        // Table avis
+        `CREATE TABLE IF NOT EXISTS avis (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            livre_id INT NOT NULL,
+            utilisateur_nom VARCHAR(100) NOT NULL,
+            utilisateur_email VARCHAR(150),
+            note INT,
+            commentaire TEXT,
+            date_avis TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )`,
+        
+        // Table favoris
+        `CREATE TABLE IF NOT EXISTS favoris (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            utilisateur_id INT NOT NULL,
+            livre_id INT NOT NULL,
+            date_ajout TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )`
+    ];
 
+    let created = 0;
+    const errors = [];
+
+    // Créer les tables une par une
+    const createNextTable = (index) => {
+        if (index >= tables.length) {
+            // Toutes les tables sont créées
+            if (errors.length > 0) {
+                res.status(500).json({
+                    message: `⚠️ ${created} tables créées, ${errors.length} erreurs`,
+                    created: created,
+                    errors: errors
+                });
+            } else {
+                // Insérer l'admin et des livres
+                insertInitialData(res);
+            }
+            return;
+        }
+
+        const sql = tables[index];
+        db.query(sql, (err, result) => {
+            if (err) {
+                console.error(`❌ Table ${index + 1} échouée:`, err.message);
+                errors.push(`Table ${index + 1}: ${err.message}`);
+            } else {
+                console.log(`✅ Table ${index + 1} créée`);
+                created++;
+            }
+            
+            createNextTable(index + 1);
+        });
+    };
+
+    // Fonction pour insérer les données initiales
+    const insertInitialData = (response) => {
+        const initialData = [
+            // Admin
+            `INSERT IGNORE INTO utilisateurs (nom, email, mot_de_passe, role) 
+             VALUES ('Admin', 'admin@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin')`,
+            
+            // Livres
+            `INSERT IGNORE INTO livres (titre, auteur, genre, description) VALUES
+             ('Les Misérables', 'Victor Hugo', 'Roman', 'Une fresque sociale bouleversante'),
+             ('Le Petit Prince', 'Saint-Exupéry', 'Conte', 'Un conte poétique et universel'),
+             ('Harry Potter', 'J.K. Rowling', 'Fantasy', 'Aventure magique à Poudlard')`
+        ];
+
+        let dataInserted = 0;
+        const dataErrors = [];
+
+        initialData.forEach((sql, index) => {
+            db.query(sql, (err, result) => {
+                if (err) {
+                    console.error(`❌ Données ${index + 1} échouées:`, err.message);
+                    dataErrors.push(`Données ${index + 1}: ${err.message}`);
+                } else {
+                    console.log(`✅ Données ${index + 1} insérées`);
+                    dataInserted++;
+                }
+
+                if (dataInserted + dataErrors.length === initialData.length) {
+                    response.json({
+                        message: '🎉 BASE DE DONNÉES INITIALISÉE AVEC SUCCÈS!',
+                        tables_created: created,
+                        data_inserted: dataInserted,
+                        admin: 'admin@gmail.com / admin',
+                        test_url: '/livres'
+                    });
+                }
+            });
+        });
+    };
+
+    // Démarrer la création des tables
+    createNextTable(0);
+});
+
+// Route de vérification simple
+app.get('/check-tables', (req, res) => {
+    db.query('SHOW TABLES', (err, results) => {
+        if (err) {
+            res.json({ error: err.message, tables: [] });
+        } else {
+            const tableNames = results.map(row => Object.values(row)[0]);
+            res.json({
+                database: 'railway',
+                tables_count: tableNames.length,
+                tables: tableNames
+            });
+        }
+    });
+});
 // Middleware global
 app.use(express.json());
 app.use(cors());
 app.use("/images", express.static(imagesPath));
-app.get('/', (req, res) => {
-  res.send('API Bibooks en ligne !');
-});
 
 console.log("Configuration SMTP:");
 console.log("MAIL_USER:", process.env.MAIL_USER);
@@ -89,7 +250,7 @@ app.post("/send-email", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant vous connecter à votre compte.</p>
-                <a href="http://localhost:3001/connexion" 
+                <a href="https://bibooks-app.up.railway.app/connexion" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Se connecter
@@ -133,7 +294,7 @@ app.post("/envoi-avis", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez acceder à votre compte.</p>
-                <a href="http://localhost:3001" 
+                <a href="https://bibooks-app.up.railway.app" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Se connecter
@@ -177,7 +338,7 @@ app.post("/demande-pret", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir si votre demande a été acceptée.</p>
-                <a href="http://localhost:3001/profil" 
+                <a href="https://bibooks-app.up.railway.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -219,7 +380,7 @@ app.post("/changement-mot-de-passe", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir votre profil.</p>
-                <a href="http://localhost:3001/profil" 
+                <a href="https://bibooks-app.up.railway.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -267,7 +428,7 @@ app.post("/pret-confirme", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir votre profil.</p>
-                <a href="http://localhost:3001/profil" 
+                <a href="https://bibooks-app.up.railway.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -309,7 +470,7 @@ app.post("/pret-refus", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir votre profil.</p>
-                <a href="http://localhost:3001/profil" 
+                <a href="https://bibooks-app.up.railway.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -345,7 +506,7 @@ app.get("/livres/recherche", (req, res) => {
   });
 });
 
-// http://localhost:3001/livres
+// https://bibooks-app.up.railway.app/livres
 // Get all books
 // Route pour obtenir les livres (depuis la base de données)
 app.get("/livres", async (req, res) => {
@@ -425,7 +586,7 @@ app.get("/livres", async (req, res) => {
   }
 });
 
-// http://localhost:3001/livres/:id
+// https://bibooks-app.up.railway.app/livres/:id
 // Get books by id
 app.get("/livres/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -440,7 +601,7 @@ app.get("/livres/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/livres
+// https://bibooks-app.up.railway.app/livres
 // Créer un nouveau livre
 // Créer un nouveau livre (manuel ou depuis Google Books)
 app.post("/livres", upload.single("image"), async (req, res) => {
@@ -660,7 +821,7 @@ app.post("/rechercher-livres-google", async (req, res) => {
     });
   }
 });
-// http://localhost:3001/livres/:id
+// https://bibooks-app.up.railway.app/livres/:id
 // Modifier un livre
 app.put("/livres/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -676,7 +837,7 @@ app.put("/livres/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/livres/:id
+// https://bibooks-app.up.railway.app/livres/:id
 // Modifier un livre avec patch (mise à jour partielle)
 app.patch("/livres/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -701,7 +862,7 @@ app.patch("/livres/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/livres/:id
+// https://bibooks-app.up.railway.app/livres/:id
 // Supprimer un livre
 app.delete("/livres/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -715,7 +876,7 @@ app.delete("/livres/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/demandes
+// https://bibooks-app.up.railway.app/demandes
 // Get all demandes
 app.get("/demandes", (req, res) => {
   const sql = "SELECT * FROM demandes ORDER BY date_pret DESC";
@@ -729,7 +890,7 @@ app.get("/demandes", (req, res) => {
   });
 });
 
-// http://localhost:3001/demandes/:statut
+// https://bibooks-app.up.railway.app/demandes/:statut
 // Get demande by statut
 app.get("/demandes/:statut", (req, res) => {
   const statut = req.params.statut;
@@ -744,7 +905,7 @@ app.get("/demandes/:statut", (req, res) => {
   });
 });
 
-// http://localhost:3001/demandes
+// https://bibooks-app.up.railway.app/demandes
 // Créer une nouvelle demande de prêt
 app.post("/demandes", (req, res) => {
   const nouvelleDemande = req.body;
@@ -759,7 +920,7 @@ app.post("/demandes", (req, res) => {
   });
 });
 
-// http://localhost:3001/demandes/:id
+// https://bibooks-app.up.railway.app/demandes/:id
 // Modifier une demande de prêt
 app.patch("/demandes/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -782,7 +943,7 @@ app.patch("/demandes/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/demandes/:id
+// https://bibooks-app.up.railway.app/demandes/:id
 // Supprimer une demande de prêt
 app.delete("/demandes/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -797,7 +958,7 @@ app.delete("/demandes/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/utilisateurs
+// https://bibooks-app.up.railway.app/utilisateurs
 // Get all utilisateurs
 app.get("/utilisateurs", (req, res) => {
   const sql = "select * from utilisateurs";
@@ -811,7 +972,7 @@ app.get("/utilisateurs", (req, res) => {
   });
 });
 
-// http://localhost:3001/utilisateurs/:id
+// https://bibooks-app.up.railway.app/utilisateurs/:id
 // Get utilisateur by id
 app.get("/utilisateurs/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -826,7 +987,7 @@ app.get("/utilisateurs/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/utilisateurs
+// https://bibooks-app.up.railway.app/utilisateurs
 // Créer un nouvel utilisateur
 app.post("/utilisateurs", (req, res) => {
   const nouveauUtilisateur = req.body;
@@ -841,7 +1002,7 @@ app.post("/utilisateurs", (req, res) => {
   });
 });
 
-// http://localhost:3001/utilisateurs/:id
+// https://bibooks-app.up.railway.app/utilisateurs/:id
 // Modifier un utilisateur
 app.patch("/utilisateurs/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -856,7 +1017,7 @@ app.patch("/utilisateurs/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/utilisateurs/:id
+// https://bibooks-app.up.railway.app/utilisateurs/:id
 app.delete("/utilisateurs/:id", (req, res) => {
   const id = Number(req.params.id);
   const sql = `DELETE FROM utilisateurs WHERE id=${id}`;
@@ -871,7 +1032,7 @@ app.delete("/utilisateurs/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/prets
+// https://bibooks-app.up.railway.app/prets
 // Get all prets
 app.get("/prets", (req, res) => {
   const sql = "select * from prets";
@@ -885,7 +1046,7 @@ app.get("/prets", (req, res) => {
   });
 });
 
-// http://localhost:3001/prets/:id
+// https://bibooks-app.up.railway.app/prets/:id
 // Get pret by id
 app.get("/prets/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -900,7 +1061,7 @@ app.get("/prets/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/prets
+// https://bibooks-app.up.railway.app/prets
 // Créer un nouveau prêt
 app.post("/prets", (req, res) => {
   const { livre_id, utilisateur_id, date_pret, date_retour, statut, nom } =
@@ -927,7 +1088,7 @@ app.post("/prets", (req, res) => {
   });
 });
 
-// http://localhost:3001/prets/:id
+// https://bibooks-app.up.railway.app/prets/:id
 // Modifier un prêt (partiel)
 app.patch("/prets/:id", (req, res) => {
   const id = req.params.id;
@@ -955,7 +1116,7 @@ app.patch("/prets/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/prets/:id
+// https://bibooks-app.up.railway.app/prets/:id
 // Modifier un prêt (complet)
 app.put("/prets/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -971,7 +1132,7 @@ app.put("/prets/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/prets/:id
+// https://bibooks-app.up.railway.app/prets/:id
 // Supprimer un prêt
 app.delete("/prets/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -986,7 +1147,7 @@ app.delete("/prets/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/avis
+// https://bibooks-app.up.railway.app/avis
 // Get all avis
 app.get("/avis", (req, res) => {
   const sql = "select * from avis";
@@ -1001,7 +1162,7 @@ app.get("/avis", (req, res) => {
   });
 });
 
-// http://localhost:3001/avis/:id
+// https://bibooks-app.up.railway.app/avis/:id
 // Get avis by id
 app.get("/avis/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -1016,7 +1177,7 @@ app.get("/avis/:id", (req, res) => {
   });
 });
 
-// http://localhost:3001/avis
+// https://bibooks-app.up.railway.app/avis
 // Créer un nouvel avis
 app.post("/avis", (req, res) => {
   const { livreId, nom, email, note, commentaire } = req.body;
@@ -1071,7 +1232,33 @@ app.get("/laisser_avis", (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, "..","frontend", "404.html"));
+  const fs = require('fs');
+  const file404 = path.join(__dirname, "..", "frontend", "404.html");
+  
+  // Si c'est une route API, retourner JSON
+  if (req.path.startsWith('/api') || req.path.startsWith('/livres') || 
+      req.path.startsWith('/utilisateurs') || req.path.startsWith('/demandes') ||
+      req.path.startsWith('/prets') || req.path.startsWith('/avis') ||
+      req.path.startsWith('/init-urgence') || req.path.startsWith('/check-tables')) {
+    return res.status(404).json({ error: 'Endpoint non trouvé' });
+  }
+  
+  // Si le fichier 404 existe, le servir
+  if (fs.existsSync(file404)) {
+    res.status(404).sendFile(file404);
+  } else {
+    // Sinon, créer une réponse 404 simple
+    res.status(404).send(`
+      <html>
+        <head><title>404 - Page non trouvée</title></head>
+        <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+          <h1>404 - Page non trouvée</h1>
+          <p>La page que vous recherchez n'existe pas.</p>
+          <a href="/" style="color: #00b4d8;">Retour à l'accueil</a>
+        </body>
+      </html>
+    `);
+  }
 });
 
 app.listen(port, '0.0.0.0', () => {
