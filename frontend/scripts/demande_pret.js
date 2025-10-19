@@ -2,9 +2,9 @@ let livres = [];
 let demandes = [];
 let prets = [];
 
-const urlLivres = "http://localhost:3001/livres";
-const urlDemandes = "http://localhost:3001/demandes";
-const urlPrets = "http://localhost:3001/prets";
+const urlLivres = "https://bibooks-app.up.railway.app/livres";
+const urlDemandes = "https://bibooks-app.up.railway.app/demandes";
+const urlPrets = "https://bibooks-app.up.railway.app/prets";
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
@@ -453,7 +453,7 @@ document.getElementById("form-demande").addEventListener("submit", async functio
         );
         
         // Envoyer l'email de confirmation
-        await fetch("http://localhost:3001/demande-pret", {
+        await fetch("https://bibooks-app.up.railway.app/demande-pret", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ nom, email, date_demande }),
