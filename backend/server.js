@@ -140,10 +140,13 @@ app.get('/init-urgence', (req, res) => {
              VALUES ('Admin', 'admin@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin')`,
             
             // Livres
-            `INSERT IGNORE INTO livres (titre, auteur, genre, description) VALUES
-             ('Les Misérables', 'Victor Hugo', 'Roman', 'Une fresque sociale bouleversante'),
-             ('Le Petit Prince', 'Saint-Exupéry', 'Conte', 'Un conte poétique et universel'),
-             ('Harry Potter', 'J.K. Rowling', 'Fantasy', 'Aventure magique à Poudlard')`
+            INSERT IGNORE INTO livres (titre, auteur, genre, img, date, prix, exp, description) VALUES
+ ('Les Misérables', 'Victor Hugo', 'Roman', 'miserables.png', '1862-04-03', 15.99, 5, 'Une fresque sociale bouleversante qui suit la rédemption de Jean Valjean dans une France marquée par l’injustice et la pauvreté.'),
+ ('Le Petit Prince', 'Saint-Exupéry', 'Conte', 'le_petit_prince.png', '1943-04-06', 10.50, 8, 'Un conte poétique et universel sur l’enfance, l’amour et le sens de la vie à travers les yeux d’un petit prince voyageur.'),
+ ('Harry Potter', 'J.K. Rowling', 'Fantasy', 'harry_potter.png', '1997-06-26', 20.00, 10, 'Le jeune Harry découvre qu’il est un sorcier et entame une aventure magique à Poudlard pour affronter le redoutable Voldemort.'),
+ ('Dracula', 'Bram Stoker', 'Horreur', 'dracula.png', '1897-05-26', 12.00, 4, 'L’histoire glaçante du comte Dracula qui terrorise Londres, un classique du roman gothique et du mythe vampirique.'),
+ ('Crime et Châtiment', 'Fiodor Dostoïevski', 'Roman', 'crime_et_chatiment.png', '1867-01-01', 14.99, 6, 'Un drame psychologique intense où un étudiant pauvre commet un meurtre et se débat avec ses tourments moraux.'),
+ ('L''Étranger', 'Albert Camus', 'Roman', 'letranger.png', '1942-05-19', 13.50, 7, 'Un récit percutant sur l’absurdité de la vie, raconté à travers l’indifférence de Meursault face à son crime et à son procès.')`
         ];
 
         let dataInserted = 0;
