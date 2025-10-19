@@ -446,10 +446,11 @@ document.getElementById("form-demande").addEventListener("submit", async functio
             showMessage("Vous avez déjà une demande en attente pour ce livre.", "error");
             return;
         }
-const now = new Date();
-        // Méthode 1 : Simple et efficace
-        const dateDemande = now.toISOString().split("T")[0];
-        onsole.log("Date formatée pour MySQL:", dateDemande);
+const today = new Date();
+const dateDemande = today.getFullYear() + "-" +
+  String(today.getMonth() + 1).padStart(2, '0') + "-" +
+  String(today.getDate()).padStart(2, '0');
+        console.log("Date formatée pour MySQL:", dateDemande);
         // Préparer les données pour l'API
         const demandeData = {
     nom: nom,
