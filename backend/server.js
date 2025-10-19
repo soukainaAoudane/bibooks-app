@@ -905,38 +905,82 @@ app.post("/rechercher-livres-google", async (req, res) => {
 });
 // https://bibooks-app.up.railway.app/livres/:id
 // Modifier un livre
-app.put("/livres/:id", (req, res) => {
+// https://bibooks-app.up.railway.app/livres/:id
+// Modifier un livre AVEC upload d'image
+app.put("/livres/:id", upload.single("image"), (req, res) => {
   const id = Number(req.params.id);
   const livreModifier = req.body;
-  const sql = `update livres set titre='${livreModifier.titre}', auteur='${livreModifier.auteur}', genre='${livreModifier.genre}', img='${livreModifier.img}', date='${livreModifier.date}', prix=${livreModifier.prix}, exp='${livreModifier.exp}', description='${livreModifier.description}' where id=${id}`;
-  db.query(sql, (err, reslut) => {
-    if (err) {
-      console.log("Erreur de modification du livre", err);
-    } else {
-      console.log("Livre modifié avec succès");
-      res.json({ message: "Livre modifié avec succès" });
+  
+  // Gérer l'image : si nouvelle image uploadée, utiliser son nom, sinon garder l'ancienne
+  const nouvelleImage = req.file ? req.file.filename : livreModifier.img;
+  
+  const sql = `UPDATE livres SET 
+    titre = ?, 
+    auteur = ?, 
+    genre = ?, 
+    img = ?, 
+    date = ?, 
+    prix = ?, 
+    exp = ?, 
+    description = ? 
+    WHERE id = ?`;
+  
+  db.query(
+    sql,
+    [
+      livreModifier.titre,
+      livreModifier.auteur,
+      livreModifier.genre,
+      nouvelleImage, // Utilise la nouvelle image ou garde l'ancienne
+      livreModifier.date,
+      livreModifier.prix,
+      livreModifier.exp,
+      livreModifier.description,
+      id
+    ],
+    (err, result) => {
+      if (err) {
+        console.error("Erreur de modification du livre", err);
+        res.status(500).json({ error: "Erreur serveur lors de la modification" });
+      } else {
+        console.log("Livre modifié avec succès");
+        res.json({ 
+          message: "Livre modifié avec succès",
+          nouvelleImage: nouvelleImage 
+        });
+      }
     }
-  });
+  );
 });
 
 // https://bibooks-app.up.railway.app/livres/:id
-// Modifier un livre avec patch (mise à jour partielle)
-app.patch("/livres/:id", (req, res) => {
+// Modifier un livre avec patch (mise à jour partielle) AVEC upload d'image
+app.patch("/livres/:id", upload.single("image"), (req, res) => {
   const id = Number(req.params.id);
   const champs = req.body;
+  
+  // Si une nouvelle image est uploadée, l'ajouter aux champs à modifier
+  if (req.file) {
+    champs.img = req.file.filename;
+  }
+  
   const modifications = Object.entries(champs)
-    .map(([cle, valeur]) => `${cle}='${valeur}'`)
+    .map(([cle, valeur]) => `${cle} = ?`)
     .join(", ");
+    
   if (!modifications) {
     return res.status(400).json({ message: "Aucun champ à modifier." });
   }
-  const sql = `UPDATE livres SET ${modifications} WHERE id=${id}`;
-  db.query(sql, (err, result) => {
+  
+  const valeurs = Object.values(champs);
+  valeurs.push(id);
+  
+  const sql = `UPDATE livres SET ${modifications} WHERE id = ?`;
+  
+  db.query(sql, valeurs, (err, result) => {
     if (err) {
-      console.log("Erreur de modification partielle du livre", err);
-      res
-        .status(500)
-        .json({ message: "Erreur de modification partielle du livre" });
+      console.error("Erreur de modification partielle du livre", err);
+      res.status(500).json({ message: "Erreur de modification partielle du livre" });
     } else {
       console.log("Livre modifié partiellement avec succès");
       res.json({ message: "Livre modifié partiellement avec succès" });
