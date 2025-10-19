@@ -446,7 +446,10 @@ document.getElementById("form-demande").addEventListener("submit", async functio
             showMessage("Vous avez déjà une demande en attente pour ce livre.", "error");
             return;
         }
-
+const now = new Date();
+        // Méthode 1 : Simple et efficace
+        const dateDemande = now.toISOString().slice(0, 19).replace('T', ' ');
+        onsole.log("Date formatée pour MySQL:", dateDemande);
         // Préparer les données pour l'API
         const demandeData = {
     nom: nom,
@@ -454,7 +457,7 @@ document.getElementById("form-demande").addEventListener("submit", async functio
     date_pret: datePret,
     date_retour: dateRetour,
     statut: "en attente",
-    date_demande: new Date().toISOString().split('T')[0] + ' ' + new Date().toTimeString().split(' ')[0]
+    date_demande: dateDemande
         };
 
         console.log("Données à envoyer:", demandeData);
