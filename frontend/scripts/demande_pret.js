@@ -449,12 +449,12 @@ document.getElementById("form-demande").addEventListener("submit", async functio
 
         // Préparer les données pour l'API
         const demandeData = {
-            nom: nom,
-            livre_id: livreId,
-            date_pret: datePret,
-            date_retour: dateRetour,
-            statut: "en attente",
-            date_demande: new Date().toISOString()
+    nom: nom,
+    livre_id: livreId,
+    date_pret: datePret,
+    date_retour: dateRetour,
+    statut: "en attente",
+    date_demande: new Date().toISOString().split('T')[0] + ' ' + new Date().toTimeString().split(' ')[0]
         };
 
         console.log("Données à envoyer:", demandeData);
