@@ -333,6 +333,12 @@ document.getElementById("form-demande").addEventListener("submit", async functio
     e.preventDefault();
 
     const utilisateur = JSON.parse(localStorage.getItem('utilisateur')); 
+    if (!utilisateur) {
+        showMessage("Vous devez être connecté pour effectuer une demande.", "error");
+        window.location.href = "connexion";
+        return;
+    }
+
     const email = utilisateur.email;
     const nom = document.getElementById("nom_emprunteur").value.trim();
     const livreValue = document.getElementById("livre_select_demande").value;
@@ -341,8 +347,11 @@ document.getElementById("form-demande").addEventListener("submit", async functio
     const messageEl = document.getElementById("message_demande");
     const submitBtn = document.querySelector(".btn-submit");
 
-    messageEl.className = "message";
-    messageEl.textContent = "";
+    // Réinitialiser le message
+    if (messageEl) {
+        messageEl.className = "message";
+        messageEl.textContent = "";
+    }
 
     // Validation des champs
     if (!nom || livreValue === "" || !datePret || !dateRetour) {
@@ -373,22 +382,37 @@ document.getElementById("form-demande").addEventListener("submit", async functio
     let livreId;
 
     try {
+        // Récupérer l'ID du livre selon le type
         if (livreValue === "google_books") {
             // Sauvegarder le livre Google Books
             const livreGoogle = JSON.parse(localStorage.getItem("livreSelectionne"));
+            if (!livreGoogle) {
+                showMessage("Livre Google Books non trouvé.", "error");
+                return;
+            }
+            
             console.log("Sauvegarde du livre Google Books:", livreGoogle.titre);
             livreId = await sauvegarderLivreSiNecessaire(livreGoogle);
             livre = { ...livreGoogle, id: livreId };
             
-            // Recharger la liste
+            // Recharger la liste des livres
             const respLivres = await fetch(urlLivres);
             livres = await respLivres.json();
             afficherLivres();
         } else {
+            // Livre existant
             livre = livres[livreValue];
+            if (!livre) {
+                showMessage("Livre sélectionné non trouvé.", "error");
+                return;
+            }
             livreId = livre.id;
         }
 
+        console.log("Livre ID à utiliser:", livreId);
+        console.log("Livre sélectionné:", livre);
+
+        // Vérifier la disponibilité
         if (!livre || (Number(livre.exp) || 0) <= 0) {
             showMessage("Ce livre n'est plus disponible.", "error");
             afficherLivres();
@@ -423,66 +447,128 @@ document.getElementById("form-demande").addEventListener("submit", async functio
             return;
         }
 
-        // Envoyer la demande
-        submitBtn.disabled = true;
-        submitBtn.style.opacity = 0.7;
+        // Préparer les données pour l'API
+        const demandeData = {
+            nom: nom,
+            livre_id: livreId,
+            date_pret: datePret,
+            date_retour: dateRetour,
+            statut: "en attente",
+            date_demande: new Date().toISOString()
+        };
 
+        console.log("Données à envoyer:", demandeData);
+
+        // Désactiver le bouton pendant l'envoi
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = 0.7;
+            submitBtn.textContent = "Envoi en cours...";
+        }
+
+        // Envoyer la demande
         const response = await fetch(urlDemandes, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                nom,
-                livre_id: livreId,
-                date_pret: datePret,
-                date_retour: dateRetour,
-                statut: "en attente",
-                date_demande: new Date().toISOString(),
-            }),
+            body: JSON.stringify(demandeData),
         });
 
-        const date_demande = new Date().toISOString();
+        console.log("Réponse API:", response.status, response.statusText);
+
         if (!response.ok) {
-            throw new Error("Erreur lors de l'envoi de la demande.");
+            const errorText = await response.text();
+            console.error("Erreur détaillée:", errorText);
+            throw new Error(`Erreur ${response.status}: ${response.statusText}`);
         }
 
+        const resultat = await response.json();
+        console.log("Demande créée avec succès:", resultat);
+
+        // Afficher le message de succès
         showMessage(
-            `Votre demande pour "${livre.titre}" a été envoyée avec succès.`,
+            `Votre demande pour "${livre.titre}" a été envoyée avec succès. Redirection vers l'accueil...`,
             "success"
         );
         
-        // Envoyer l'email de confirmation
-        await fetch("https://bibooks-app.up.railway.app/demande-pret", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ nom, email, date_demande }),
-        });
+        // Envoyer l'email de confirmation (optionnel)
+        try {
+            await fetch("https://bibooks-app.up.railway.app/demande-pret", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    nom: nom, 
+                    email: email, 
+                    date_demande: new Date().toISOString(),
+                    livre_titre: livre.titre 
+                }),
+            });
+            console.log("Email de confirmation envoyé");
+        } catch (emailError) {
+            console.warn("Erreur lors de l'envoi de l'email:", emailError);
+            // Ne pas bloquer le processus principal pour une erreur d'email
+        }
 
+        // Réinitialiser le formulaire
         this.reset();
-        document.getElementById("availability-text").textContent = "";
+        const availabilityText = document.getElementById("availability-text");
+        if (availabilityText) {
+            availabilityText.textContent = "";
+        }
+        
+        // Nettoyer le localStorage
         localStorage.removeItem("livreSelectionne");
+        
+        // Recharger les données pour mettre à jour les listes
+        const [newLivres, newDemandes] = await Promise.all([
+            fetch(urlLivres).then(r => r.json()),
+            fetch(urlDemandes).then(r => r.json())
+        ]);
+        livres = newLivres;
+        demandes = newDemandes;
         afficherLivres();
 
+        // Redirection après succès
         setTimeout(() => {
             window.location.href = "accueil";
         }, 3000);
+
     } catch (error) {
-        console.error("Erreur soumission:", error);
-        showMessage(error.message || "Erreur inconnue.", "error");
+        console.error("Erreur détaillée lors de la soumission:", error);
+        showMessage(
+            error.message || "Une erreur est survenue lors de l'envoi de la demande. Veuillez réessayer.", 
+            "error"
+        );
     } finally {
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = 1;
+        // Réactiver le bouton
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = 1;
+            submitBtn.textContent = "Envoyer la demande";
+        }
     }
 });
 
+// Fonction showMessage améliorée
 function showMessage(text, type) {
     const messageEl = document.getElementById("message_demande");
+    if (!messageEl) {
+        console.error("Élément message_demande non trouvé");
+        // Créer un message d'urgence
+        alert(`${type.toUpperCase()}: ${text}`);
+        return;
+    }
+    
     messageEl.textContent = text;
     messageEl.className = `message ${type}`;
     messageEl.style.display = "block";
 
-    if (type !== "success") {
+    if (type === "success") {
+        // Le message de succès reste affiché jusqu'à la redirection
+        messageEl.style.display = "block";
+    } else {
+        // Les messages d'erreur disparaissent après 5 secondes
         setTimeout(() => {
             messageEl.style.display = "none";
             messageEl.textContent = "";
