@@ -112,18 +112,6 @@ app.get('/init-urgence', (req, res) => {
                     errors: errors
                 });
             } else {
-              // Adapter la table demandes si colonne date_demande n'est pas bonne
-const alterDateDemande = `
-    ALTER TABLE demandes 
-    MODIFY date_demande DATETIME DEFAULT CURRENT_TIMESTAMP;
-`;
-db.query(alterDateDemande, (err) => {
-    if (err) {
-        console.error("⚠️ Erreur modification de date_demande :", err.message);
-    } else {
-        console.log("✅ Colonne date_demande modifiée en DATETIME");
-    }
-});
 
                 // Insérer l'admin et des livres
                 insertInitialData(res);
@@ -1049,7 +1037,7 @@ app.get("/demandes/:statut", (req, res) => {
 // Créer une nouvelle demande de prêt
 app.post("/demandes", (req, res) => {
   const nouvelleDemande = req.body;
-  const sql = `insert into demandes (nom,livre_id,date_pret,date_retour,statut,date_demande) values ('${nouvelleDemande.nom}',${nouvelleDemande.livre_id},'${nouvelleDemande.date_pret}','${nouvelleDemande.date_retour}','${nouvelleDemande.statut}','${nouvelleDemande.date_demande}')`;
+  const sql = `insert into demandes (nom,livre_id,date_pret,date_retour,statut) values ('${nouvelleDemande.nom}',${nouvelleDemande.livre_id},'${nouvelleDemande.date_pret}','${nouvelleDemande.date_retour}','${nouvelleDemande.statut}')`;
   db.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de création de la demande", err);
