@@ -4,7 +4,7 @@ let pageCourante = 1;
 const livresParPage = 5;
 
 let livres = [];
-const urlLivres = "http://localhost:3001/livres";
+const urlLivres = "https://bibooks-app.up.railway.app/livres";
 
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("DOM chargé - initialisation...");
@@ -365,7 +365,7 @@ async function sauvegarderLivreGoogle(livreGoogle) {
         }
 
         // Vérifier si le livre existe déjà dans la base
-        const response = await fetch(`http://localhost:3001/livres`);
+        const response = await fetch(`https://bibooks-app.up.railway.app/livres`);
         if (response.ok) {
             const tousLesLivres = await response.json();
             const livreExistant = tousLesLivres.find(
@@ -393,7 +393,7 @@ async function sauvegarderLivreGoogle(livreGoogle) {
         console.log("Sauvegarde du livre:", livreData);
 
         // Créer le livre dans la base
-        const responseCreation = await fetch("http://localhost:3001/livres", {
+        const responseCreation = await fetch("https://bibooks-app.up.railway.app/livres", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
