@@ -11,9 +11,9 @@
         }, 100);
       }
 
-      const urlLivres = "http://localhost:3001/livres";
-      const urlDemandes = "http://localhost:3001/demandes";
-      const urlPrets = "http://localhost:3001/prets";
+      const urlLivres = "https://bibooks-app.up.railway.app/livres";
+      const urlDemandes = "https://bibooks-app.up.railway.app/demandes";
+      const urlPrets = "https://bibooks-app.up.railway.app/prets";
       let livres = [];
       let demandes = [];
       let prets = [];
