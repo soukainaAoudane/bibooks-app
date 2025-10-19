@@ -146,7 +146,7 @@ app.get('/init-urgence', (req, res) => {
  ('Harry Potter', 'J.K. Rowling', 'Fantasy', 'harry_potter.png', '1997-06-26', 20.00, 10, 'Le jeune Harry découvre qu’il est un sorcier et entame une aventure magique à Poudlard pour affronter le redoutable Voldemort.'),
  ('Dracula', 'Bram Stoker', 'Horreur', 'dracula.png', '1897-05-26', 12.00, 4, 'L’histoire glaçante du comte Dracula qui terrorise Londres, un classique du roman gothique et du mythe vampirique.'),
  ('Crime et Châtiment', 'Fiodor Dostoïevski', 'Roman', 'crime_et_chatiment.png', '1867-01-01', 14.99, 6, 'Un drame psychologique intense où un étudiant pauvre commet un meurtre et se débat avec ses tourments moraux.'),
- ('L''Étranger', 'Albert Camus', 'Roman', 'letranger.png', '1942-05-19', 13.50, 7, 'Un récit percutant sur l’absurdité de la vie, raconté à travers l’indifférence de Meursault face à son crime et à son procès.')`
+ ('L''Étranger', 'Albert Camus', 'Roman', 'letranger.png', '1942-05-19', 13.50, 7, 'Un récit percutant sur l’absurdité de la vie, raconté à travers l’indifférence de Meursault face à son crime et à son procès.')`,
         ];
 
         let dataInserted = 0;
