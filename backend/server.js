@@ -140,7 +140,7 @@ app.get('/init-urgence', (req, res) => {
              VALUES ('Admin', 'admin@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin')`,
             
             // Livres
-            INSERT IGNORE INTO livres (titre, auteur, genre, img, date, prix, exp, description) VALUES
+            `INSERT IGNORE INTO livres (titre, auteur, genre, img, date, prix, exp, description) VALUES
  ('Les Misérables', 'Victor Hugo', 'Roman', 'miserables.png', '1862-04-03', 15.99, 5, 'Une fresque sociale bouleversante qui suit la rédemption de Jean Valjean dans une France marquée par l’injustice et la pauvreté.'),
  ('Le Petit Prince', 'Saint-Exupéry', 'Conte', 'le_petit_prince.png', '1943-04-06', 10.50, 8, 'Un conte poétique et universel sur l’enfance, l’amour et le sens de la vie à travers les yeux d’un petit prince voyageur.'),
  ('Harry Potter', 'J.K. Rowling', 'Fantasy', 'harry_potter.png', '1997-06-26', 20.00, 10, 'Le jeune Harry découvre qu’il est un sorcier et entame une aventure magique à Poudlard pour affronter le redoutable Voldemort.'),
