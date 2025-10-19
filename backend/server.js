@@ -112,6 +112,19 @@ app.get('/init-urgence', (req, res) => {
                     errors: errors
                 });
             } else {
+              // Adapter la table demandes si colonne date_demande n'est pas bonne
+const alterDateDemande = `
+    ALTER TABLE demandes 
+    MODIFY date_demande DATETIME DEFAULT CURRENT_TIMESTAMP;
+`;
+db.query(alterDateDemande, (err) => {
+    if (err) {
+        console.error("⚠️ Erreur modification de date_demande :", err.message);
+    } else {
+        console.log("✅ Colonne date_demande modifiée en DATETIME");
+    }
+});
+
                 // Insérer l'admin et des livres
                 insertInitialData(res);
             }
@@ -257,6 +270,7 @@ const insertInitialData = (response) => {
     // Démarrer la création des tables
     createNextTable(0);
 });
+
 
 // Route de vérification simple
 app.get('/check-tables', (req, res) => {
