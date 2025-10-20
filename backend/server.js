@@ -275,7 +275,9 @@ app.get('/check-tables', (req, res) => {
         }
     });
 });
-
+// Middleware global
+app.use(express.json());
+app.use(cors());
 app.use("/images", express.static(imagesPath));
 
 console.log("Configuration SMTP:");
