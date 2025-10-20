@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             maxRetour.setDate(maxRetour.getDate() + 30);
 
             dateRetourInput.min = datePretInput.value;
-            dateRetourInput.max = maxRetour.toLocaleDateString('fr-CA');
+            dateRetourInput.max = maxRetour.toISOString().split('T')[0];
 
             if (dateRetourInput.value < dateRetourInput.min || dateRetourInput.value > dateRetourInput.max) {
                 dateRetourInput.value = dateRetourInput.min;
