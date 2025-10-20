@@ -447,7 +447,6 @@ document.getElementById("form-demande").addEventListener("submit", async functio
             showMessage("Vous avez déjà une demande en attente pour ce livre.", "error");
             return;
         }
-const today = new Date();
 const dateDemande = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
 
 console.log("Date demande formatée:", dateDemande);
