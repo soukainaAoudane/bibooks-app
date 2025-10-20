@@ -305,16 +305,17 @@ function afficherDisponibilite() {
         }
 
         if (livre && livre.img) {
-            if (livre.img.startsWith('http://') || livre.img.startsWith('https://')) {
-                imageEl.src = livre.img;
-            } else {
-                imageEl.src = `images/${livre.img}`;
-            }
-            imageEl.alt = `Image du livre ${livre.titre}`;
-            imageEl.style.display = "block";
-        } else {
-            imageEl.style.display = "none";
-        }
+    if (livre.img.startsWith('http://') || livre.img.startsWith('https://')) {
+        imageEl.src = livre.img;
+    } else {
+        imageEl.src = `../images/${livre.img}`;
+    }
+    imageEl.alt = `Image du livre ${livre.titre}`;
+    imageEl.style.display = "block";
+} else {
+    imageEl.style.display = "none";
+}
+
 
         if (copies > 0) {
             availabilityText.innerHTML = `<i class="fas fa-check-circle"></i> ${copies} exemplaire(s) disponible(s)`;
