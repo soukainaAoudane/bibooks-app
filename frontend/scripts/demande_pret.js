@@ -224,7 +224,7 @@ async function sauvegarderLivreSiNecessaire(livre) {
             auteur: livre.auteur,
             description: livre.description || "Description non disponible",
             genre: livre.genre || "Non spécifié",
-            date: livre.date || new Date().new Date().toLocaleDateString('fr-CA'),
+            date: livre.date || new Date().toLocaleDateString('fr-CA'),
             prix: livre.prix || "0.00",
             img: livre.img || "",
             exp: livre.exp !== undefined ? livre.exp : 1
