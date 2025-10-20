@@ -1190,32 +1190,39 @@ app.get("/prets/:id", (req, res) => {
 });
 
 // https://bibooks-app.up.railway.app/prets
-// Créer un nouveau prêt
+// Créer un nouveau prêt - VERSION CORRIGÉE
 app.post("/prets", (req, res) => {
-  const { livre_id, utilisateur_id, date_pret, date_retour, statut, nom } =
-    req.body;
-  if (
-    !livre_id ||
-    !utilisateur_id ||
-    !date_pret ||
-    !date_retour ||
-    !statut ||
-    !nom
-  ) {
-    return res
-      .status(400)
-      .json({ error: "Tous les champs sont obligatoires." });
-  }
-  const sql = `INSERT INTO prets (livre_id, utilisateur_id, date_pret, date_retour, statut, nom) VALUES (${livre_id}, ${utilisateur_id}, '${date_pret}', '${date_retour}', '${statut}', '${nom}')`;
-  db.query(sql, (err, result) => {
+  const { livre_id, utilisateur_id, date_pret, date_retour, statut, nom } = req.body;
+  
+  // ✅ SOLUTION RADICALE : Utiliser exactement la date reçue du frontend
+  // (supposant que le frontend envoie déjà YYYY-MM-DD)
+  const datePretCorrigee = date_pret;
+  const dateRetourCorrigee = date_retour;
+
+  console.log("📅 Dates utilisées:", { 
+    datePretCorrigee, 
+    dateRetourCorrigee 
+  });
+
+  const sql = `INSERT INTO prets (livre_id, utilisateur_id, date_pret, date_retour, statut, nom) 
+               VALUES (?, ?, ?, ?, ?, ?)`;
+
+  db.query(sql, [livre_id, utilisateur_id, datePretCorrigee, dateRetourCorrigee, statut, nom], (err, result) => {
     if (err) {
       console.error("Erreur de création du prêt:", err);
       return res.status(500).json({ error: "Erreur serveur." });
     }
-    res.json({ message: "Prêt créé avec succès" });
+    
+    // Vérifions ce qui a été inséré
+    db.query("SELECT * FROM prets WHERE id = ?", [result.insertId], (err, newPret) => {
+      console.log("📅 Date insérée en base:", newPret[0]?.date_retour);
+      res.json({ 
+        message: "Prêt créé avec succès",
+        date_retour_inseree: newPret[0]?.date_retour
+      });
+    });
   });
 });
-
 // https://bibooks-app.up.railway.app/prets/:id
 // Modifier un prêt (partiel)
 app.patch("/prets/:id", (req, res) => {

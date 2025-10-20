@@ -448,7 +448,10 @@ document.getElementById("form-demande").addEventListener("submit", async functio
             return;
         }
 const dateDemande = new Date().toLocaleDateString('fr-CA'); // Format YYYY-MM-DD
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5f20c5ccf920078bbacacdc500643dfcf24a9311
 
 console.log("Date demande formatée:", dateDemande);
         // Préparer les données pour l'API
