@@ -1190,29 +1190,43 @@ app.get("/prets/:id", (req, res) => {
 });
 
 // https://bibooks-app.up.railway.app/prets
-// Créer un nouveau prêt
+// Créer un nouveau prêt - VERSION CORRIGÉE
 app.post("/prets", (req, res) => {
-  const { livre_id, utilisateur_id, date_pret, date_retour, statut, nom } =
-    req.body;
-  if (
-    !livre_id ||
-    !utilisateur_id ||
-    !date_pret ||
-    !date_retour ||
-    !statut ||
-    !nom
-  ) {
-    return res
-      .status(400)
-      .json({ error: "Tous les champs sont obligatoires." });
+  const { livre_id, utilisateur_id, date_pret, date_retour, statut, nom } = req.body;
+  
+  if (!livre_id || !utilisateur_id || !date_pret || !date_retour || !statut || !nom) {
+    return res.status(400).json({ error: "Tous les champs sont obligatoires." });
   }
-  const sql = `INSERT INTO prets (livre_id, utilisateur_id, date_pret, date_retour, statut, nom) VALUES (${livre_id}, ${utilisateur_id}, '${date_pret}', '${date_retour}', '${statut}', '${nom}')`;
-  db.query(sql, (err, result) => {
+
+  // ✅ CORRECTION : Utiliser fr-CA pour format YYYY-MM-DD constant
+  const corrigerDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('fr-CA'); // "2025-10-20"
+  };
+
+  const datePretCorrigee = corrigerDate(date_pret);
+  const dateRetourCorrigee = corrigerDate(date_retour);
+
+  console.log("📅 Dates corrigées:", { 
+    original: { date_pret, date_retour },
+    corrige: { datePretCorrigee, dateRetourCorrigee }
+  });
+
+  const sql = `INSERT INTO prets (livre_id, utilisateur_id, date_pret, date_retour, statut, nom) 
+               VALUES (?, ?, ?, ?, ?, ?)`;
+
+  db.query(sql, [livre_id, utilisateur_id, datePretCorrigee, dateRetourCorrigee, statut, nom], (err, result) => {
     if (err) {
       console.error("Erreur de création du prêt:", err);
       return res.status(500).json({ error: "Erreur serveur." });
     }
-    res.json({ message: "Prêt créé avec succès" });
+    res.json({ 
+      message: "Prêt créé avec succès",
+      dates: {
+        pret: datePretCorrigee,
+        retour: dateRetourCorrigee
+      }
+    });
   });
 });
 
