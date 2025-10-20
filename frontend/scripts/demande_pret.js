@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // Configuration des dates
-        const today = new Date().toLocalDateString();
+        const today = new Date().toLocaleDateString();
         document.getElementById("date_pret_demande").min = today;
 
         const datePretInput = document.getElementById("date_pret_demande");
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             maxRetour.setDate(maxRetour.getDate() + 30);
 
             dateRetourInput.min = datePretInput.value;
-            dateRetourInput.max = maxRetour.toLocalDateString();
+            dateRetourInput.max = maxRetour.toLocaleDateString();
 
             if (dateRetourInput.value < dateRetourInput.min || dateRetourInput.value > dateRetourInput.max) {
                 dateRetourInput.value = dateRetourInput.min;
@@ -224,7 +224,7 @@ async function sauvegarderLivreSiNecessaire(livre) {
             auteur: livre.auteur,
             description: livre.description || "Description non disponible",
             genre: livre.genre || "Non spécifié",
-            date: livre.date || new Date().toLocalDateString(),
+            date: livre.date || new Date().toLocaleDateString(),
             prix: livre.prix || "0.00",
             img: livre.img || "",
             exp: livre.exp !== undefined ? livre.exp : 1
@@ -365,7 +365,7 @@ document.getElementById("form-demande").addEventListener("submit", async functio
         return;
     }
 
-    const today = new Date().toLocalDateString();
+    const today = new Date().toLocaleDateString();
     if (datePret < today) {
         showMessage("La date de prêt ne peut pas être dans le passé.", "error");
         return;
@@ -507,7 +507,7 @@ console.log("Date demande formatée:", dateDemande);
                 body: JSON.stringify({ 
                     nom: nom, 
                     email: email, 
-                    date_demande: new Date().toLocalDateString(),
+                    date_demande: new Date().toLocaleDateString(),
                     livre_titre: livre.titre 
                 }),
             });
