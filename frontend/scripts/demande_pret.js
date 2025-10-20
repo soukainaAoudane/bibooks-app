@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // Configuration des dates
-        const today = new Date().toLocaleDateString();
+        const today = new Date().new Date().toLocaleDateString('fr-CA');
         document.getElementById("date_pret_demande").min = today;
 
         const datePretInput = document.getElementById("date_pret_demande");
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             maxRetour.setDate(maxRetour.getDate() + 30);
 
             dateRetourInput.min = datePretInput.value;
-            dateRetourInput.max = maxRetour.toLocaleDateString();
+            dateRetourInput.max = maxRetour.new Date().toLocaleDateString('fr-CA');
 
             if (dateRetourInput.value < dateRetourInput.min || dateRetourInput.value > dateRetourInput.max) {
                 dateRetourInput.value = dateRetourInput.min;
@@ -224,7 +224,7 @@ async function sauvegarderLivreSiNecessaire(livre) {
             auteur: livre.auteur,
             description: livre.description || "Description non disponible",
             genre: livre.genre || "Non spécifié",
-            date: livre.date || new Date().toLocaleDateString(),
+            date: livre.date || new Date().new Date().toLocaleDateString('fr-CA'),
             prix: livre.prix || "0.00",
             img: livre.img || "",
             exp: livre.exp !== undefined ? livre.exp : 1
@@ -365,7 +365,7 @@ document.getElementById("form-demande").addEventListener("submit", async functio
         return;
     }
 
-    const today = new Date().toLocaleDateString();
+    const today = new Date().new Date().toLocaleDateString('fr-CA');
     if (datePret < today) {
         showMessage("La date de prêt ne peut pas être dans le passé.", "error");
         return;
@@ -450,7 +450,7 @@ document.getElementById("form-demande").addEventListener("submit", async functio
 
 
 
-const dateDemande = new Date().toLocaleDateString(); // Format YYYY-MM-DD
+const dateDemande = new Date().new Date().toLocaleDateString('fr-CA'); // Format YYYY-MM-DD
 
 
 console.log("Date demande formatée:", dateDemande);
@@ -507,7 +507,7 @@ console.log("Date demande formatée:", dateDemande);
                 body: JSON.stringify({ 
                     nom: nom, 
                     email: email, 
-                    date_demande: new Date().toLocaleDateString(),
+                    date_demande: new Date().new Date().toLocaleDateString('fr-CA'),
                     livre_titre: livre.titre 
                 }),
             });
