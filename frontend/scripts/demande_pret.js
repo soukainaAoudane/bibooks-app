@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // Configuration des dates
-        const today = new Date().toLocaleDateString('fr-CA');
+        const today = new Date().toISOString().split('T')[0];
         document.getElementById("date_pret_demande").min = today;
 
         const datePretInput = document.getElementById("date_pret_demande");
@@ -224,7 +224,7 @@ async function sauvegarderLivreSiNecessaire(livre) {
             auteur: livre.auteur,
             description: livre.description || "Description non disponible",
             genre: livre.genre || "Non spécifié",
-            date: livre.date || new Date().toLocaleDateString('fr-CA'),
+            date: livre.date || new Date().toISOString().split('T')[0],
             prix: livre.prix || "0.00",
             img: livre.img || "",
             exp: livre.exp !== undefined ? livre.exp : 1
@@ -365,7 +365,7 @@ document.getElementById("form-demande").addEventListener("submit", async functio
         return;
     }
 
-    const today = new Date().toLocaleDateString('fr-CA');
+    const today = new Date().toISOString().split('T')[0];
     if (datePret < today) {
         showMessage("La date de prêt ne peut pas être dans le passé.", "error");
         return;
@@ -450,7 +450,7 @@ document.getElementById("form-demande").addEventListener("submit", async functio
 
 
 
-const dateDemande = new Date().toLocaleDateString('fr-CA'); // Format YYYY-MM-DD
+const dateDemande = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
 
 
 console.log("Date demande formatée:", dateDemande);
@@ -507,7 +507,7 @@ console.log("Date demande formatée:", dateDemande);
                 body: JSON.stringify({ 
                     nom: nom, 
                     email: email, 
-                    date_demande: new Date().toLocaleDateString('fr-CA'),
+                    date_demande: new Date().toISOString().split('T')[0],
                     livre_titre: livre.titre 
                 }),
             });
