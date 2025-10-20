@@ -275,9 +275,7 @@ app.get('/check-tables', (req, res) => {
         }
     });
 });
-// Middleware global
-app.use(express.json());
-app.use(cors());
+
 app.use("/images", express.static(imagesPath));
 
 console.log("Configuration SMTP:");
@@ -1360,7 +1358,7 @@ app.get("/laisser_avis", (req, res) => {
 });
 
 app.use((req, res) => {
- res.sendFile(path.join(__dirnamee, "..","frontend", "404.html"));
+ res.sendFile(path.join(__dirname, "..","frontend", "404.html"));
 });
 
 app.listen(port, '0.0.0.0', () => {
