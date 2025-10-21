@@ -333,7 +333,7 @@ app.post("/send-email", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant vous connecter à votre compte.</p>
-                <a href="https://bibooks.netlify.app/connexion" 
+                <a href="https://bibooks-app.up.railway.app/connexion" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Se connecter
@@ -421,7 +421,7 @@ app.post("/demande-pret", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir si votre demande a été acceptée.</p>
-                <a href="https://bibooks.netlify.app/profil" 
+                <a href="https://bibooks-app.up.railway.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -463,7 +463,7 @@ app.post("/changement-mot-de-passe", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir votre profil.</p>
-                <a href="https://bibooks.netlify.app/profil" 
+                <a href="https://bibooks-app.up.railway.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -511,7 +511,7 @@ app.post("/pret-confirme", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir votre profil.</p>
-                <a href="https://bibooks.netlify.app/profil" 
+                <a href="https://bibooks-app.up.railway.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -553,7 +553,7 @@ app.post("/pret-refus", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir votre profil.</p>
-                <a href="https://bibooks.netlify.app/profil" 
+                <a href="https://bibooks-app.up.railway.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
