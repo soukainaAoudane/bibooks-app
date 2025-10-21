@@ -1,14 +1,4 @@
-// AJOUTEZ CE CODE AU TRÈS DÉBUT DU FICHIER
-process.on('uncaughtException', (error) => {
-    console.error('💥 ERREUR CRITIQUE:', error.message);
-    console.error('Stack:', error.stack);
-});
 
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('❌ PROMESSE REJETÉE:', reason);
-});
-
-console.log('🚀 Démarrage de server.js...');
 // Déclaration des variables utilisées
 const axios = require("axios"); //une librairei qui permet de faire dees requetes htttp
 const express = require("express");
