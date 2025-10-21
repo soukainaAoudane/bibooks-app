@@ -346,7 +346,7 @@ app.post("/send-email", async (req, res) => {
     return res.status(400).json({ error: "Données manquantes" });
   }
   const mailOptions = {
-    from: `"Bibliothèque" <${process.env.MAIL_USER}>`,
+    from: `"Bibliothèque" <sousouawadane@gmail.com>`,
     to: email,
     subject: "Confirmation d'inscription",
     html: `
@@ -390,7 +390,7 @@ app.post("/envoi-avis", async (req, res) => {
     return res.status(400).json({ error: "Données manquantes" });
   }
   const mailOptions = {
-    from: `"Bibliothèque" <${process.env.MAIL_USER}>`,
+    from: `"Bibliothèque" <sousouawadane@gmail.com>`,
     to: email,
     subject: "Publication de l'avis ",
     html: `
@@ -434,7 +434,7 @@ app.post("/demande-pret", async (req, res) => {
     return res.status(400).json({ error: "Données manquantes" });
   }
   const mailOptions = {
-    from: `"Bibliothèque" <${process.env.MAIL_USER}>`,
+    from: `"Bibliothèque" <sousouawadane@gmail.com>`,
     to: email,
     subject: "Envoi de demande de prêt",
     html: `
@@ -478,7 +478,7 @@ app.post("/changement-mot-de-passe", async (req, res) => {
     return res.status(400).json({ error: "Données manquantes" });
   }
   const mailOptions = {
-    from: `"Bibliothèque" <${process.env.MAIL_USER}>`,
+    from: `"Bibliothèque" <sousouawadane@gmail.com>`,
     to: email,
     subject: "Changement du mot de passe",
     html: `
@@ -520,7 +520,7 @@ app.post("/pret-confirme", async (req, res) => {
     return res.status(400).json({ error: "Données manquantes" });
   }
   const mailOptions = {
-    from: `"Bibliothèque" <${process.env.MAIL_USER}>`,
+    from: `"Bibliothèque" <sousouawadane@gmail.com>`,
     to: email,
     subject: "Confirmation de demande de prêt",
     html: `
@@ -568,7 +568,7 @@ app.post("/pret-refus", async (req, res) => {
     return res.status(400).json({ error: "Données manquantes" });
   }
   const mailOptions = {
-    from: `"Bibliothèque" <${process.env.MAIL_USER}>`,
+    from: `"Bibliothèque" <sousouawadane@gmail.com>`,
     to: email,
     subject: "refus de demande de prêt",
     html: `
