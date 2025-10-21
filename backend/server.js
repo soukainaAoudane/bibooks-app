@@ -1329,44 +1329,44 @@ app.post("/avis", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "frontend", "index.html"));
+  res.sendFile(path.resolve(__dirname, "..", "frontend", "index.html"));
 });
 app.get("/accueil", (req, res) => {
-  res.sendFile(path.join(__dirname, "..","frontend", "index.html"));
+  res.sendFile(path.resolve(__dirname, "..","frontend", "index.html"));
 });
 app.get("/liste_livres", (req, res) => {
-  res.sendFile(path.join(__dirname, "..","frontend", "liste_livres.html"));
+  res.sendFile(path.resolve(__dirname, "..","frontend", "liste_livres.html"));
 });
 app.get("/detail", (req, res) => {
-  res.sendFile(path.join(__dirname, "..","frontend", "detail.html"));
+  res.sendFile(path.resolve(__dirname, "..","frontend", "detail.html"));
 });
 app.get("/connexion", (req, res) => {
-  res.sendFile(path.join(__dirname, "..","frontend", "connexion.html"));
+  res.sendFile(path.resolve(__dirname, "..","frontend", "connexion.html"));
 });
 app.get("/inscription", (req, res) => {
-  res.sendFile(path.join(__dirname, "..","frontend", "inscription.html"));
+  res.sendFile(path.resolve(__dirname, "..","frontend", "inscription.html"));
 });
 app.get("/ajouter", (req, res) => {
-  res.sendFile(path.join(__dirname, "..","frontend", "ajouter.html"));
+  res.sendFile(path.resolve(__dirname, "..","frontend", "ajouter.html"));
 });
 app.get("/demande_pret", (req, res) => {
-  res.sendFile(path.join(__dirname, "..","frontend", "demande_pret.html"));
+  res.sendFile(path.resolve(__dirname, "..","frontend", "demande_pret.html"));
 });
 app.get("/admin", (req, res) => {
-  res.sendFile(path.join(__dirname, "..","frontend", "admin.html"));
+  res.sendFile(path.resolve(__dirname, "..","frontend", "admin.html"));
 });
 app.get("/auteur", (req, res) => {
-  res.sendFile(path.join(__dirname, "..","frontend", "auteur.html"));
+  res.sendFile(path.resolve(__dirname, "..","frontend", "auteur.html"));
 });
 app.get("/profil", (req, res) => {
-  res.sendFile(path.join(__dirname, "..","frontend", "profil.html"));
+  res.sendFile(path.resolve(__dirname, "..","frontend", "profil.html"));
 });
 app.get("/laisser_avis", (req, res) => {
-  res.sendFile(path.join(__dirname, "..","frontend", "laisser_avis.html"));
+  res.sendFile(path.resolve(__dirname, "..","frontend", "laisser_avis.html"));
 });
 
 app.use((req, res) => {
- res.sendFile(path.join(__dirname, "..","frontend", "404.html"));
+ res.sendFile(path.resolve(__dirname, "..","frontend", "404.html"));
 });
 
 app.listen(port, '0.0.0.0', () => {
