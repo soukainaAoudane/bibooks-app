@@ -599,6 +599,50 @@ app.post("/pret-refus", async (req, res) => {
     res.status(500).json({ error: "Échec de l'envoi de l'email" });
   }
 });
+
+// Route de test - ajoutez-la à votre server.js
+app.get('/api/debug/db', async (req, res) => {
+    try {
+        console.log('🧪 Test DB en cours...');
+        
+        // Test 1: Connexion basique
+        const [test1] = await pool.promise().query('SELECT 1 as result');
+        console.log('Test 1 OK:', test1);
+        
+        // Test 2: Base de données
+        const [test2] = await pool.promise().query('SELECT DATABASE() as db, USER() as user');
+        console.log('Test 2 OK:', test2);
+        
+        // Test 3: Tables existantes
+        const [test3] = await pool.promise().query(`
+            SELECT TABLE_NAME 
+            FROM INFORMATION_SCHEMA.TABLES 
+            WHERE TABLE_SCHEMA = 'railway'
+        `);
+        console.log('Tables trouvées:', test3);
+        
+        res.json({
+            status: 'OK',
+            tests: {
+                connection: 'OK',
+                database: test2[0],
+                tables: test3
+            }
+        });
+        
+    } catch (error) {
+        console.error('❌ ERREUR Test DB:');
+        console.error('Message:', error.message);
+        console.error('Code:', error.code);
+        console.error('Stack:', error.stack);
+        
+        res.status(500).json({
+            status: 'ERROR',
+            error: error.message,
+            code: error.code
+        });
+    }
+});
 // Route pour rechercher un livre par titre et auteur
 // Route pour rechercher un livre par titre et auteur - À PLACER AVANT /livres
 app.get("/livres/recherche", (req, res) => {
