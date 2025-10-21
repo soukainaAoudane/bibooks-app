@@ -346,7 +346,7 @@ app.post("/send-email", async (req, res) => {
     return res.status(400).json({ error: "Données manquantes" });
   }
   const mailOptions = {
-    from: `"Bibliothèque" <sousouawadane@gmail.com>`,
+    from: '"Bibliothèque" <sousouawadane@gmail.com>',
     to: email,
     subject: "Confirmation d'inscription",
     html: `
@@ -364,7 +364,7 @@ app.post("/send-email", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant vous connecter à votre compte.</p>
-                <a href="https://bibooks-app.up.railway.app/connexion" 
+                <a href="https://bibooks.netlify.app/connexion" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Se connecter
@@ -390,7 +390,7 @@ app.post("/envoi-avis", async (req, res) => {
     return res.status(400).json({ error: "Données manquantes" });
   }
   const mailOptions = {
-    from: `"Bibliothèque" <sousouawadane@gmail.com>`,
+    from: '"Bibliothèque" <sousouawadane@gmail.com>',
     to: email,
     subject: "Publication de l'avis ",
     html: `
@@ -408,7 +408,7 @@ app.post("/envoi-avis", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez acceder à votre compte.</p>
-                <a href="https://bibooks.netlify.app" 
+                <a href="https://bibooks.netlify.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Se connecter
@@ -434,7 +434,7 @@ app.post("/demande-pret", async (req, res) => {
     return res.status(400).json({ error: "Données manquantes" });
   }
   const mailOptions = {
-    from: `"Bibliothèque" <sousouawadane@gmail.com>`,
+    from: '"Bibliothèque" <sousouawadane@gmail.com>',
     to: email,
     subject: "Envoi de demande de prêt",
     html: `
@@ -452,7 +452,7 @@ app.post("/demande-pret", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir si votre demande a été acceptée.</p>
-                <a href="https://bibooks-app.up.railway.app/profil" 
+                <a href="https://bibooks.netlify.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -478,7 +478,7 @@ app.post("/changement-mot-de-passe", async (req, res) => {
     return res.status(400).json({ error: "Données manquantes" });
   }
   const mailOptions = {
-    from: `"Bibliothèque" <sousouawadane@gmail.com>`,
+    from: '"Bibliothèque" <sousouawadane@gmail.com>',
     to: email,
     subject: "Changement du mot de passe",
     html: `
@@ -494,7 +494,7 @@ app.post("/changement-mot-de-passe", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir votre profil.</p>
-                <a href="https://bibooks-app.up.railway.app/profil" 
+                <a href="https://bibooks.netlify.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -520,7 +520,7 @@ app.post("/pret-confirme", async (req, res) => {
     return res.status(400).json({ error: "Données manquantes" });
   }
   const mailOptions = {
-    from: `"Bibliothèque" <sousouawadane@gmail.com>`,
+    from: '"Bibliothèque" <sousouawadane@gmail.com>',
     to: email,
     subject: "Confirmation de demande de prêt",
     html: `
@@ -542,7 +542,7 @@ app.post("/pret-confirme", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir votre profil.</p>
-                <a href="https://bibooks-app.up.railway.app/profil" 
+                <a href="https://bibooks.netlify.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -568,7 +568,7 @@ app.post("/pret-refus", async (req, res) => {
     return res.status(400).json({ error: "Données manquantes" });
   }
   const mailOptions = {
-    from: `"Bibliothèque" <sousouawadane@gmail.com>`,
+    from: '"Bibliothèque" <sousouawadane@gmail.com>',
     to: email,
     subject: "refus de demande de prêt",
     html: `
@@ -584,7 +584,7 @@ app.post("/pret-refus", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir votre profil.</p>
-                <a href="https://bibooks-app.up.railway.app/profil" 
+                <a href="https://bibooks.netlify.app/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
