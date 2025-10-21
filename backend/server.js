@@ -293,6 +293,15 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ Erreur SMTP:", error);
+  } else {
+    console.log("✅ Serveur SMTP prêt, vous pouvez envoyer des emails.");
+  }
+});
+
+
 // Configuration de multer
 const storage = multer.diskStorage({
   // Crée une configuration de stockage pour Multer
