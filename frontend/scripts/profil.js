@@ -25,10 +25,10 @@ async function fetchData(url) {
 async function chargerDonnees() {
   try {
     [livres, prets, demandes, utilisateurs] = await Promise.all([
-      fetchData("https://bibooks-app.up.railway.app/livres"),
-      fetchData("https://bibooks-app.up.railway.app/prets"),
-      fetchData("https://bibooks-app.up.railway.app/demandes"),
-      fetchData("https://bibooks-app.up.railway.app/utilisateurs")
+      fetchData("https://bibooks-app-production.up.railway.app/livres"),
+      fetchData("https://bibooks-app-production.up.railway.app/prets"),
+      fetchData("https://bibooks-app-production.up.railway.app/demandes"),
+      fetchData("https://bibooks-app-production.up.railway.app/utilisateurs")
     ]);
 
     afficherDemandes(utilisateur);
@@ -161,7 +161,7 @@ async function verifierCompte() {
   if (!utilisateur.nom) return;
   
   try {
-    const prets = await fetchData("https://bibooks-app.up.railway.app/prets");
+    const prets = await fetchData("https://bibooks-app-production.up.railway.app/prets");
     if (compteADelete(prets, utilisateur)) {
       showToast(
         "Votre compte a été supprimé car vous avez un prêt en retard de plus de 10 jours.",
@@ -180,11 +180,11 @@ async function verifierCompte() {
 }
 
 async function supprimerPretsUtilisateur(nom) {
-  const prets = await fetchData("https://bibooks-app.up.railway.app/prets");
+  const prets = await fetchData("https://bibooks-app-production.up.railway.app/prets");
   const pretsASupprimer = prets.filter((pret) => pret.nom === nom);
   
   for (const pret of pretsASupprimer) {
-    await fetch(`https://bibooks-app.up.railway.app/prets/${pret.id}`, {
+    await fetch(`https://bibooks-app-production.up.railway.app/prets/${pret.id}`, {
       method: "DELETE",
     });
   }
@@ -214,14 +214,14 @@ async function modifier() {
     user.mot_de_passe = await hashage(nouveau_password);
   }
 
-  await fetch(`https://bibooks-app.up.railway.app/utilisateurs/${user.id}`, {
+  await fetch(`https://bibooks-app-production.up.railway.app/utilisateurs/${user.id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user),
   });
 
   localStorage.setItem("utilisateur", JSON.stringify(user));
-  await fetch("https://bibooks-app.up.railway.app/changement-mot-de-passe", {
+  await fetch("https://bibooks-app-production.up.railway.app/changement-mot-de-passe", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ nom, email }),
@@ -302,7 +302,7 @@ async function afficherFavoris() {
 
   for (const favori of favorisUtilisateur) {
     try {
-      const response = await fetch(`https://bibooks-app.up.railway.app/livres/${favori.livreId}`);
+      const response = await fetch(`https://bibooks-app-production.up.railway.app/livres/${favori.livreId}`);
       if (!response.ok) continue;
       
       const livre = await response.json();
@@ -404,7 +404,7 @@ async function retourLivre(pretId) {
   if (!confirm("Confirmez-vous le retour de ce livre ?")) return;
   
   try {
-    const response = await fetch(`https://bibooks-app.up.railway.app/prets/${pretId}`, {
+    const response = await fetch(`https://bibooks-app-production.up.railway.app/prets/${pretId}`, {
       method: "PATCH",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({statut: "retourné"}),
@@ -420,7 +420,7 @@ async function retourLivre(pretId) {
       if (livre) {
         localStorage.setItem('livreSelectionne', JSON.stringify(livre));
         livre.exp = (livre.exp || 0) + 1;
-        await fetch(`https://bibooks-app.up.railway.app/livres/${livre.id}`, {
+        await fetch(`https://bibooks-app-production.up.railway.app/livres/${livre.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ exp: livre.exp })
@@ -600,7 +600,7 @@ async function annulerDemande(demandeId) {
   }
 
   try {
-    const response = await fetch(`https://bibooks-app.up.railway.app/demandes/${demandeId}`, {
+    const response = await fetch(`https://bibooks-app-production.up.railway.app/demandes/${demandeId}`, {
       method: "DELETE",
       headers: {"Content-Type": "application/json"}
     });
@@ -611,7 +611,7 @@ async function annulerDemande(demandeId) {
 
     showToast("Demande annulée avec succès", "success");
     setTimeout(async () => {
-      demandes = await fetchData("https://bibooks-app.up.railway.app/demandes");
+      demandes = await fetchData("https://bibooks-app-production.up.railway.app/demandes");
       afficherDemandes(utilisateur);
       document.getElementById("demandes").textContent = 
         demandes.filter(d => d.nom === utilisateur.nom).length;

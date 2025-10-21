@@ -1,14 +1,14 @@
       let livres = [];
-      const urlLivres = "https://bibooks-app.up.railway.app/livres";
+      const urlLivres = "https://bibooks-app-production.up.railway.app/livres";
 
       let demandes = [];
-      const urlDemandes = "https://bibooks-app.up.railway.app/demandes";
+      const urlDemandes = "https://bibooks-app-production.up.railway.app/demandes";
 
       let prets = [];
-      const urlPrets = "https://bibooks-app.up.railway.app/prets";
+      const urlPrets = "https://bibooks-app-production.up.railway.app/prets";
 
       let utilisateurs = [];
-      const urlUtilisateurs = "https://bibooks-app.up.railway.app/utilisateurs";
+      const urlUtilisateurs = "https://bibooks-app-production.up.railway.app/utilisateurs";
 
       function showToast(message, type = "success") {
         const toast = document.createElement("div");
@@ -392,7 +392,7 @@
 
           const email = emprunteur.email;
 
-          await fetch("https://bibooks-app.up.railway.app/pret-confirme", {
+          await fetch("https://bibooks-app-production.up.railway.app/pret-confirme", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ nom: emprunteur.nom, email, datePret, dateRetour }),
@@ -445,7 +445,7 @@
         document.getElementById("demandes_attentes").textContent =
           demandes.filter((d) => d.statut === "en attente").length;
 
-           await fetch("https://bibooks-app.up.railway.app/pret-refus", {
+           await fetch("https://bibooks-app-production.up.railway.app/pret-refus", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ nom: emprunteur.nom, email }),

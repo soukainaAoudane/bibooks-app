@@ -11,9 +11,9 @@
         }, 100);
       }
 
-      const urlLivres = "https://bibooks-app.up.railway.app/livres";
-      const urlDemandes = "https://bibooks-app.up.railway.app/demandes";
-      const urlPrets = "https://bibooks-app.up.railway.app/prets";
+      const urlLivres = "https://bibooks-app-production.up.railway.app/livres";
+      const urlDemandes = "https://bibooks-app-production.up.railway.app/demandes";
+      const urlPrets = "https://bibooks-app-production.up.railway.app/prets";
       let livres = [];
       let demandes = [];
       let prets = [];
