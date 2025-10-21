@@ -13,6 +13,10 @@ const dotenv = require("dotenv");
 const multer = require("multer");
 app.use(express.static(path.join(__dirname, "public"))); // ou supprimez cette ligne
 
+// Middleware global
+app.use(express.json());
+app.use(cors());
+app.use("/images", express.static(imagesPath));
 
 // Chargement des variables d'environnement
 dotenv.config({ path: path.resolve(__dirname, ".env") });
@@ -265,10 +269,7 @@ app.get('/check-tables', (req, res) => {
         }
     });
 });
-// Middleware global
-app.use(express.json());
-app.use(cors());
-app.use("/images", express.static(imagesPath));
+
 
 console.log("Configuration SMTP:");
 console.log("MAIL_USER:", process.env.MAIL_USER);
