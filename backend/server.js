@@ -21,7 +21,7 @@ const imagesPath = path.join(__dirname, "images");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const multer = require("multer");
-app.use(express.static(path.join(__dirname, "public"))); // ou supprimez cette ligne
+//app.use(express.static(path.join(__dirname, "public"))); // ou supprimez cette ligne
 
 // Ajoutez ceci au début de votre server.js, après les imports
 app.use((req, res, next) => {
@@ -43,7 +43,9 @@ app.use((error, req, res, next) => {
         route: req.url
     });
 });
-
+app.get("/", (req, res) => {
+    res.json({ message: "API Bibooks fonctionnelle" });
+});
 // Chargement des variables d'environnement
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 // 🚨 ROUTE D'INITIALISATION URGENTE - À AJOUTER IMMÉDIATEMENT
@@ -140,7 +142,7 @@ app.get('/init-urgence', (req, res) => {
         }
 
         const sql = tables[index];
-        db.query(sql, (err, result) => {
+        pool.query(sql, (err, result) => {
             if (err) {
                 console.error(`❌ Table ${index + 1} échouée:`, err.message);
                 errors.push(`Table ${index + 1}: ${err.message}`);
@@ -162,7 +164,7 @@ const insertInitialData = (response) => {
     const sqlAdmin = `INSERT IGNORE INTO utilisateurs (nom, email, mot_de_passe, role) 
                      VALUES ('Admin', 'admin@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin')`;
     
-    db.query(sqlAdmin, (err, result) => {
+    pool.query(sqlAdmin, (err, result) => {
         if (err) {
             console.error('❌ Erreur insertion admin:', err.message);
             // Continuer malgré l'erreur admin
@@ -241,7 +243,7 @@ const insertInitialData = (response) => {
         livres.forEach((livre, index) => {
             const sqlLivre = `INSERT IGNORE INTO livres (titre, auteur, genre, img, date, prix, exp, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
             
-            db.query(sqlLivre, [
+            pool.query(sqlLivre, [
                 livre.titre,
                 livre.auteur, 
                 livre.genre,
@@ -282,7 +284,7 @@ const insertInitialData = (response) => {
 
 // Route de vérification simple
 app.get('/check-tables', (req, res) => {
-    db.query('SHOW TABLES', (err, results) => {
+    pool.query('SHOW TABLES', (err, results) => {
         if (err) {
             res.json({ error: err.message, tables: [] });
         } else {
@@ -601,16 +603,16 @@ app.post("/pret-refus", async (req, res) => {
 });
 
 // Route de test - ajoutez-la à votre server.js
-app.get('/api/debug/db', async (req, res) => {
+app.get('/api/debug/pool', async (req, res) => {
     try {
-        console.log('🧪 Test DB en cours...');
+        console.log('🧪 Test pool en cours...');
         
         // Test 1: Connexion basique
         const [test1] = await pool.promise().query('SELECT 1 as result');
         console.log('Test 1 OK:', test1);
         
         // Test 2: Base de données
-        const [test2] = await pool.promise().query('SELECT DATABASE() as db, USER() as user');
+        const [test2] = await pool.promise().query('SELECT DATABASE() as pool, USER() as user');
         console.log('Test 2 OK:', test2);
         
         // Test 3: Tables existantes
@@ -631,7 +633,7 @@ app.get('/api/debug/db', async (req, res) => {
         });
         
     } catch (error) {
-        console.error('❌ ERREUR Test DB:');
+        console.error('❌ ERREUR Test pool:');
         console.error('Message:', error.message);
         console.error('Code:', error.code);
         console.error('Stack:', error.stack);
@@ -653,7 +655,7 @@ app.get("/livres/recherche", (req, res) => {
   }
 
   const sql = `SELECT * FROM livres WHERE titre = ? AND auteur = ? LIMIT 1`;
-  db.query(sql, [titre, auteur], (err, result) => {
+  pool.query(sql, [titre, auteur], (err, result) => {
     if (err) {
       console.error("Erreur recherche livre:", err);
       return res.status(500).json({ error: "Erreur serveur" });
@@ -669,7 +671,7 @@ app.get("/livres", async (req, res) => {
   try {
     // D'abord vérifier la base de données locale
     const localBooks = await new Promise((resolve, reject) => {
-      db.query("SELECT * FROM livres LIMIT 50", (err, result) => {
+      pool.query("SELECT * FROM livres LIMIT 50", (err, result) => {
         if (err) reject(err);
         else resolve(result);
       });
@@ -714,7 +716,7 @@ app.get("/livres", async (req, res) => {
                     (titre, auteur, genre, img, date, prix, exp, description) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-        db.query(
+        pool.query(
           sql,
           [
             book.titre,
@@ -734,8 +736,8 @@ app.get("/livres", async (req, res) => {
       });
     });
 
-    const insertedBooks = await Promise.all(insertPromises);
-    res.json(insertedBooks);
+    const insertepoolooks = await Promise.all(insertPromises);
+    res.json(insertepoolooks);
   } catch (error) {
     console.error("Erreur:", error);
     res.status(500).json({ error: "Erreur serveur" });
@@ -747,7 +749,7 @@ app.get("/livres", async (req, res) => {
 app.get("/livres/:id", (req, res) => {
   const id = Number(req.params.id);
   const sql = `select * from livres where id=${id}`;
-  db.query(sql, (err, reslut) => {
+  pool.query(sql, (err, reslut) => {
     if (err) {
       console.log("Erreur get livre by id", err);
     } else {
@@ -791,7 +793,7 @@ app.post("/livres", upload.single("image"), async (req, res) => {
                 (titre, auteur, genre, img, date, prix, exp, description) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-      db.query(
+      pool.query(
         sql,
         [
           bookData.titre,
@@ -834,7 +836,7 @@ app.post("/livres", upload.single("image"), async (req, res) => {
             (titre, auteur, genre, img, date, prix, exp, description) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-    db.query(
+    pool.query(
       sql,
       [
         titre,
@@ -938,7 +940,7 @@ app.post("/rechercher-livres-google", async (req, res) => {
                     (titre, auteur, genre, img, date, prix, exp, description) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-        db.query(
+        pool.query(
           sql,
           [
             book.titre,
@@ -963,11 +965,11 @@ app.post("/rechercher-livres-google", async (req, res) => {
     });
 
     // Attendre que tous les livres soient insérés
-    const insertedBooks = await Promise.all(insertPromises);
+    const insertepoolooks = await Promise.all(insertPromises);
 
     res.status(200).json({
-      message: `${insertedBooks.length} livres insérés avec succès.`,
-      books: insertedBooks,
+      message: `${insertepoolooks.length} livres insérés avec succès.`,
+      books: insertepoolooks,
     });
   } catch (error) {
     console.error("Erreur Google Books:", error);
@@ -999,7 +1001,7 @@ app.put("/livres/:id", upload.single("image"), (req, res) => {
     description = ? 
     WHERE id = ?`;
   
-  db.query(
+  pool.query(
     sql,
     [
       livreModifier.titre,
@@ -1051,7 +1053,7 @@ app.patch("/livres/:id", upload.single("image"), (req, res) => {
   
   const sql = `UPDATE livres SET ${modifications} WHERE id = ?`;
   
-  db.query(sql, valeurs, (err, result) => {
+  pool.query(sql, valeurs, (err, result) => {
     if (err) {
       console.error("Erreur de modification partielle du livre", err);
       res.status(500).json({ message: "Erreur de modification partielle du livre" });
@@ -1067,7 +1069,7 @@ app.patch("/livres/:id", upload.single("image"), (req, res) => {
 app.delete("/livres/:id", (req, res) => {
   const id = Number(req.params.id);
   const sql = `delete from livres where id=${id}`;
-  db.query(sql, (err, reslut) => {
+  pool.query(sql, (err, reslut) => {
     if (err) console.log("Erreur de suppression du livre", err);
     else {
       console.log("Livre supprimé avec succès");
@@ -1080,7 +1082,7 @@ app.delete("/livres/:id", (req, res) => {
 // Get all demandes
 app.get("/demandes", (req, res) => {
   const sql = "SELECT * FROM demandes ORDER BY date_pret DESC";
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de récupération des demandes", err);
     } else {
@@ -1095,7 +1097,7 @@ app.get("/demandes", (req, res) => {
 app.get("/demandes/:statut", (req, res) => {
   const statut = req.params.statut;
   const sql = `select * from demandes where statut='${statut}'`;
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de récupération de la demande", err);
     } else {
@@ -1110,7 +1112,7 @@ app.get("/demandes/:statut", (req, res) => {
 app.post("/demandes", (req, res) => {
   const nouvelleDemande = req.body;
   const sql = `insert into demandes (nom,livre_id,date_pret,date_retour,statut) values ('${nouvelleDemande.nom}',${nouvelleDemande.livre_id},'${nouvelleDemande.date_pret}','${nouvelleDemande.date_retour}','${nouvelleDemande.statut}')`;
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de création de la demande", err);
     } else {
@@ -1132,7 +1134,7 @@ app.patch("/demandes/:id", (req, res) => {
     return res.status(400).json({ message: "Aucun champ à modifier." });
   }
   const sql = `UPDATE demandes SET ${modifications} WHERE id=${id}`;
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de modification de la demande", err);
       res.status(500).json({ message: "Erreur de modification de la demande" });
@@ -1148,7 +1150,7 @@ app.patch("/demandes/:id", (req, res) => {
 app.delete("/demandes/:id", (req, res) => {
   const id = Number(req.params.id);
   const sql = `delete from demandes where id=${id}`;
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de suppression de la demande", err);
     } else {
@@ -1162,7 +1164,7 @@ app.delete("/demandes/:id", (req, res) => {
 // Get all utilisateurs
 app.get("/utilisateurs", (req, res) => {
   const sql = "select * from utilisateurs";
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de récupération des utilisateurs", err);
     } else {
@@ -1177,7 +1179,7 @@ app.get("/utilisateurs", (req, res) => {
 app.get("/utilisateurs/:id", (req, res) => {
   const id = Number(req.params.id);
   const sql = `select * from utilisateurs where id=${id}`;
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de récupération de l'utilisateur", err);
     } else {
@@ -1192,7 +1194,7 @@ app.get("/utilisateurs/:id", (req, res) => {
 app.post("/utilisateurs", (req, res) => {
   const nouveauUtilisateur = req.body;
   const sql = `insert into utilisateurs (nom,email,mot_de_passe,role) values ('${nouveauUtilisateur.nom}','${nouveauUtilisateur.email}','${nouveauUtilisateur.mot_de_passe}','${nouveauUtilisateur.role}')`;
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de création de l'utilisateur", err);
     } else {
@@ -1211,7 +1213,7 @@ app.patch("/utilisateurs/:id", (req, res) => {
     .map(([key, value]) => `${key}='${value}'`)
     .join(", ");
   const sql = `UPDATE utilisateurs SET ${updates} WHERE id = ?`;
-  db.query(sql, [id], (err, result) => {
+  pool.query(sql, [id], (err, result) => {
     if (err) return res.status(500).send(err);
     res.send({ message: "Utilisateur modifié" });
   });
@@ -1221,7 +1223,7 @@ app.patch("/utilisateurs/:id", (req, res) => {
 app.delete("/utilisateurs/:id", (req, res) => {
   const id = Number(req.params.id);
   const sql = `DELETE FROM utilisateurs WHERE id=${id}`;
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.error("Erreur lors de la suppression de l'utilisateur:", err);
       res.status(500).json({ message: "Erreur serveur" });
@@ -1236,7 +1238,7 @@ app.delete("/utilisateurs/:id", (req, res) => {
 // Get all prets
 app.get("/prets", (req, res) => {
   const sql = "select * from prets";
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de récupération des prêts", err);
     } else {
@@ -1251,7 +1253,7 @@ app.get("/prets", (req, res) => {
 app.get("/prets/:id", (req, res) => {
   const id = Number(req.params.id);
   const sql = `select * from prets where id=${id}`;
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de récupération du prêt", err);
     } else {
@@ -1279,14 +1281,14 @@ app.post("/prets", (req, res) => {
   const sql = `INSERT INTO prets (livre_id, utilisateur_id, date_pret, date_retour, statut, nom) 
                VALUES (?, ?, ?, ?, ?, ?)`;
 
-  db.query(sql, [livre_id, utilisateur_id, datePretCorrigee, dateRetourCorrigee, statut, nom], (err, result) => {
+  pool.query(sql, [livre_id, utilisateur_id, datePretCorrigee, dateRetourCorrigee, statut, nom], (err, result) => {
     if (err) {
       console.error("Erreur de création du prêt:", err);
       return res.status(500).json({ error: "Erreur serveur." });
     }
     
     // Vérifions ce qui a été inséré
-    db.query("SELECT * FROM prets WHERE id = ?", [result.insertId], (err, newPret) => {
+    pool.query("SELECT * FROM prets WHERE id = ?", [result.insertId], (err, newPret) => {
       console.log("📅 Date insérée en base:", newPret[0]?.date_retour);
       res.json({ 
         message: "Prêt créé avec succès",
@@ -1311,7 +1313,7 @@ app.patch("/prets/:id", (req, res) => {
   }
   const sql = `UPDATE prets SET ${updates.join(", ")} WHERE id = ?`;
   values.push(id);
-  db.query(sql, values, (err, result) => {
+  pool.query(sql, values, (err, result) => {
     if (err) {
       console.error("Erreur lors de la modification du prêt:", err);
       return res.status(500).json({ error: "Erreur serveur." });
@@ -1329,7 +1331,7 @@ app.put("/prets/:id", (req, res) => {
   const id = Number(req.params.id);
   const pretModifier = req.body;
   const sql = `update prets set livre_id=${pretModifier.livre_id}, utilisateur_id=${pretModifier.utilisateur_id}, date_pret='${pretModifier.date_pret}', date_retour='${pretModifier.date_retour}', statut='${pretModifier.statut}' where id=${id}`;
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de modification du prêt", err);
     } else {
@@ -1344,7 +1346,7 @@ app.put("/prets/:id", (req, res) => {
 app.delete("/prets/:id", (req, res) => {
   const id = Number(req.params.id);
   const sql = `delete from prets where id=${id}`;
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de suppression du prêt", err);
     } else {
@@ -1358,7 +1360,7 @@ app.delete("/prets/:id", (req, res) => {
 // Get all avis
 app.get("/avis", (req, res) => {
   const sql = "select * from avis";
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de récupération des avis", err);
       res.status(500).json({ error: "Erreur serveur" });
@@ -1374,7 +1376,7 @@ app.get("/avis", (req, res) => {
 app.get("/avis/:id", (req, res) => {
   const id = Number(req.params.id);
   const sql = `select * from avis where id=${id}`;
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
       console.log("Erreur de récupération de l'avis", err);
     } else {
@@ -1392,7 +1394,7 @@ app.post("/avis", (req, res) => {
     return res.status(400).json({ message: "Données manquantes" });
   }
   const sql = `INSERT INTO avis (livre_id, utilisateur_nom, utilisateur_email, note, commentaire) VALUES (?, ?, ?, ?, ?)`;
-  db.query(sql, [livreId, nom, email, note, commentaire], (err, result) => {
+  pool.query(sql, [livreId, nom, email, note, commentaire], (err, result) => {
     if (err) {
       console.error("Erreur MySQL :", err);
       return res.status(500).json({ message: "Erreur serveur" });
