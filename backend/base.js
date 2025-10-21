@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 const path = require('path');
 
-// Charger le .env explicitement
+// Charger le .env
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 console.log('Variables DB:', {
@@ -16,15 +16,14 @@ const db = mysql.createConnection({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT || 3306,
-    ssl: { rejectUnauthorized: true } // souvent nécessaire pour Railway
+    port: process.env.DB_PORT
 });
 
 db.connect((err) => {
     if (err) {
         console.error('Erreur de connexion à la base de données:', err);
     } else {
-        console.log('Connecté à la base de données MySQL via Railway');
+        console.log('Connecté à la base de données MySQL');
     }
 });
 
