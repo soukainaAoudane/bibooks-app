@@ -307,12 +307,12 @@ console.log("MAIL_USER:", process.env.MAIL_USER);
 console.log("MAIL_PASS:", process.env.MAIL_PASS ? "***" : "non défini");
 
 const transporter = nodemailer.createTransport({
-  //Cree un objet transporteur pour envoyer des emails
-  service: "gmail", //utilisation de service email
+  host: 'smtp.sendgrid.net',
+  port: 587,
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
+    user: 'apikey',  // Toujours 'apikey' pour SendGrid
+    pass: process.env.MAIL_PASS  // Votre API Key SendGrid
+  }
 });
 
 transporter.verify((error, success) => {
