@@ -23,6 +23,26 @@ const dotenv = require("dotenv");
 const multer = require("multer");
 app.use(express.static(path.join(__dirname, "public"))); // ou supprimez cette ligne
 
+// Ajoutez ceci au début de votre server.js, après les imports
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
+
+// Middleware pour logger les erreurs détaillées
+app.use((error, req, res, next) => {
+    console.error('=== ERREUR SERVEUR DÉTAILLÉE ===');
+    console.error('URL:', req.url);
+    console.error('Méthode:', req.method);
+    console.error('Erreur:', error.message);
+    console.error('Stack:', error.stack);
+    console.error('=== FIN ERREUR ===');
+    res.status(500).json({ 
+        error: 'Erreur serveur',
+        details: error.message,
+        route: req.url
+    });
+});
 
 // Chargement des variables d'environnement
 dotenv.config({ path: path.resolve(__dirname, ".env") });
