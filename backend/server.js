@@ -284,7 +284,6 @@ console.log("Configuration SMTP:");
 console.log("MAIL_USER:", process.env.MAIL_USER);
 console.log("MAIL_PASS:", process.env.MAIL_PASS ? "***" : "non défini");
 
-// Configuration du transporteur Nodemailer
 const transporter = nodemailer.createTransport({
   //Cree un objet transporteur pour envoyer des emails
   service: "gmail", //utilisation de service email
@@ -334,7 +333,7 @@ app.post("/send-email", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant vous connecter à votre compte.</p>
-                <a href="https://bibooks-app.up.railway.app/connexion" 
+                <a href="http://localhost:3001/connexion" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Se connecter
@@ -378,7 +377,7 @@ app.post("/envoi-avis", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez acceder à votre compte.</p>
-                <a href="https://bibooks-app.up.railway.app" 
+                <a href="http://localhost:3001" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Se connecter
@@ -422,7 +421,7 @@ app.post("/demande-pret", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir si votre demande a été acceptée.</p>
-                <a href="https://bibooks-app.up.railway.app/profil" 
+                <a href="http://localhost:3001/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -464,7 +463,7 @@ app.post("/changement-mot-de-passe", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir votre profil.</p>
-                <a href="https://bibooks-app.up.railway.app/profil" 
+                <a href="http://localhost:3001/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -512,7 +511,7 @@ app.post("/pret-confirme", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir votre profil.</p>
-                <a href="https://bibooks-app.up.railway.app/profil" 
+                <a href="http://localhost:3001/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
@@ -554,7 +553,7 @@ app.post("/pret-refus", async (req, res) => {
                     </ul>
                 </div>
                 <p>Vous pouvez maintenant voir votre profil.</p>
-                <a href="https://bibooks-app.up.railway.app/profil" 
+                <a href="http://localhost:3001/profil" 
                    style="display: inline-block; background: #00b4d8; color: white; 
                           padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
                     Profil
