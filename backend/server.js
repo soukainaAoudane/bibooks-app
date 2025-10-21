@@ -19,7 +19,7 @@ const db = require("./base.js");
 const path = require("path");
 const imagesPath = path.join(__dirname, "images");
 const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
+const dotenv = require("dotenv").config();
 const multer = require("multer");
 app.use(express.static(path.join(__dirname, "public"))); // ou supprimez cette ligne
 
