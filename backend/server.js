@@ -394,7 +394,7 @@ app.post("/send-email", async (req, res) => {
 
     const result = await sendEmail({
         from: 'BiBooks <onboarding@resend.dev>',
-        to: email,
+        to: 'aoudanesoukaina@gmail.com',
         subject: "Confirmation d'inscription",
         html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
