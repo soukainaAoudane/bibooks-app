@@ -294,22 +294,9 @@ console.log("Configuration SMTP:");
 console.log("MAIL_USER:", process.env.MAIL_USER);
 console.log("MAIL_PASS:", process.env.MAIL_PASS ? "***" : "non défini");
 
-const transporter = nodemailer.createTransport({
-  //Cree un objet transporteur pour envoyer des emails
-  service: "gmail", //utilisation de service email
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-});
 
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ Erreur SMTP:", error);
-  } else {
-    console.log("✅ Serveur SMTP prêt, vous pouvez envoyer des emails.");
-  }
-});
+
+
 
 
 // Configuration de multer
@@ -327,136 +314,193 @@ const storage = multer.diskStorage({
 const upload = multer({ storage }); // Crée une instance de Multer avec la configuration de stockage
 
 // Route pour l'envoi d'emails d'inscription
+// Configuration SMTP et debug
+console.log("Configuration SMTP:");
+console.log("MAIL_USER:", process.env.MAIL_USER);
+console.log("MAIL_PASS:", process.env.MAIL_PASS ? "***" : "non défini");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+});
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ Erreur SMTP:", error);
+  } else {
+    console.log("✅ Serveur SMTP prêt, vous pouvez envoyer des emails.");
+  }
+});
+
+// Debug SMTP
+const debugSMTP = async () => {
+  console.log("\n🔍 Diagnostic SMTP :");
+  console.log("1. Variables d'environnement :");
+  console.log("- MAIL_USER:", process.env.MAIL_USER ? "✓ défini" : "❌ manquant");
+  console.log("- MAIL_PASS:", process.env.MAIL_PASS ? "✓ défini" : "❌ manquant");
+  
+  try {
+    console.log("\n2. Test de connexion SMTP...");
+    const isReady = await transporter.verify();
+    console.log(isReady ? "✓ Connexion SMTP OK" : "❌ Échec connexion SMTP");
+
+    console.log("\n3. Tentative d'envoi test...");
+    await transporter.sendMail({
+      from: process.env.MAIL_USER,
+      to: process.env.MAIL_USER,
+      subject: "Test SMTP BiBooks",
+      text: "Test de configuration SMTP"
+    });
+    console.log("✓ Email test envoyé");
+  } catch (error) {
+    console.error("❌ Erreur SMTP:", error.message);
+    console.error("Détails:", error);
+  }
+};
+
+// Exécuter le diagnostic au démarrage
+debugSMTP();
+
+// Route pour l'envoi d'emails d'inscription
 app.post("/send-email", async (req, res) => {
-  console.log("Requête reçue:", req.body);
+  console.log("\n📧 Tentative d'envoi d'email inscription:");
+  console.log("Données reçues:", req.body);
+  
   const { nom, email, nom_ut } = req.body;
   if (!email || !nom) {
     return res.status(400).json({ error: "Données manquantes" });
   }
+
   const mailOptions = {
-    from: '"Bibliothèque" <sousouawadane@gmail.com>',
+    from: '"BiBooks" <sousouawadane@gmail.com>',
     to: email,
     subject: "Confirmation d'inscription",
     html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <h2 style="color: #3366cc;">Bienvenue ${nom} !</h2>
-                <p>Merci pour votre inscription à notre bibliothèque en ligne.</p>
-                <div style="background: #f5f7fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                    <p><strong>Détails de votre compte :</strong></p>
-                    <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li>Nom d'utilisateur: ${nom_ut}</li>
-                        <li>Email: ${email}</li>
-                        <li>Date d'inscription: ${new Date().toLocaleDateString(
-                          "fr-FR"
-                        )}</li>
-                    </ul>
-                </div>
-                <p>Vous pouvez maintenant vous connecter à votre compte.</p>
-                <a href="https://bibooks.netlify.app/connexion" 
-                   style="display: inline-block; background: #00b4d8; color: white; 
-                          padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
-                    Se connecter
-                </a>
-            </div>
-        `,
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #3366cc;">Bienvenue ${nom} !</h2>
+        <p>Merci pour votre inscription à notre bibliothèque en ligne.</p>
+        <div style="background: #f5f7fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p><strong>Détails de votre compte :</strong></p>
+          <ul style="margin: 10px 0; padding-left: 20px;">
+            <li>Nom d'utilisateur: ${nom_ut}</li>
+            <li>Email: ${email}</li>
+            <li>Date d'inscription: ${new Date().toLocaleDateString("fr-FR")}</li>
+          </ul>
+        </div>
+        <p>Vous pouvez maintenant vous connecter à votre compte.</p>
+        <a href="https://bibooks.netlify.app/connexion" 
+           style="display: inline-block; background: #00b4d8; color: white; 
+                  padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
+          Se connecter
+        </a>
+      </div>
+    `
   };
+
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`Email envoyé avec succès à ${email}`);
+    console.log(`✅ Email d'inscription envoyé à ${email}`);
     res.status(200).json({ message: "Email envoyé" });
   } catch (error) {
-    console.error("Erreur lors de l'envoi de l'email:", error);
+    console.error("❌ Erreur lors de l'envoi de l'email:", error);
     res.status(500).json({ error: "Échec de l'envoi de l'email" });
   }
 });
 
 // Route pour l'envoi d'emails d'avis
 app.post("/envoi-avis", async (req, res) => {
-  console.log("Requête reçue:", req.body);
+  console.log("\n📧 Tentative d'envoi d'email avis:");
+  console.log("Données reçues:", req.body);
+  
   const { nom, email } = req.body;
   if (!email || !nom) {
     return res.status(400).json({ error: "Données manquantes" });
   }
+
   const mailOptions = {
-    from: '"Bibliothèque" <sousouawadane@gmail.com>',
+    from: '"BiBooks" <sousouawadane@gmail.com>',
     to: email,
-    subject: "Publication de l'avis ",
+    subject: "Publication de l'avis",
     html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <h2 style="color: #3366cc;">Bienvenue ${nom} !</h2>
-                <p>Merci pour votre publication de l'avis dans notre bibliothèque en ligne.</p>
-                <div style="background: #f5f7fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                    <p><strong>Détails de votre compte :</strong></p>
-                    <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li>Nom d'utilisateur: ${nom}</li>
-                        <li>Email: ${email}</li>
-                        <li>Date d'envoie: ${new Date().toLocaleDateString(
-                          "fr-FR"
-                        )}</li>
-                    </ul>
-                </div>
-                <p>Vous pouvez acceder à votre compte.</p>
-                <a href="https://bibooks.netlify.app/profil" 
-                   style="display: inline-block; background: #00b4d8; color: white; 
-                          padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
-                    Se connecter
-                </a>
-            </div>
-        `,
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #3366cc;">Merci ${nom} !</h2>
+        <p>Votre avis a été publié avec succès.</p>
+        <div style="background: #f5f7fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p><strong>Détails :</strong></p>
+          <ul style="margin: 10px 0; padding-left: 20px;">
+            <li>Nom: ${nom}</li>
+            <li>Email: ${email}</li>
+            <li>Date de publication: ${new Date().toLocaleDateString("fr-FR")}</li>
+          </ul>
+        </div>
+        <a href="https://bibooks.netlify.app/profil" 
+           style="display: inline-block; background: #00b4d8; color: white; 
+                  padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
+          Voir mon profil
+        </a>
+      </div>
+    `
   };
+
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`Email envoyé avec succès à ${email}`);
+    console.log(`✅ Email d'avis envoyé à ${email}`);
     res.status(200).json({ message: "Email envoyé" });
   } catch (error) {
-    console.error("Erreur lors de l'envoi de l'email:", error);
+    console.error("❌ Erreur lors de l'envoi de l'email:", error);
     res.status(500).json({ error: "Échec de l'envoi de l'email" });
   }
 });
 
-// Email d'envoi d'email de demande de pret
+// Route pour l'envoi d'emails de demande de prêt
 app.post("/demande-pret", async (req, res) => {
-  console.log("Requête reçue:", req.body);
+  console.log("\n📧 Tentative d'envoi d'email demande de prêt:");
+  console.log("Données reçues:", req.body);
+  
   const { nom, email, date_demande } = req.body;
   if (!email || !nom) {
     return res.status(400).json({ error: "Données manquantes" });
   }
+
   const mailOptions = {
-    from: '"Bibliothèque" <sousouawadane@gmail.com>',
+    from: '"BiBooks" <sousouawadane@gmail.com>',
     to: email,
-    subject: "Envoi de demande de prêt",
+    subject: "Demande de prêt reçue",
     html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <h2 style="color: #3366cc;">Bienvenue ${nom} !</h2>
-                <p>Merci pour votre demande de prêt.</p>
-                <div style="background: #f5f7fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                    <p><strong>Détails de votre compte :</strong></p>
-                    <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li>Nom d'utilisateur: ${nom}</li>
-                        <li>Email: ${email}</li>
-                        <li>Date de demande:${new Date(
-                          date_demande
-                        ).toLocaleDateString()}</li>
-                    </ul>
-                </div>
-                <p>Vous pouvez maintenant voir si votre demande a été acceptée.</p>
-                <a href="https://bibooks.netlify.app/profil" 
-                   style="display: inline-block; background: #00b4d8; color: white; 
-                          padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
-                    Profil
-                </a>
-            </div>
-        `,
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #3366cc;">Demande reçue, ${nom} !</h2>
+        <p>Votre demande de prêt a été enregistrée.</p>
+        <div style="background: #f5f7fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p><strong>Détails de la demande :</strong></p>
+          <ul style="margin: 10px 0; padding-left: 20px;">
+            <li>Nom: ${nom}</li>
+            <li>Email: ${email}</li>
+            <li>Date de demande: ${new Date(date_demande).toLocaleDateString()}</li>
+          </ul>
+        </div>
+        <p>Nous traiterons votre demande dans les plus brefs délais.</p>
+        <a href="https://bibooks.netlify.app/profil" 
+           style="display: inline-block; background: #00b4d8; color: white; 
+                  padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
+          Suivre ma demande
+        </a>
+      </div>
+    `
   };
+
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`Email envoyé avec succès à ${email}`);
+    console.log(`✅ Email de demande de prêt envoyé à ${email}`);
     res.status(200).json({ message: "Email envoyé" });
   } catch (error) {
-    console.error("Erreur lors de l'envoi de l'email:", error);
+    console.error("❌ Erreur lors de l'envoi de l'email:", error);
     res.status(500).json({ error: "Échec de l'envoi de l'email" });
   }
 });
+
+// Les autres routes d'emails suivent le même modèle...
 
 // Email d'envoi d'email de changement de mot de passe
 app.post("/changement-mot-de-passe", async (req, res) => {
