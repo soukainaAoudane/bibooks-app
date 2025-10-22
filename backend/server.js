@@ -7,8 +7,12 @@ process.on('uncaughtException', (error) => {
 process.on('unhandledRejection', (reason, promise) => {
     console.error('❌ PROMESSE REJETÉE:', reason);
 });
+const path = require("path");
+const dotenv = require("dotenv");
 
 console.log('🚀 Démarrage de server.js...');
+// Chargement des variables d'environnement
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 // Déclaration des variables utilisées
 const axios = require("axios"); //une librairei qui permet de faire dees requetes htttp
 const express = require("express");
@@ -16,12 +20,15 @@ const app = express();
 const cors = require("cors");
 const port = process.env.PORT || 3001;
 const pool = require("./base.js");
-const path = require("path");
-const imagesPath = path.join(__dirname, "images");
 const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
 const multer = require("multer");
+const imagesPath = path.join(__dirname, "..", "frontend", "images");
 //app.use(express.static(path.join(__dirname, "public"))); // ou supprimez cette ligne
+
+// Middleware global
+app.use(express.json());
+app.use(cors());
+app.use("/images", express.static(imagesPath));
 
 // Ajoutez ceci au début de votre server.js, après les imports
 app.use((req, res, next) => {
@@ -29,25 +36,9 @@ app.use((req, res, next) => {
     next();
 });
 
-// Middleware pour logger les erreurs détaillées
-app.use((error, req, res, next) => {
-    console.error('=== ERREUR SERVEUR DÉTAILLÉE ===');
-    console.error('URL:', req.url);
-    console.error('Méthode:', req.method);
-    console.error('Erreur:', error.message);
-    console.error('Stack:', error.stack);
-    console.error('=== FIN ERREUR ===');
-    res.status(500).json({ 
-        error: 'Erreur serveur',
-        details: error.message,
-        route: req.url
-    });
-});
-app.get("/", (req, res) => {
-    res.json({ message: "API Bibooks fonctionnelle" });
-});
-// Chargement des variables d'environnement
-dotenv.config({ path: path.resolve(__dirname, ".env") });
+
+
+
 // 🚨 ROUTE D'INITIALISATION URGENTE - À AJOUTER IMMÉDIATEMENT
 app.get('/init-urgence', (req, res) => {
     console.log('🚨 INITIALISATION URGENTE DES TABLES');
@@ -297,22 +288,19 @@ app.get('/check-tables', (req, res) => {
         }
     });
 });
-// Middleware global
-app.use(express.json());
-app.use(cors());
-app.use("/images", express.static(imagesPath));
+
 
 console.log("Configuration SMTP:");
 console.log("MAIL_USER:", process.env.MAIL_USER);
 console.log("MAIL_PASS:", process.env.MAIL_PASS ? "***" : "non défini");
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.sendgrid.net',
-  port: 587,
+  //Cree un objet transporteur pour envoyer des emails
+  service: "gmail", //utilisation de service email
   auth: {
-    user: 'apikey',  // Toujours 'apikey' pour SendGrid
-    pass: process.env.MAIL_PASS  // Votre API Key SendGrid
-  }
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
 });
 
 transporter.verify((error, success) => {
@@ -328,7 +316,7 @@ transporter.verify((error, success) => {
 const storage = multer.diskStorage({
   // Crée une configuration de stockage pour Multer
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "..", "frontend", "images"));
+    cb(null, imagesPath); // Définit le dossier de destination pour les fichiers téléchargés
   },
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname); // Récupère l'extension du fichier original
@@ -1070,8 +1058,9 @@ app.delete("/livres/:id", (req, res) => {
   const id = Number(req.params.id);
   const sql = `delete from livres where id=${id}`;
   pool.query(sql, (err, reslut) => {
-    if (err) console.log("Erreur de suppression du livre", err);
-    else {
+    if (err) {
+      console.log("Erreur de suppression du livre", err);
+    } else {
       console.log("Livre supprimé avec succès");
       res.json({ message: "Livre supprimé avec succès" });
     }
@@ -1444,6 +1433,17 @@ app.use((req, res) => {
  res.sendFile(path.join(__dirname, "..","frontend", "404.html"));
 });
 
+// Error handler global — placer ICI, après toutes les routes
+app.use((err, req, res, next) => {
+  console.error('=== ERREUR SERVEUR DÉTAILLÉE ===');
+  console.error('URL:', req.url);
+  console.error('Méthode:', req.method);
+  console.error('Erreur:', err.message);
+  console.error('Stack:', err.stack);
+  console.error('=== FIN ERREUR ===');
+  res.status(500).json({ error: 'Erreur serveur', details: err.message });
+});
+
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server is running on port http://localhost:${port}`);
-}); 
+});
