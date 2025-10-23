@@ -2,59 +2,15 @@
   "version": 2,
   "builds": [
     {
-      "src": "backend/server.js",
+      "src": "server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/accueil",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/admin", 
-      "dest": "/admin.html"
-    },
-    {
-      "src": "/profil",
-      "dest": "/profil.html"
-    },
-    {
-      "src": "/connexion",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/inscription",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/liste_livres",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/detail",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/ajouter",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/demande_pret",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/auteur",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/laisser_avis",
-      "dest": "/index.html"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/404.html",
-      "status": 404
+      "dest": "/server.js",
+      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"]
     }
   ]
 }
