@@ -3,7 +3,7 @@
           JSON.parse(localStorage.getItem("utilisateur")) || {};
         const livreSelectionne =
           JSON.parse(localStorage.getItem("livreSelectionne")) || {};
-        const urlAvis = "https://bibooks-backend.vercel.app/avis";
+        const urlAvis = "https://bibooks-backend-nnrk.vercel.app//avis";
         // Afficher les infos du livre
         document.getElementById("livre-titre").textContent =
           livreSelectionne.titre || "Titre non disponible";
@@ -62,7 +62,7 @@
               note: rating,
               commentaire: avis,
             }),
-          }); await fetch("https://bibooks-backend.vercel.app/envoi-avis", {
+          }); await fetch("https://bibooks-backend-nnrk.vercel.app//envoi-avis", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ nom, email }),

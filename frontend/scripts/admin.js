@@ -1,14 +1,14 @@
       let livres = [];
-      const urlLivres = "https://bibooks-backend.vercel.app/livres";
+      const urlLivres = "https://bibooks-backend-nnrk.vercel.app//livres";
 
       let demandes = [];
-      const urlDemandes = "https://bibooks-backend.vercel.app/demandes";
+      const urlDemandes = "https://bibooks-backend-nnrk.vercel.app//demandes";
 
       let prets = [];
-      const urlPrets = "https://bibooks-backend.vercel.app/prets";
+      const urlPrets = "https://bibooks-backend-nnrk.vercel.app//prets";
 
       let utilisateurs = [];
-      const urlUtilisateurs = "https://bibooks-backend.vercel.app/utilisateurs";
+      const urlUtilisateurs = "https://bibooks-backend-nnrk.vercel.app//utilisateurs";
 
       function showToast(message, type = "success") {
         const toast = document.createElement("div");
@@ -392,7 +392,7 @@
 
           const email = emprunteur.email;
 
-          await fetch("https://bibooks-backend.vercel.app/pret-confirme", {
+          await fetch("https://bibooks-backend-nnrk.vercel.app//pret-confirme", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ nom: emprunteur.nom, email, datePret, dateRetour }),
@@ -445,7 +445,7 @@
         document.getElementById("demandes_attentes").textContent =
           demandes.filter((d) => d.statut === "en attente").length;
 
-           await fetch("https://bibooks-backend.vercel.app/pret-refus", {
+           await fetch("https://bibooks-backend-nnrk.vercel.app//pret-refus", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ nom: emprunteur.nom, email }),
