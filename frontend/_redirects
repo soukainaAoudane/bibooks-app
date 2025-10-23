@@ -1,7 +1,15 @@
-# Redirections SPA (Single Page Application)
-/*    /index.html   200
-
-# Redirections personnalisées (optionnel)
+# Redirections SPA - seulement pour les routes valides
 /accueil    /index.html   200
 /admin      /admin.html   200
 /profil     /profil.html   200
+/connexion  /index.html   200
+/inscription /index.html  200
+/liste_livres /index.html 200
+/detail     /index.html   200
+/ajouter    /index.html   200
+/demande_pret /index.html 200
+/auteur     /index.html   200
+/laisser_avis /index.html 200
+
+# Pour toutes les autres URLs (fautes de frappe) → 404
+/*    /404.html   404
