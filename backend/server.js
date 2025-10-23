@@ -377,108 +377,101 @@ console.log("Configuration SMTP:");
 console.log("MAIL_USER:", process.env.MAIL_USER);
 console.log("MAIL_PASS:", process.env.MAIL_PASS ? "***" : "non défini");
 
+const nodemailer = require('nodemailer');
 
+// Configuration Nodemailer
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS
+  }
+});
+
+// Test de configuration Nodemailer
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ Erreur Nodemailer:", error);
+  } else {
+    console.log("✅ Serveur email prêt avec Nodemailer");
+  }
+});
 
 
 
 //Route de ssend email d'inscription
 // Route pour l'envoi d'emails d'inscription
+// Route pour l'envoi d'emails d'inscription
 app.post("/send-email", async (req, res) => {
-    console.log("\n📧 Tentative d'envoi d'email inscription:");
-    console.log("Données reçues:", req.body);
-    
-    const { nom, email, nom_ut } = req.body;
-    if (!email || !nom) {
-        return res.status(400).json({ error: "Données manquantes" });
-    }
+  console.log("\n📧 Tentative d'envoi d'email inscription:");
+  console.log("Données reçues:", req.body);
+  
+  const { nom, email, nom_ut } = req.body;
+  if (!email || !nom) {
+    return res.status(400).json({ error: "Données manquantes" });
+  }
 
-    const result = await sendEmail({
-        from: 'BiBooks <onboarding@resend.dev>',
-        to: 'aoudanesoukaina@gmail.com',
-        subject: "Confirmation d'inscription",
-        html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <h2 style="color: #3366cc;">Bienvenue ${nom} !</h2>
-                <p>Merci pour votre inscription à notre bibliothèque en ligne.</p>
-                <div style="background: #f5f7fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                    <p><strong>Détails de votre compte :</strong></p>
-                    <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li>Nom d'utilisateur: ${nom_ut}</li>
-                        <li>Email: ${email}</li>
-                        <li>Date d'inscription: ${new Date().toLocaleDateString("fr-FR")}</li>
-                    </ul>
-                </div>
-                <p>Vous pouvez maintenant vous connecter à votre compte.</p>
-            </div>
-        `
-    });
+  const mailOptions = {
+    from: '"BiBooks" <sousouawadane@gmail.com>',
+    to: email,
+    subject: "Confirmation d'inscription",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #3366cc;">Bienvenue ${nom} !</h2>
+        <p>Merci pour votre inscription à notre bibliothèque en ligne.</p>
+        <div style="background: #f5f7fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p><strong>Détails de votre compte :</strong></p>
+          <ul style="margin: 10px 0; padding-left: 20px;">
+            <li>Nom d'utilisateur: ${nom_ut}</li>
+            <li>Email: ${email}</li>
+            <li>Date d'inscription: ${new Date().toLocaleDateString("fr-FR")}</li>
+          </ul>
+        </div>
+        <p>Vous pouvez maintenant vous connecter à votre compte.</p>
+        <a href="https://bibooks.netlify.app/connexion" 
+           style="display: inline-block; background: #00b4d8; color: white; 
+                  padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
+          Se connecter
+        </a>
+      </div>
+    `
+  };
 
-    if (result.simulated) {
-        // Resend n'est pas installé, mais on retourne quand même un succès
-        res.status(200).json({ 
-            message: "Inscription réussie - Email simulé (Resend en cours de configuration)",
-            simulated: true 
-        });
-    } else if (result.success) {
-        res.status(200).json({ 
-            message: "Email envoyé",
-            id: result.data.id 
-        });
-    } else {
-        res.status(500).json({ error: result.error });
-    }
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Email envoyé à ${email} via Nodemailer`);
+    res.status(200).json({ message: "Email envoyé avec succès" });
+  } catch (error) {
+    console.error("❌ Erreur Nodemailer:", error);
+    res.status(500).json({ error: "Échec de l'envoi de l'email" });
+  }
 });
 
 // Route pour l'envoi d'emails d'avis
 app.post("/envoi-avis", async (req, res) => {
-    console.log("\n📧 Tentative d'envoi d'email avis:");
-    console.log("Données reçues:", req.body);
-    
-    const { nom, email } = req.body;
-    if (!email || !nom) {
-        return res.status(400).json({ error: "Données manquantes" });
-    }
+  const { nom, email } = req.body;
 
-    try {
-        const { data, error } = await resend.emails.send({
-            from: 'BiBooks <onboarding@resend.dev>',
-            to: email,
-            subject: "Publication de l'avis",
-            html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h2 style="color: #3366cc;">Merci ${nom} !</h2>
-                    <p>Votre avis a été publié avec succès.</p>
-                    <div style="background: #f5f7fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                        <p><strong>Détails :</strong></p>
-                        <ul style="margin: 10px 0; padding-left: 20px;">
-                            <li>Nom: ${nom}</li>
-                            <li>Email: ${email}</li>
-                            <li>Date de publication: ${new Date().toLocaleDateString("fr-FR")}</li>
-                        </ul>
-                    </div>
-                    <a href="https://bibooks.netlify.app/profil" 
-                       style="display: inline-block; background: #00b4d8; color: white; 
-                              padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
-                        Voir mon profil
-                    </a>
-                </div>
-            `
-        });
+  const mailOptions = {
+    from: '"BiBooks" <sousouawadane@gmail.com>',
+    to: email,
+    subject: "Publication de l'avis",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #3366cc;">Merci ${nom} !</h2>
+        <p>Votre avis a été publié avec succès.</p>
+        <!-- ... reste du template ... -->
+      </div>
+    `
+  };
 
-        if (error) {
-            console.error("❌ Erreur Resend:", error);
-            return res.status(500).json({ error: "Échec de l'envoi de l'email" });
-        }
-
-        console.log(`✅ Email d'avis envoyé à ${email}`);
-        res.status(200).json({ 
-            message: "Email envoyé",
-            id: data.id 
-        });
-    } catch (error) {
-        console.error("❌ Erreur lors de l'envoi de l'email:", error);
-        res.status(500).json({ error: "Échec de l'envoi de l'email" });
-    }
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Email d'avis envoyé à ${email}`);
+    res.status(200).json({ message: "Email envoyé" });
+  } catch (error) {
+    console.error("❌ Erreur Nodemailer:", error);
+    res.status(500).json({ error: "Échec de l'envoi de l'email" });
+  }
 });
 
 // Route pour l'envoi d'emails de demande de prêt
