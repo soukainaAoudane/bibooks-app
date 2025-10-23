@@ -54,7 +54,7 @@
         async function initializeAdmin() {
             const ADMIN_EMAIL = "admin@gmail.com";
             const ADMIN_PASSWORD = "admin";
-            const urlUtilisateurs = "https://bibooks-app-production.up.railway.app/utilisateurs";
+            const urlUtilisateurs = "https://bibooks-backend.vercel.app/utilisateurs";
 
             try {
                 const response = await fetch(urlUtilisateurs);
@@ -83,7 +83,7 @@
         function setupLoginForm() {
             const form = document.getElementById('connexionForm');
             const message = document.getElementById('login-message');
-            const urlUtilisateurs = "https://bibooks-app-production.up.railway.app/utilisateurs";
+            const urlUtilisateurs = "https://bibooks-backend.vercel.app/utilisateurs";
 
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
@@ -129,7 +129,7 @@
         function setupRegisterForm() {
             const form = document.getElementById('inscriptionForm');
             const message = document.getElementById('register-message');
-            const urlUtilisateurs = "https://bibooks-app-production.up.railway.app/utilisateurs";
+            const urlUtilisateurs = "https://bibooks-backend.vercel.app/utilisateurs";
             const ADMIN_EMAIL = "admin@gmail.com";
 
             form.addEventListener('submit', async function(e) {
@@ -194,7 +194,7 @@
                     if (!postResponse.ok) throw new Error("Erreur d'enregistrement");
 
                     // Envoi de l'email de confirmation
-                    await fetch("https://bibooks-app-production.up.railway.app/send-email", {
+                    await fetch("https://bibooks-backend.vercel.app/send-email", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ nom, email, nom_ut: nom }),

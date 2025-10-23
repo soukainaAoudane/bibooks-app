@@ -6,9 +6,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     let livreSelectionne = null;
     
     // URLs API
-    const urlPrets = "https://bibooks-app-production.up.railway.app/prets";
-    const urlDemandes = "https://bibooks-app-production.up.railway.app/demandes";
-    const urlLivres = "https://bibooks-app-production.up.railway.app/livres";
+    const urlPrets = "https://bibooks-backend.vercel.app/prets";
+    const urlDemandes = "https://bibooks-backend.vercel.app/demandes";
+    const urlLivres = "https://bibooks-backend.vercel.app/livres";
     
     // État de connexion
     const connecté = localStorage.getItem("connecté");
@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (connecté === "oui" && utilisateur) {
                 try {
                     // Vérifier les demandes existantes
-                    const responseDemandes = await fetch("https://bibooks-app-production.up.railway.app/demandes");
+                    const responseDemandes = await fetch("https://bibooks-backend.vercel.app/demandes");
                     const demandes = await responseDemandes.json();
                     
                     const demandeExistante = demandes.find(
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
 
                     // Vérifier les prêts existants
-                    const responsePrets = await fetch("https://bibooks-app-production.up.railway.app/prets");
+                    const responsePrets = await fetch("https://bibooks-backend.vercel.app/prets");
                     const prets = await responsePrets.json();
                     
                     const livreEmprunte = prets.find(
@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function fetchAvis(livreId) {
         try {
-            const res = await fetch(`https://bibooks-app-production.up.railway.app/avis?livre_id=${livreId}`);
+            const res = await fetch(`https://bibooks-backend.vercel.app/avis?livre_id=${livreId}`);
             if (!res.ok) return [];
             return await res.json();
         } catch (error) {
