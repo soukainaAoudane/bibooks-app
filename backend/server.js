@@ -1548,6 +1548,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Erreur serveur', details: err.message });
 });
 
-app.listen(port, '0.0.0.0', () => {
+// Export pour Vercel (TRÈS IMPORTANT)
+module.exports = app;
+
+// Gardez le app.listen() pour le développement local
+if (require.main === module) {
+  app.listen(port, '0.0.0.0', () => {
     console.log(`Server is running on port http://localhost:${port}`);
-});
+  });
+}
