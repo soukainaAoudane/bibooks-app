@@ -1,16 +1,16 @@
-// AJOUTEZ CE CODE AU TRÈS DÉBUT DU FICHIER
+// Capturer les erreurs 
 process.on('uncaughtException', (error) => {
-    console.error('💥 ERREUR CRITIQUE:', error.message);
+    console.error('ERREUR CRITIQUE:', error.message);
     console.error('Stack:', error.stack);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-    console.error('❌ PROMESSE REJETÉE:', reason);
+    console.error(' PROMESSE REJETÉE:', reason);
 });
+// Déclaration des variablese utilisés
 const path = require("path");
 const dotenv = require("dotenv");
 
-console.log('🚀 Démarrage de server.js...');
 // Chargement des variables d'environnement
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 // Déclaration des variables utilisées
@@ -22,25 +22,22 @@ const port = process.env.PORT || 3001;
 const pool = require("./base.js");
 const multer = require("multer");
 const imagesPath = path.join(__dirname, "..", "frontend", "images");
-//app.use(express.static(path.join(__dirname, "public"))); // ou supprimez cette ligne
+//app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware global
 app.use(express.json());
 app.use(cors());
 app.use("/images", express.static(imagesPath));
 
-// Ajoutez ceci au début de votre server.js, après les imports
+// afficher la methode utilisé et la date d'utilisation
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
     next();
 });
 
-
-
-
-// 🚨 ROUTE D'INITIALISATION URGENTE - À AJOUTER IMMÉDIATEMENT
+// ROUTE D'INITIALISATION DES TABLES/
 app.get('/init-urgence', (req, res) => {
-    console.log('🚨 INITIALISATION URGENTE DES TABLES');
+    console.log('INITIALISATION URGENTE DES TABLES');
     
     const tables = [
         // Table utilisateurs
@@ -134,10 +131,10 @@ app.get('/init-urgence', (req, res) => {
         const sql = tables[index];
         pool.query(sql, (err, result) => {
             if (err) {
-                console.error(`❌ Table ${index + 1} échouée:`, err.message);
+                console.error(`Table ${index + 1} échouée:`, err.message);
                 errors.push(`Table ${index + 1}: ${err.message}`);
             } else {
-                console.log(`✅ Table ${index + 1} créée`);
+                console.log(`Table ${index + 1} créée`);
                 created++;
             }
             
@@ -145,24 +142,22 @@ app.get('/init-urgence', (req, res) => {
         });
     };
 
-    // Fonction pour insérer les données initiales
-// Fonction pour insérer les données initiales - VERSION CORRIGÉE ET SÉCURISÉE
+// Fonction pour insérer les données initiales
 const insertInitialData = (response) => {
-    console.log('📝 Insertion des données initiales...');
+    console.log('Insertion des données initiales...');
     
-    // 1. Insérer l'admin d'abord
+    // 1. Insérer l'admin d'abord avec sonn mot de passe hashée
     const sqlAdmin = `INSERT IGNORE INTO utilisateurs (nom, email, mot_de_passe, role) 
                      VALUES ('Admin', 'admin@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin')`;
     
     pool.query(sqlAdmin, (err, result) => {
         if (err) {
-            console.error('❌ Erreur insertion admin:', err.message);
-            // Continuer malgré l'erreur admin
+            console.error('Erreur insertion admin:', err.message);
         } else {
-            console.log('✅ Admin inséré avec succès');
+            console.log('Admin inséré avec succès');
         }
         
-        // 2. Insérer les livres UN PAR UN (plus sûr)
+        // 2. Insérer les livres UN PAR UN pur etre sure
         const livres = [
             {
                 titre: "Les Misérables",
@@ -229,7 +224,7 @@ const insertInitialData = (response) => {
         let livresInseres = 0;
         const erreursLivres = [];
 
-        // Insérer chaque livre individuellement
+        // Insérer chaque livre 
         livres.forEach((livre, index) => {
             const sqlLivre = `INSERT IGNORE INTO livres (titre, auteur, genre, img, date, prix, exp, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
             
@@ -244,17 +239,17 @@ const insertInitialData = (response) => {
                 livre.description
             ], (err, result) => {
                 if (err) {
-                    console.error(`❌ Livre ${index + 1} échoué:`, err.message);
+                    console.error(`Livre ${index + 1} échoué:`, err.message);
                     erreursLivres.push(`Livre ${index + 1} (${livre.titre}): ${err.message}`);
                 } else {
-                    console.log(`✅ Livre ${index + 1} inséré: ${livre.titre}`);
+                    console.log(`Livre ${index + 1} inséré: ${livre.titre}`);
                     livresInseres++;
                 }
 
                 // Quand tous les livres sont traités
                 if (livresInseres + erreursLivres.length === livres.length) {
                     response.json({
-                        message: '🎉 BASE DE DONNÉES INITIALISÉE AVEC SUCCÈS!',
+                        message: 'BASE DE DONNÉES INITIALISÉE AVEC SUCCÈS!',
                         tables_created: created,
                         admin_insere: true,
                         livres_inseres: livresInseres,
@@ -272,7 +267,7 @@ const insertInitialData = (response) => {
 });
 
 
-// Route de vérification simple
+// Route de vérification des tables
 app.get('/check-tables', (req, res) => {
     pool.query('SHOW TABLES', (err, results) => {
         if (err) {
@@ -294,10 +289,6 @@ console.log("MAIL_USER:", process.env.MAIL_USER);
 console.log("MAIL_PASS:", process.env.MAIL_PASS ? "***" : "non défini");
 
 
-
-
-
-
 // Configuration de multer
 const storage = multer.diskStorage({
   // Crée une configuration de stockage pour Multer
@@ -312,12 +303,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage }); // Crée une instance de Multer avec la configuration de stockage
 
-// Route pour l'envoi d'emails d'inscription
-// Configuration SMTP et debug
-console.log("Configuration SMTP:");
+//Configuration
+console.log("Configuration:");
 console.log("MAIL_USER:", process.env.MAIL_USER);
 console.log("MAIL_PASS:", process.env.MAIL_PASS ? "***" : "non défini");
 
+//Déclarer nodemailerr pour envoyer lesmmails;
 const nodemailer = require('nodemailer');
 
 // Configuration Nodemailer
@@ -332,19 +323,16 @@ const transporter = nodemailer.createTransport({
 // Test de configuration Nodemailer
 transporter.verify((error, success) => {
   if (error) {
-    console.error("❌ Erreur Nodemailer:", error);
+    console.error("Erreur Nodemailer:", error);
   } else {
-    console.log("✅ Serveur email prêt avec Nodemailer");
+    console.log("Serveur email prêt avec Nodemailer");
   }
 });
 
 
-
-//Route de ssend email d'inscription
-// Route pour l'envoi d'emails d'inscription
 // Route pour l'envoi d'emails d'inscription
 app.post("/send-email", async (req, res) => {
-  console.log("\n📧 Tentative d'envoi d'email inscription:");
+  console.log("\n >>Tentative d'envoi d'email inscription:");
   console.log("Données reçues:", req.body);
   
   const { nom, email, nom_ut } = req.body;
@@ -380,10 +368,10 @@ app.post("/send-email", async (req, res) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`✅ Email envoyé à ${email} via Nodemailer`);
+    console.log(`>>Email envoyé à ${email} via Nodemailer`);
     res.status(200).json({ message: "Email envoyé avec succès" });
   } catch (error) {
-    console.error("❌ Erreur Nodemailer:", error);
+    console.error(">>Erreur Nodemailer:", error);
     res.status(500).json({ error: "Échec de l'envoi de l'email" });
   }
 });
@@ -400,17 +388,22 @@ app.post("/envoi-avis", async (req, res) => {
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #3366cc;">Merci ${nom} !</h2>
         <p>Votre avis a été publié avec succès.</p>
-        <!-- ... reste du template ... -->
+        <p>Vous pouvez maintenant vous connecter à votre compte.</p>
+        <a href="https://bibooks.netlify.app/connexion" 
+           style="display: inline-block; background: #00b4d8; color: white; 
+                  padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px;">
+          Se connecter
+        </a>
       </div>
     `
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`✅ Email d'avis envoyé à ${email}`);
+    console.log(`>>Email d'avis envoyé à ${email}`);
     res.status(200).json({ message: "Email envoyé" });
   } catch (error) {
-    console.error("❌ Erreur Nodemailer:", error);
+    console.error(">>Erreur Nodemailer:", error);
     res.status(500).json({ error: "Échec de l'envoi de l'email" });
   }
 });
@@ -453,15 +446,14 @@ app.post("/demande-pret", async (req, res) => {
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log(`✅ Email de demande de prêt envoyé à ${email}`);
+        console.log(`>>Email de demande de prêt envoyé à ${email}`);
         res.status(200).json({ message: "Email envoyé avec succès" });
     } catch (error) {
-        console.error("❌ Erreur Nodemailer:", error);
+        console.error(">>Erreur Nodemailer:", error);
         res.status(500).json({ error: "Échec de l'envoi de l'email" });
     }
 });
 
-// Email d'envoi d'email de changement de mot de passe
 // Email d'envoi d'email de changement de mot de passe
 app.post("/changement-mot-de-passe", async (req, res) => {
     console.log("Requête reçue:", req.body);
@@ -498,15 +490,14 @@ app.post("/changement-mot-de-passe", async (req, res) => {
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log(`✅ Email de changement de mot de passe envoyé à ${email}`);
+        console.log(`>>Email de changement de mot de passe envoyé à ${email}`);
         res.status(200).json({ message: "Email envoyé avec succès" });
     } catch (error) {
-        console.error("❌ Erreur Nodemailer:", error);
+        console.error(">>Erreur Nodemailer:", error);
         res.status(500).json({ error: "Échec de l'envoi de l'email" });
     }
 });
 
-// Email d'envoi d'email de confirmation de demande de pret
 // Email d'envoi d'email de confirmation de demande de pret
 app.post("/pret-confirme", async (req, res) => {
     console.log("Requête reçue:", req.body);
@@ -546,15 +537,14 @@ app.post("/pret-confirme", async (req, res) => {
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log(`✅ Email de confirmation de prêt envoyé à ${email}`);
+        console.log(` >>Email de confirmation de prêt envoyé à ${email}`);
         res.status(200).json({ message: "Email envoyé avec succès" });
     } catch (error) {
-        console.error("❌ Erreur Nodemailer:", error);
+        console.error(">>Erreur Nodemailer:", error);
         res.status(500).json({ error: "Échec de l'envoi de l'email" });
     }
 });
 
-// Email pour le refus de demande de pret
 // Email pour le refus de demande de pret
 app.post("/pret-refus", async (req, res) => {
     console.log("Requête reçue:", req.body);
@@ -592,59 +582,16 @@ app.post("/pret-refus", async (req, res) => {
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log(`✅ Email de refus de prêt envoyé à ${email}`);
+        console.log(`>>Email de refus de prêt envoyé à ${email}`);
         res.status(200).json({ message: "Email envoyé avec succès" });
     } catch (error) {
-        console.error("❌ Erreur Nodemailer:", error);
+        console.error(">>Erreur Nodemailer:", error);
         res.status(500).json({ error: "Échec de l'envoi de l'email" });
     }
 });
 
-// Route de test - ajoutez-la à votre server.js
-app.get('/api/debug/pool', async (req, res) => {
-    try {
-        console.log('🧪 Test pool en cours...');
-        
-        // Test 1: Connexion basique
-        const [test1] = await pool.promise().query('SELECT 1 as result');
-        console.log('Test 1 OK:', test1);
-        
-        // Test 2: Base de données
-        const [test2] = await pool.promise().query('SELECT DATABASE() as pool, USER() as user');
-        console.log('Test 2 OK:', test2);
-        
-        // Test 3: Tables existantes
-        const [test3] = await pool.promise().query(`
-            SELECT TABLE_NAME 
-            FROM INFORMATION_SCHEMA.TABLES 
-            WHERE TABLE_SCHEMA = 'railway'
-        `);
-        console.log('Tables trouvées:', test3);
-        
-        res.json({
-            status: 'OK',
-            tests: {
-                connection: 'OK',
-                database: test2[0],
-                tables: test3
-            }
-        });
-        
-    } catch (error) {
-        console.error('❌ ERREUR Test pool:');
-        console.error('Message:', error.message);
-        console.error('Code:', error.code);
-        console.error('Stack:', error.stack);
-        
-        res.status(500).json({
-            status: 'ERROR',
-            error: error.message,
-            code: error.code
-        });
-    }
-});
-// Route pour rechercher un livre par titre et auteur
-// Route pour rechercher un livre par titre et auteur - À PLACER AVANT /livres
+
+// Route pour rechercher un livre par titre et auteur 
 app.get("/livres/recherche", (req, res) => {
   const { titre, auteur } = req.query;
   
@@ -664,7 +611,7 @@ app.get("/livres/recherche", (req, res) => {
 
 // https://bibooks-app.up.railway.app/livres
 // Get all books
-// Route pour obtenir les livres (depuis la base de données)
+// Route pour obtenir les livres 
 app.get("/livres", async (req, res) => {
   try {
     // D'abord vérifier la base de données locale
@@ -759,7 +706,7 @@ app.get("/livres/:id", (req, res) => {
 
 // https://bibooks-app.up.railway.app/livres
 // Créer un nouveau livre
-// Créer un nouveau livre (manuel ou depuis Google Books)
+// Créer un nouveau livre
 app.post("/livres", upload.single("image"), async (req, res) => {
   const { titre, auteur, genre, date, prix, exp, description, googleBooksId } =
     req.body;
@@ -887,7 +834,6 @@ app.get("/google-books/:id", async (req, res) => {
 });
 
 // Route pour rechercher et sauvegarder des livres depuis Google Books
-// Route améliorée pour rechercher et sauvegarder des livres depuis Google Books
 app.post("/rechercher-livres-google", async (req, res) => {
   const { query, maxResults = 10 } = req.body;
   const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
@@ -926,8 +872,8 @@ app.post("/rechercher-livres-google", async (req, res) => {
         img: volumeInfo.imageLinks ? volumeInfo.imageLinks.thumbnail : null,
         date: volumeInfo.publishedDate || null,
         description: volumeInfo.description || "Pas de description disponible.",
-        prix: 0, // Valeur par défaut
-        exp: "Non spécifié", // Valeur par défaut
+        prix: 0, 
+        exp: "Non spécifié", 
       };
     });
 
@@ -978,8 +924,6 @@ app.post("/rechercher-livres-google", async (req, res) => {
   }
 });
 // https://bibooks-app.up.railway.app/livres/:id
-// Modifier un livre
-// https://bibooks-app.up.railway.app/livres/:id
 // Modifier un livre AVEC upload d'image
 app.put("/livres/:id", upload.single("image"), (req, res) => {
   const id = Number(req.params.id);
@@ -1028,7 +972,7 @@ app.put("/livres/:id", upload.single("image"), (req, res) => {
 });
 
 // https://bibooks-app.up.railway.app/livres/:id
-// Modifier un livre avec patch (mise à jour partielle) AVEC upload d'image
+// Modifier un livre avec patch AVEC upload d'image
 app.patch("/livres/:id", upload.single("image"), (req, res) => {
   const id = Number(req.params.id);
   const champs = req.body;
@@ -1263,16 +1207,14 @@ app.get("/prets/:id", (req, res) => {
 });
 
 // https://bibooks-app.up.railway.app/prets
-// Créer un nouveau prêt - VERSION CORRIGÉE
+// Créer un nouveau prêt 
 app.post("/prets", (req, res) => {
   const { livre_id, utilisateur_id, date_pret, date_retour, statut, nom } = req.body;
   
-  // ✅ SOLUTION RADICALE : Utiliser exactement la date reçue du frontend
-  // (supposant que le frontend envoie déjà YYYY-MM-DD)
   const datePretCorrigee = date_pret;
   const dateRetourCorrigee = date_retour;
 
-  console.log("📅 Dates utilisées:", { 
+  console.log("Dates utilisées:", { 
     datePretCorrigee, 
     dateRetourCorrigee 
   });
@@ -1288,7 +1230,7 @@ app.post("/prets", (req, res) => {
     
     // Vérifions ce qui a été inséré
     pool.query("SELECT * FROM prets WHERE id = ?", [result.insertId], (err, newPret) => {
-      console.log("📅 Date insérée en base:", newPret[0]?.date_retour);
+      console.log("Date insérée en base:", newPret[0]?.date_retour);
       res.json({ 
         message: "Prêt créé avec succès",
         date_retour_inseree: newPret[0]?.date_retour
@@ -1443,7 +1385,7 @@ app.use((req, res) => {
  res.sendFile(path.join(__dirname, "..","frontend", "404.html"));
 });
 
-// Error handler global — placer ICI, après toutes les routes
+// Error handler global
 app.use((err, req, res, next) => {
   console.error('=== ERREUR SERVEUR DÉTAILLÉE ===');
   console.error('URL:', req.url);
@@ -1454,10 +1396,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Erreur serveur', details: err.message });
 });
 
-// Export pour Vercel (TRÈS IMPORTANT)
+// Export pour Vercel
 module.exports = app;
 
-// Gardez le app.listen() pour le développement local
 if (require.main === module) {
   app.listen(port, '0.0.0.0', () => {
     console.log(`Server is running on port http://localhost:${port}`);
