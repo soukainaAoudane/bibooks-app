@@ -1,5 +1,6 @@
 /* Variables CSS pour une meilleure maintenabilité */
       :root {
+        --header-height:70px;
         --primary: #0077b6;
         --secondary: #00b4d8;
         --accent: #90e0ef;
@@ -753,3 +754,111 @@
         border-top: 1px solid rgba(0, 0, 0, 0.1);
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
       }
+// ...existing code...
+/* Header / nav responsive fixes */
+:root{
+  --header-height:70px;
+}
+
+/* Ensure header has explicit height for layout calculations */
+#header{
+  height:var(--header-height);
+  align-items:center;
+  padding:10px 18px;
+}
+
+/* Make sure nav is positioned directly under header using the variable */
+nav{
+  top:var(--header-height);
+  z-index:1050;
+}
+
+/* Mobile: show hamburger, hide horizontal menu by default */
+.menu-toggle{ display:none; }
+
+/* Keep header buttons visible on small screens */
+.bouton{ display:flex; gap:10px; align-items:center; }
+
+/* Ensure profile and theme buttons are compact and visible */
+#sombre, #profile, #button{
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  min-width:40px;
+  height:40px;
+  padding:6px 10px;
+  border-radius:10px;
+}
+
+/* Make nav links wrap nicely on medium screens */
+nav ul{ flex-wrap:wrap; justify-content:center; gap:18px; }
+
+/* Adjust accueil content to avoid overflow on small screens */
+.accueil-content{
+  width:100%;
+  max-width:920px;
+  padding:18px;
+  box-sizing:border-box;
+}
+
+/* ===== Specific breakpoints ===== */
+@media (max-width: 1024px){
+  :root{ --header-height:66px; }
+  #header{ padding:10px 16px; }
+  .accueil{ margin-top: calc(var(--header-height) + 20px); }
+  .accueil-content{ max-width:88%; }
+}
+
+@media (max-width: 768px){
+  :root{ --header-height:64px; }
+  /* show hamburger */
+  .menu-toggle{ display:inline-flex; position:relative; z-index:1205; }
+
+  /* collapse nav into vertical panel by default */
+  nav{
+    position:fixed;
+    left:8px;
+    right:8px;
+    top:var(--header-height);
+    border-radius:10px;
+    display:block;
+    padding:0;
+  }
+  nav ul{
+    display:none; /* JS should toggle a class to show */
+    flex-direction:column;
+    gap:10px;
+    padding:12px;
+    margin:0;
+    background:var(--secondary);
+    border-radius:8px;
+  }
+  /* helper class (if you toggle .open on nav) */
+  nav.open ul{ display:flex; }
+
+  /* ensure header buttons remain visible */
+  #sombre, #profile, #button{ min-width:36px; height:36px; padding:6px; }
+
+  /* reduce accueil content width */
+  .accueil-content{ max-width:92%; padding:14px; }
+  .livre{ min-height:420px; width:46%; }
+  .livre img{ width:150px; height:210px; }
+}
+
+@media (max-width:480px){
+  :root{ --header-height:60px; }
+  #header{ padding:8px 12px; }
+  #header h1{ font-size:1rem; }
+  .menu-toggle{ font-size:1.25rem; }
+  #sombre, #profile, #button{ min-width:34px; height:34px; padding:5px; font-size:0.95rem; }
+  .livre{ width:100%; min-height:420px; }
+  .accueil{ height:55vh; margin-top:calc(var(--header-height) + 8px); }
+  .accueil-content{ width:100%; max-width:96%; padding:12px; }
+}
+
+/* Accessibility focus (keep at end) */
+a:focus,button:focus,input:focus{
+  outline:3px solid rgba(0,180,216,0.18);
+  outline-offset:2px;
+}
+/* ...existing code... */
