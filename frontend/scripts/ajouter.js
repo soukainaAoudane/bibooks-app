@@ -1,4 +1,4 @@
-        const urlLivres = "https://bibooks-backend-nnrk.vercel.app//livres";
+        const urlLivres = "https://bibooks-backend-nnrk.vercel.app/livres";
         let livres = [];
         
         fetch(urlLivres)

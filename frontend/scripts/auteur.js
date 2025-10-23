@@ -11,9 +11,9 @@
         }, 100);
       }
 
-      const urlLivres = "https://bibooks-backend-nnrk.vercel.app//livres";
-      const urlDemandes = "https://bibooks-backend-nnrk.vercel.app//demandes";
-      const urlPrets = "https://bibooks-backend-nnrk.vercel.app//prets";
+      const urlLivres = "https://bibooks-backend-nnrk.vercel.app/livres";
+      const urlDemandes = "https://bibooks-backend-nnrk.vercel.app/demandes";
+      const urlPrets = "https://bibooks-backend-nnrk.vercel.app/prets";
       let livres = [];
       let demandes = [];
       let prets = [];

@@ -2,9 +2,9 @@ let livres = [];
 let demandes = [];
 let prets = [];
 
-const urlLivres = "https://bibooks-backend-nnrk.vercel.app//livres";
-const urlDemandes = "https://bibooks-backend-nnrk.vercel.app//demandes";
-const urlPrets = "https://bibooks-backend-nnrk.vercel.app//prets";
+const urlLivres = "https://bibooks-backend-nnrk.vercel.app/livres";
+const urlDemandes = "https://bibooks-backend-nnrk.vercel.app/demandes";
+const urlPrets = "https://bibooks-backend-nnrk.vercel.app/prets";
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
@@ -501,7 +501,7 @@ console.log("Date demande formatée:", dateDemande);
         
         // Envoyer l'email de confirmation (optionnel)
         try {
-            await fetch("https://bibooks-backend-nnrk.vercel.app//demande-pret", {
+            await fetch("https://bibooks-backend-nnrk.vercel.app/demande-pret", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ 
