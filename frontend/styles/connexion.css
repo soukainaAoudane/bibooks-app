@@ -5,6 +5,7 @@
   padding: 0;
 }
 
+/* Styles pour le corps de la page avec centrage */
 body {
   height: 100vh;
   background-color: lightblue;
@@ -16,6 +17,7 @@ body {
   padding: 20px;
 }
 
+/* Conteneur principal avec disposition flex */
 .main-container {
   display: flex;
   max-width: 900px;
@@ -27,6 +29,7 @@ body {
   min-height: 550px;
 }
 
+/* Section image avec dégradé de fond */
 .image-section {
   flex: 1;
   background: linear-gradient(135deg, #004d99, #00b4d8);
@@ -37,6 +40,7 @@ body {
   position: relative;
 }
 
+/* Overlay semi-transparent sur la section image */
 .image-section::before {
   content: "";
   position: absolute;
@@ -47,6 +51,7 @@ body {
   background: rgba(0, 0, 0, 0.1);
 }
 
+/* Image de la bibliothèque */
 .library-image {
   max-width: 100%;
   max-height: 100%;
@@ -55,6 +60,7 @@ body {
   object-fit: cover;
 }
 
+/* Texte superposé sur l'image */
 .image-text {
   position: absolute;
   bottom: 30px;
@@ -73,6 +79,7 @@ body {
   opacity: 0.9;
 }
 
+/* Section du formulaire */
 .form-section {
   flex: 1;
   padding: 40px;
@@ -81,6 +88,7 @@ body {
   justify-content: center;
 }
 
+/* Conteneur des formulaires avec effet de survol */
 .container {
   width: 100%;
   transition: transform 0.4s;
@@ -90,6 +98,7 @@ body {
   transform: scale(1.01);
 }
 
+/* Titre principal */
 h1 {
   color: #3366cc;
   margin-bottom: 25px;
@@ -97,7 +106,7 @@ h1 {
   font-size: 28px;
 }
 
-/* Styles des onglets */
+/* Styles des onglets de navigation */
 .tabs {
   display: flex;
   margin-bottom: 20px;
@@ -114,11 +123,13 @@ h1 {
   flex: 1;
 }
 
+/* Onglet actif avec indication visuelle */
 .tab.active {
   color: #004d99;
   border-bottom: 3px solid #00b4d8;
 }
 
+/* Contenu des onglets - masqué par défaut */
 .tab-content {
   display: none;
 }
@@ -127,7 +138,7 @@ h1 {
   display: block;
 }
 
-/* Styles communs aux formulaires */
+/* Styles communs aux champs de formulaire */
 input,
 select {
   width: 100%;
@@ -140,6 +151,7 @@ select {
   transition: border-color 0.3s;
 }
 
+/* États focus pour les champs */
 input:focus,
 select:focus {
   border-color: #004d99;
@@ -147,6 +159,7 @@ select:focus {
   outline: none;
 }
 
+/* Boutons de soumission */
 button {
   width: 100%;
   padding: 14px;
@@ -165,6 +178,7 @@ button:hover {
   transform: scale(1.02);
 }
 
+/* Messages de feedback */
 .message {
   margin: 15px 0;
   min-height: 24px;
@@ -180,6 +194,7 @@ button:hover {
   color: green;
 }
 
+/* Lien pour basculer entre les formulaires */
 .switch-form {
   text-align: center;
   margin-top: 20px;
@@ -197,13 +212,16 @@ button:hover {
   text-decoration: underline;
 }
 
-/* Responsive */
+/* Media Queries pour la responsivité */
+
+/* Tablettes et mobiles */
 @media (max-width: 768px) {
   .main-container {
     flex-direction: column;
     max-width: 450px;
   }
 
+  /* Masquer la section image sur mobile */
   .image-section {
     display: none;
   }
