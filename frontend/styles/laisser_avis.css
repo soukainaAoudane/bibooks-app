@@ -1,287 +1,307 @@
-      :root {
-        --primary: #539fec;
-        --secondary: #3498db;
-        --accent: #e74c3c;
-        --light: #ecf0f1;
-        --dark: #4a9cee;
-        --text: #4d88a5;
-        --text-light: #7f8c8d;
-        --success: #27ae60;
-        --warning: #f39c12;
-        --border-radius: 6px;
-        --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      }
+/* Variables CSS pour une gestion centralisée des couleurs et styles */
+:root {
+  --primary: #539fec;
+  --secondary: #3498db;
+  --accent: #e74c3c;
+  --light: #ecf0f1;
+  --dark: #4a9cee;
+  --text: #4d88a5;
+  --text-light: #7f8c8d;
+  --success: #27ae60;
+  --warning: #f39c12;
+  --border-radius: 6px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-          sans-serif;
-      }
+/* Reset CSS pour une base cohérente */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    sans-serif;
+}
 
-      body {
-        background-color: #f9f9f9;
-        color: var(--text);
-        line-height: 1.6;
-        padding: 0;
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+/* Styles de base pour le corps avec centrage */
+body {
+  background-color: #f9f9f9;
+  color: var(--text);
+  line-height: 1.6;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-      .container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 2rem;
-        display: grid;
-        grid-template-columns: 1fr 1.5fr;
-        background: white;
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
-        overflow: hidden;
-      }
+/* Conteneur principal avec disposition en grille */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
 
-      .book-panel {
-        background: linear-gradient(135deg, var(--primary), var(--dark));
-        padding: 3rem 2rem;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-      }
+/* Panneau latéral pour les informations du livre */
+.book-panel {
+  background: linear-gradient(135deg, var(--primary), var(--dark));
+  padding: 3rem 2rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
 
-      .book-panel::before {
-        content: "";
-        position: absolute;
-        top: -50px;
-        right: -50px;
-        width: 150px;
-        height: 150px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 50%;
-      }
+/* Éléments décoratifs circulaires pour le panneau livre */
+.book-panel::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+}
 
-      .book-panel::after {
-        content: "";
-        position: absolute;
-        bottom: -80px;
-        left: -80px;
-        width: 200px;
-        height: 200px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 50%;
-      }
+.book-panel::after {
+  content: "";
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+}
 
-      .book-cover {
-        width: 220px;
-        height: 320px;
-        border-radius: 4px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        object-fit: cover;
-        margin-bottom: 2rem;
-        position: relative;
-        z-index: 1;
-        transition: var(--transition);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
+/* Couverture du livre avec effets d'interaction */
+.book-cover {
+  width: 220px;
+  height: 320px;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  object-fit: cover;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+  transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-      .book-cover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-      }
+.book-cover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
 
-      .book-info {
-        text-align: center;
-        position: relative;
-        z-index: 1;
-      }
+/* Informations du livre */
+.book-info {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
 
-      .book-title {
-        font-size: 1.8rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        color: white;
-      }
+.book-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: white;
+}
 
-      .book-author {
-        font-size: 1.1rem;
-        opacity: 0.9;
-        margin-bottom: 0.5rem;
-        font-weight: 400;
-      }
+.book-author {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+}
 
-      .book-genre {
-        font-size: 0.9rem;
-        opacity: 0.8;
-        font-style: italic;
-      }
+.book-genre {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  font-style: italic;
+}
 
-      .form-panel {
-        padding: 3rem;
-        display: flex;
-        flex-direction: column;
-      }
+/* Panneau du formulaire */
+.form-panel {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+}
 
-      .form-header {
-        margin-bottom: 2rem;
-      }
+/* En-tête du formulaire */
+.form-header {
+  margin-bottom: 2rem;
+}
 
-      .form-title {
-        font-size: 1.8rem;
-        color: var(--primary);
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-      }
+.form-title {
+  font-size: 1.8rem;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
 
-      .form-subtitle {
-        color: var(--text-light);
-        font-size: 1rem;
-      }
+.form-subtitle {
+  color: var(--text-light);
+  font-size: 1rem;
+}
 
-      .form-group {
-        margin-bottom: 1.5rem;
-      }
+/* Groupes de champs du formulaire */
+.form-group {
+  margin-bottom: 1.5rem;
+}
 
-      .form-label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-        color: var(--primary);
-        font-size: 0.95rem;
-      }
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--primary);
+  font-size: 0.95rem;
+}
 
-      .form-label.required::after {
-        content: " *";
-        color: var(--accent);
-      }
+/* Indication des champs obligatoires */
+.form-label.required::after {
+  content: " *";
+  color: var(--accent);
+}
 
-      .form-input {
-        width: 100%;
-        padding: 0.8rem 1rem;
-        border: 1px solid #ddd;
-        border-radius: var(--border-radius);
-        font-size: 1rem;
-        transition: var(--transition);
-        background-color: #f9f9f9;
-      }
+/* Champs de saisie */
+.form-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+  background-color: #f9f9f9;
+}
 
-      .form-input:focus {
-        outline: none;
-        border-color: var(--secondary);
-        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        background-color: white;
-      }
+.form-input:focus {
+  outline: none;
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  background-color: white;
+}
 
-      .rating-container {
-        margin: 1.5rem 0;
-      }
+/* Conteneur pour le système de notation */
+.rating-container {
+  margin: 1.5rem 0;
+}
 
-      .rating {
-        display: flex;
-        justify-content: space-between;
-        max-width: 300px;
-      }
+.rating {
+  display: flex;
+  justify-content: space-between;
+  max-width: 300px;
+}
 
-      .rating input {
-        display: none;
-      }
+/* Système de notation étoiles */
+.rating input {
+  display: none;
+}
 
-      .rating label {
-        font-size: 2rem;
-        color: #ddd;
-        cursor: pointer;
-        transition: var(--transition);
-        padding: 0 0.2rem;
-      }
+.rating label {
+  font-size: 2rem;
+  color: #ddd;
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 0 0.2rem;
+}
 
-      .rating label:hover {
-        color: var(--warning);
-        transform: scale(1.1);
-      }
+.rating label:hover {
+  color: var(--warning);
+  transform: scale(1.1);
+}
 
-      .rating input:checked ~ label {
-        color: var(--warning);
-      }
+.rating input:checked ~ label {
+  color: var(--warning);
+}
 
-      .rating input:checked + label {
-        animation: bounce 0.5s;
-      }
+.rating input:checked + label {
+  animation: bounce 0.5s;
+}
 
-      .form-textarea {
-        min-height: 150px;
-        resize: vertical;
-        line-height: 1.6;
-      }
+/* Zone de texte pour les commentaires */
+.form-textarea {
+  min-height: 150px;
+  resize: vertical;
+  line-height: 1.6;
+}
 
-      .submit-btn {
-        background: linear-gradient(135deg, var(--primary), var(--dark));
-        color: white;
-        border: none;
-        padding: 1rem 2rem;
-        border-radius: var(--border-radius);
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: var(--transition);
-        margin-top: 1rem;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-      }
+/* Bouton de soumission avec dégradé */
+.submit-btn {
+  background: linear-gradient(135deg, var(--primary), var(--dark));
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
 
-      .submit-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        background: linear-gradient(135deg, var(--dark), var(--primary));
-      }
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, var(--dark), var(--primary));
+}
 
-      .submit-btn:active {
-        transform: translateY(0);
-      }
+.submit-btn:active {
+  transform: translateY(0);
+}
 
-      .submit-btn i {
-        font-size: 1.1rem;
-      }
+.submit-btn i {
+  font-size: 1.1rem;
+}
 
-      /* Responsive */
-      @media (max-width: 992px) {
-        .container {
-          grid-template-columns: 1fr;
-          max-width: 700px;
-        }
+/* Media Queries pour la responsivité */
 
-        .book-panel {
-          padding: 2rem;
-        }
+/* Tablettes */
+@media (max-width: 992px) {
+  .container {
+    grid-template-columns: 1fr;
+    max-width: 700px;
+  }
 
-        .form-panel {
-          padding: 2rem;
-        }
-      }
+  .book-panel {
+    padding: 2rem;
+  }
 
-      @media (max-width: 576px) {
-        body {
-          padding: 0;
-        }
+  .form-panel {
+    padding: 2rem;
+  }
+}
 
-        .container {
-          margin: 0;
-          border-radius: 0;
-        }
+/* Mobiles */
+@media (max-width: 576px) {
+  body {
+    padding: 0;
+  }
 
-        .book-cover {
-          width: 180px;
-          height: 260px;
-        }
+  .container {
+    margin: 0;
+    border-radius: 0;
+  }
 
-        .rating label {
-          font-size: 1.8rem;
-        }
-      }
+  .book-cover {
+    width: 180px;
+    height: 260px;
+  }
+
+  .rating label {
+    font-size: 1.8rem;
+  }
+}

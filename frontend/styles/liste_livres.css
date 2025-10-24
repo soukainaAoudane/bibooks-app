@@ -1,594 +1,626 @@
-      :root {
-        --primary-color: #0077b6;
-        --secondary-color: #00b4d8;
-        --dark-color: #023e8a;
-        --light-color: #caf0f8;
-        --text-color: #333;
-        --text-light: #f5f5f5;
-        --bg-color: #f5f5f5;
-        --card-bg: rgba(255, 255, 255, 0.8);
-        --error-color: #e63946;
-        --success-color: #2a9d8f;
-      }
-
-      .dark-mode {
-        --primary-color: #00b4d8;
-        --secondary-color: #0096c7;
-        --dark-color: #333;
-        --light-color: #444;
-        --text-color: #f0f4f8;
-        --text-light: #f0f4f8;
-        --bg-color: #333;
-        --card-bg: rgba(68, 68, 68, 0.8);
-      }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      }
-
-      body {
-        background-color: #f8f9fa;
-        color: #212529;
-        line-height: 1.6;
-      }
-
-      /* Header */
-      #header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%);
-        color: #fff;
-        padding: 15px 30px;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      }
-      .adminBtn,
-      .auteurBtn {
-        background: #00b4d8;
-        border: none;
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 30px;
-        cursor: pointer;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.3s;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      #profile {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #fff;
-        font-size: 1.8rem;
-        transition: transform 0.3s;
-      }
-
-      #profile:hover {
-        transform: rotate(90deg);
-      }
-
-      .bouton {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-      }
-
-      #button {
-        background: #00b4d8;
-        border: none;
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 30px;
-        cursor: pointer;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.3s;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-
-      #button:hover {
-        background: #0096c7;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-      }
-
-      #nom {
-        color: #fff;
-        font-weight: 600;
-        max-width: 200px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      /* Barre de recherche */
-      .chercher {
-        padding: 25px;
-        text-align: center;
-        background: #fff;
-        margin: 30px auto;
-        max-width: 800px;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      }
-
-      #chercher {
-        width: 100%;
-        max-width: 600px;
-        padding: 12px 20px;
-        border-radius: 8px;
-        border: 2px solid #dee2e6;
-        font-size: 1rem;
-        transition: all 0.3s;
-      }
-
-      #chercher:focus {
-        border-color: #00b4d8;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2);
-      }
-
-      #cherche {
-        color: #dc3545;
-        margin-top: 15px;
-        font-weight: 600;
-      }
-
-      /* Liste des livres */
-      #listeLivres {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 25px;
-        padding: 25px;
-        max-width: 1400px;
-        margin: 0 auto;
-      }
-
-      .livre-card {
-        background: #fff;
-        border-radius: 12px;
-        padding: 25px;
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .livre-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
-      }
-
-      .livre-card img {
-        width: 100%;
-        height: 220px;
-        object-fit: contain;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        background: #f8f9fa;
-        padding: 15px;
-        border: 1px solid #e9ecef;
-      }
-
-      .livre-card h1 {
-        color: #0077b6;
-        font-size: 1.4rem;
-        margin-bottom: 8px;
-        font-weight: 700;
-      }
-
-      .livre-card h3 {
-        color: #495057;
-        font-size: 1.1rem;
-        margin-bottom: 15px;
-        font-weight: 500;
-        font-style: italic;
-      }
-
-      .livre-card .infos {
-        margin-top: auto;
-      }
-
-      .livre-card p {
-        margin: 8px 0;
-        color: #6c757d;
-        font-size: 0.95rem;
-      }
-
-      .livre-card .infos strong {
-        color: #343a40;
-        font-weight: 600;
-      }
-
-      .livre-card .actions {
-        display: flex;
-        gap: 12px;
-        margin-top: 20px;
-      }
-
-      .livre-card button {
-        padding: 10px 18px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.3s;
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-      }
-
-      .livre-card .btn-pret {
-        background: #0077b6;
-        color: white;
-      }
-
-      .livre-card .btn-pret:hover {
-        background: #006494;
-        transform: translateY(-2px);
-      }
-
-      .livre-card .btn-modifier {
-        background: #17a2b8;
-        color: white;
-      }
-
-      .livre-card .btn-modifier:hover {
-        background: #138496;
-        transform: translateY(-2px);
-      }
-
-      .livre-card .btn-supprimer {
-        background: #dc3545;
-        color: white;
-      }
-
-      .livre-card .btn-supprimer:hover {
-        background: #c82333;
-        transform: translateY(-2px);
-      }
-
-      /* Détail d'un livre */
-      .livre-detail {
-        max-width: 900px;
-        margin: 30px auto;
-        background: #fff;
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-      }
-
-      .livre-detail img {
-        max-width: 350px;
-        height: auto;
-        display: block;
-        margin: 0 auto 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      }
-
-      .livre-detail h1 {
-        color: #0077b6;
-        text-align: center;
-        margin-bottom: 15px;
-        font-size: 2rem;
-        font-weight: 700;
-      }
-
-      .livre-detail h3 {
-        color: #495057;
-        text-align: center;
-        margin-bottom: 25px;
-        font-size: 1.3rem;
-        font-weight: 500;
-        font-style: italic;
-      }
-
-      .livre-detail .infos {
-        margin: 30px 0;
-        padding: 25px;
-        background: #f8f9fa;
-        border-radius: 8px;
-      }
-
-      .livre-detail .infos p {
-        margin: 15px 0;
-        font-size: 1.1rem;
-        line-height: 1.8;
-      }
-
-      .livre-detail .infos strong {
-        color: #0077b6;
-        display: inline-block;
-        min-width: 220px;
-        font-weight: 600;
-      }
-
-      .livre-detail .actions {
-        display: flex;
-        gap: 20px;
-        justify-content: center;
-        margin-top: 40px;
-      }
-
-      .livre-detail .actions button {
-        padding: 12px 25px;
-        min-width: 180px;
-        font-size: 1rem;
-        font-weight: 600;
-      }
-
-      /* Bouton Ajouter */
-      #aj {
-        text-align: center;
-        margin: 30px 0;
-      }
-
-      #aj a {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        background: #28a745;
-        color: white;
-        padding: 12px 25px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s;
-        box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
-      }
-
-      #aj a:hover {
-        background: #218838;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(40, 167, 69, 0.25);
-      }
-
-      /* Popup de modification */
-      /* Popup de modification - Style amélioré */
-      #popup {
-        overflow-y: auto;
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 2000;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .contenu {
-        background: var(--card-bg);
-        padding: 35px;
-        border-radius: 12px;
-        width: 90%;
-        max-width: 550px;
-        box-shadow: 0 0 15px rgba(0, 119, 182, 0.5);
-        max-height: 90vh;
-        overflow-y: auto;
-        transition: transform 0.3s;
-      }
-
-      .contenu:hover {
-        transform: scale(1.02);
-      }
-
-      .contenu h2,h3 {
-        color: var(--primary-color);
-        margin-bottom: 25px;
-        text-align: center;
-        font-size: 1.8rem;
-        font-weight: 700;
-      }
-
-      .contenu .form-group {
-        margin-bottom: 20px;
-      }
-
-      .contenu label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 8px;
-        color: var(--primary-color);
-      }
-
-      .contenu .required::after {
-        content: " *";
-        color: var(--error-color);
-      }
-
-      .contenu input,
-      .contenu textarea,
-      .contenu select {
-        width: 100%;
-        padding: 12px;
-        border: 2px solid #ddd;
-        border-radius: 6px;
-        font-size: 1rem;
-        color: var(--text-color);
-        background-color: rgba(255, 255, 255, 0.8);
-        transition: all 0.3s;
-      }
-
-      .contenu textarea {
-        min-height: 100px;
-        resize: vertical;
-      }
-
-      .contenu input:focus,
-      .contenu select:focus,
-      .contenu textarea:focus {
-        outline: none;
-        border-color: var(--secondary-color);
-        box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2);
-      }
-
-      .contenu input:hover,
-      .contenu select:hover,
-      .contenu textarea:hover {
-        border-color: var(--secondary-color);
-      }
-
-      .contenu .buttons {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 30px;
-        gap: 15px;
-      }
-
-      .contenu button {
-        padding: 12px 25px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 1rem;
-        transition: all 0.3s;
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-      }
-
-      .contenu .enregistrer {
-        background: var(--primary-color);
-        color: var(--text-light);
-      }
-
-      .contenu .enregistrer:hover {
-        background: var(--dark-color);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      .contenu .fermer {
-        background: var(--error-color);
-        color: var(--text-light);
-      }
-
-      .contenu .fermer:hover {
-        background: #c82333;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      #modification {
-        color: var(--success-color);
-        font-weight: 600;
-        text-align: center;
-        margin-top: 20px;
-        font-size: 1.1rem;
-      }
-
-      .file-input-container {
-        position: relative;
-        overflow: hidden;
-        display: inline-block;
-        width: 100%;
-      }
-
-      .file-input-button {
-        background: var(--secondary-color);
-        color: var(--text-light);
-        padding: 10px 15px;
-        border-radius: 6px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        transition: all 0.3s;
-      }
-
-      .file-input-button:hover {
-        background: var(--primary-color);
-      }
-
-      #image {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        cursor: pointer;
-        z-index: 10;
-      }
-
-      .file-name {
-        margin-top: 5px;
-        font-size: 0.8rem;
-        color: var(--text-color);
-      }
-
-      #imgPreview {
-        max-width: 200px;
-        max-height: 300px;
-        display: block;
-        margin: 15px auto;
-        border-radius: 5px;
-        border: 2px solid var(--primary-color);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      }
-      .btn-favoris {
-        background: #6ba6ff;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
-        transition: all 0.3s;
-      }
-
-      .btn-favoris:hover {
-        background: #52abff;
-        transform: translateY(-2px);
-      }
-
-      .btn-favoris i {
-        margin-right: 5px;
-      }
-      .toast {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        padding: 15px 25px;
-        border-radius: 5px;
-        color: white;
-        z-index: 1000;
-        opacity: 0;
-        transition: opacity 0.3s;
-      }
-
-      .toast.show {
-        opacity: 1;
-      }
-
-      .toast-success {
-        background-color: #28a745;
-      }
-
-      .toast-info {
-        background-color: #17a2b8;
-      }
-
-      .toast-error {
-        background-color: #dc3545;
-      }
+/* Variables CSS pour une gestion centralisée des couleurs et styles */
+:root {
+  --primary-color: #0077b6;
+  --secondary-color: #00b4d8;
+  --dark-color: #023e8a;
+  --light-color: #caf0f8;
+  --text-color: #333;
+  --text-light: #f5f5f5;
+  --bg-color: #f5f5f5;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --error-color: #e63946;
+  --success-color: #2a9d8f;
+}
+
+/* Variables pour le mode sombre */
+.dark-mode {
+  --primary-color: #00b4d8;
+  --secondary-color: #0096c7;
+  --dark-color: #333;
+  --light-color: #444;
+  --text-color: #f0f4f8;
+  --text-light: #f0f4f8;
+  --bg-color: #333;
+  --card-bg: rgba(68, 68, 68, 0.8);
+}
+
+/* Reset CSS pour une base cohérente */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Styles de base pour le corps */
+body {
+  background-color: #f8f9fa;
+  color: #212529;
+  line-height: 1.6;
+}
+
+/* Header principal avec dégradé et position sticky */
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%);
+  color: #fff;
+  padding: 15px 30px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Boutons d'administration et auteur */
+.adminBtn,
+.auteurBtn {
+  background: #00b4d8;
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Bouton de profil avec effet de rotation au survol */
+#profile {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.8rem;
+  transition: transform 0.3s;
+}
+
+#profile:hover {
+  transform: rotate(90deg);
+}
+
+/* Conteneur pour les boutons */
+.bouton {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Bouton principal avec effets d'interaction */
+#button {
+  background: #00b4d8;
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#button:hover {
+  background: #0096c7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Affichage du nom utilisateur avec ellipsis */
+#nom {
+  color: #fff;
+  font-weight: 600;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Section de recherche */
+.chercher {
+  padding: 25px;
+  text-align: center;
+  background: #fff;
+  margin: 30px auto;
+  max-width: 800px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Champ de recherche */
+#chercher {
+  width: 100%;
+  max-width: 600px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 2px solid #dee2e6;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+#chercher:focus {
+  border-color: #00b4d8;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2);
+}
+
+/* Message d'erreur de recherche */
+#cherche {
+  color: #dc3545;
+  margin-top: 15px;
+  font-weight: 600;
+}
+
+/* Grille responsive pour la liste des livres */
+#listeLivres {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+  padding: 25px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Cartes de livres avec effets de survol */
+.livre-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.livre-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Images des livres */
+.livre-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  background: #f8f9fa;
+  padding: 15px;
+  border: 1px solid #e9ecef;
+}
+
+/* Titres des livres */
+.livre-card h1 {
+  color: #0077b6;
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.livre-card h3 {
+  color: #495057;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* Section d'informations des livres */
+.livre-card .infos {
+  margin-top: auto;
+}
+
+.livre-card p {
+  margin: 8px 0;
+  color: #6c757d;
+  font-size: 0.95rem;
+}
+
+.livre-card .infos strong {
+  color: #343a40;
+  font-weight: 600;
+}
+
+/* Actions disponibles sur les livres */
+.livre-card .actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.livre-card button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Boutons colorés avec leurs états de survol */
+.livre-card .btn-pret {
+  background: #0077b6;
+  color: white;
+}
+
+.livre-card .btn-pret:hover {
+  background: #006494;
+  transform: translateY(-2px);
+}
+
+.livre-card .btn-modifier {
+  background: #17a2b8;
+  color: white;
+}
+
+.livre-card .btn-modifier:hover {
+  background: #138496;
+  transform: translateY(-2px);
+}
+
+.livre-card .btn-supprimer {
+  background: #dc3545;
+  color: white;
+}
+
+.livre-card .btn-supprimer:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+}
+
+/* Page de détail d'un livre */
+.livre-detail {
+  max-width: 900px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.livre-detail img {
+  max-width: 350px;
+  height: auto;
+  display: block;
+  margin: 0 auto 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.livre-detail h1 {
+  color: #0077b6;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.livre-detail h3 {
+  color: #495057;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.livre-detail .infos {
+  margin: 30px 0;
+  padding: 25px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.livre-detail .infos p {
+  margin: 15px 0;
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.livre-detail .infos strong {
+  color: #0077b6;
+  display: inline-block;
+  min-width: 220px;
+  font-weight: 600;
+}
+
+.livre-detail .actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.livre-detail .actions button {
+  padding: 12px 25px;
+  min-width: 180px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Bouton d'ajout */
+#aj {
+  text-align: center;
+  margin: 30px 0;
+}
+
+#aj a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #28a745;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s;
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+}
+
+#aj a:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(40, 167, 69, 0.25);
+}
+
+/* Popup de modification avec overlay */
+#popup {
+  overflow-y: auto;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenu de la popup */
+.contenu {
+  background: var(--card-bg);
+  padding: 35px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 550px;
+  box-shadow: 0 0 15px rgba(0, 119, 182, 0.5);
+  max-height: 90vh;
+  overflow-y: auto;
+  transition: transform 0.3s;
+}
+
+.contenu:hover {
+  transform: scale(1.02);
+}
+
+.contenu h2, h3 {
+  color: var(--primary-color);
+  margin-bottom: 25px;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+/* Groupes de formulaire */
+.contenu .form-group {
+  margin-bottom: 20px;
+}
+
+.contenu label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--primary-color);
+}
+
+/* Indication des champs obligatoires */
+.contenu .required::after {
+  content: " *";
+  color: var(--error-color);
+}
+
+/* Champs de formulaire */
+.contenu input,
+.contenu textarea,
+.contenu select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: var(--text-color);
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s;
+}
+
+.contenu textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.contenu input:focus,
+.contenu select:focus,
+.contenu textarea:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2);
+}
+
+.contenu input:hover,
+.contenu select:hover,
+.contenu textarea:hover {
+  border-color: var(--secondary-color);
+}
+
+/* Boutons de la popup */
+.contenu .buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  gap: 15px;
+}
+
+.contenu button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: all 0.3s;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.contenu .enregistrer {
+  background: var(--primary-color);
+  color: var(--text-light);
+}
+
+.contenu .enregistrer:hover {
+  background: var(--dark-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contenu .fermer {
+  background: var(--error-color);
+  color: var(--text-light);
+}
+
+.contenu .fermer:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Message de modification réussie */
+#modification {
+  color: var(--success-color);
+  font-weight: 600;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.1rem;
+}
+
+/* Conteneur pour l'upload d'image */
+.file-input-container {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+.file-input-button {
+  background: var(--secondary-color);
+  color: var(--text-light);
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.file-input-button:hover {
+  background: var(--primary-color);
+}
+
+#image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.file-name {
+  margin-top: 5px;
+  font-size: 0.8rem;
+  color: var(--text-color);
+}
+
+/* Aperçu de l'image uploadée */
+#imgPreview {
+  max-width: 200px;
+  max-height: 300px;
+  display: block;
+  margin: 15px auto;
+  border-radius: 5px;
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Bouton d'ajout aux favoris */
+.btn-favoris {
+  background: #6ba6ff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s;
+}
+
+.btn-favoris:hover {
+  background: #52abff;
+  transform: translateY(-2px);
+}
+
+.btn-favoris i {
+  margin-right: 5px;
+}
+
+/* Notifications toast */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  border-radius: 5px;
+  color: white;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+/* Couleurs des toasts selon le type */
+.toast-success {
+  background-color: #28a745;
+}
+
+.toast-info {
+  background-color: #17a2b8;
+}
+
+.toast-error {
+  background-color: #dc3545;
+}
