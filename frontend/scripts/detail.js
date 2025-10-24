@@ -1,32 +1,34 @@
+// Initialisation de la page au chargement
 document.addEventListener("DOMContentLoaded", async () => {
-    // Variables globales
+    // Variables globales pour stocker les données
     let prets = [];
     let demandes = [];
     let livres = [];
     let livreSelectionne = null;
     
-    // URLs API
+    // URLs de l'API pour les différentes ressources
     const urlPrets = "https://bibooks-backend-nnrk.vercel.app/prets";
     const urlDemandes = "https://bibooks-backend-nnrk.vercel.app/demandes";
     const urlLivres = "https://bibooks-backend-nnrk.vercel.app/livres";
     
-    // État de connexion
+    // Récupération de l'état de connexion et des données utilisateur
     const connecté = localStorage.getItem("connecté");
     const utilisateur = JSON.parse(localStorage.getItem("utilisateur"));
     livreSelectionne = JSON.parse(localStorage.getItem("livreSelectionne"));
 
-    // Initialisation
+    // Chargement et initialisation des différentes fonctionnalités
     await chargerDonnees();
     afficherDetailsLivre();
     gererAuthentification();
     gererDemandePret();
     afficherLivresSimilaires();
     
+    // Gestion des avis
     const avis = await fetchAvis(livreSelectionne.id);
     afficherAvis(avis);
     afficherLienAvis();
     
-    // Gestion du mode sombre
+    // Configuration du mode sombre
     document.getElementById("sombre").addEventListener("click", () => {
         document.body.classList.toggle("dark");
         const icon = document.querySelector("#sombre i");
@@ -36,19 +38,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             `<i class="${icon.className}"></i> ${isDark ? "Mode clair" : "Mode sombre"}`;
     });
 
-    // Fonctions
+    // Fonction de chargement des données depuis l'API
     async function chargerDonnees() {
         try {
+            // Chargement parallèle des différentes données
             const [resPrets, resDemandes, resLivres] = await Promise.all([
                 fetch(urlPrets),
                 fetch(urlDemandes),
                 fetch(urlLivres)
             ]);
             
+            // Vérification des réponses
             if (!resPrets.ok || !resDemandes.ok || !resLivres.ok) {
                 throw new Error("Erreur lors du chargement des données");
             }
             
+            // Conversion des réponses en JSON
             prets = await resPrets.json();
             demandes = await resDemandes.json();
             livres = await resLivres.json();
@@ -58,23 +63,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // Affichage des détails du livre sélectionné
     function afficherDetailsLivre() {
+        // Redirection si aucun livre n'est sélectionné
         if (!livreSelectionne) {
             window.location.href = "accueil";
             return;
         }
 
         const imgElement = document.getElementById("img");
-        // Vérifie si l'image est une URL complète (http/https) ou un chemin local
+        // Gestion des images (URL externes vs chemins locaux)
         if (livreSelectionne.img && (livreSelectionne.img.startsWith('http://') || livreSelectionne.img.startsWith('https://'))) {
-            imgElement.src = livreSelectionne.img; // Utilise directement l'URL externe
+            imgElement.src = livreSelectionne.img; // URL externe directe
         } else {
             imgElement.src = livreSelectionne.img 
                 ? `images/${livreSelectionne.img}` 
-                : "images/placeholder.jpg";
+                : "images/placeholder.jpg"; // Image par défaut
         }
         imgElement.alt = livreSelectionne.titre;
 
+        // Affichage des informations du livre
         document.getElementById("titre").textContent = livreSelectionne.titre;
         document.getElementById("auteur").textContent = `Par ${livreSelectionne.auteur}`;
         document.getElementById("description").textContent = 
@@ -87,11 +95,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             ? `${Number(livreSelectionne.prix).toFixed(2)} €` 
             : "N/A";
         
-        // Gérer l'exemplaire pour les livres Google Books
+        // Gestion des exemplaires disponibles
         const expValue = livreSelectionne.exp !== undefined ? livreSelectionne.exp : 1;
         document.getElementById("exp").textContent = 
             expValue || "Information non disponible";
 
+        // Configuration du bouton de demande de prêt
         const btnPret = document.getElementById("demander-pret");
         if (expValue <= 0) {
             btnPret.disabled = true;
@@ -100,10 +109,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             btnPret.disabled = false;
             btnPret.textContent = "Demander un prêt";
-            btnPret.style.backgroundColor = ""; // Réinitialise le style
+            btnPret.style.backgroundColor = ""; // Style par défaut
         }
     }
 
+    // Gestion de l'authentification et des boutons utilisateur
     function gererAuthentification() {
         const button = document.getElementById("button");
         const buttonIcon = document.getElementById("button-icon");
@@ -112,10 +122,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const profileBtn = document.getElementById("profile");
 
         if (connecté === "oui" && utilisateur) {
+            // Configuration pour utilisateur connecté
             buttonIcon.className = "fas fa-sign-out-alt";
             buttonText.textContent = "Déconnexion";
             nom.textContent = `Bienvenue ${utilisateur.nom}`;
 
+            // Configuration selon le rôle utilisateur
             if (utilisateur.role === "admin") {
                 profileBtn.innerHTML = '<i class="fas fa-user-shield"></i>';
                 profileBtn.title = "Espace Admin";
@@ -128,24 +140,27 @@ document.addEventListener("DOMContentLoaded", async () => {
                 profileBtn.onclick = () => (window.location.href = "profil");
             }
 
+            // Déconnexion
             button.onclick = () => {
                 localStorage.removeItem("connecté");
                 localStorage.removeItem("utilisateur");
                 window.location.href = "accueil";
             };
         } else {
+            // Configuration pour utilisateur non connecté
             button.onclick = () => (window.location.href = "connexion");
             profileBtn.onclick = () => (window.location.href = "connexion");
         }
     }
 
+    // Gestion des demandes de prêt
     function gererDemandePret() {
         document.getElementById("demander-pret").addEventListener("click", async () => {
             if (!livreSelectionne) return;
 
             if (connecté === "oui" && utilisateur) {
                 try {
-                    // Vérifier les demandes existantes
+                    // Vérification des demandes existantes
                     const responseDemandes = await fetch("https://bibooks-backend-nnrk.vercel.app/demandes");
                     const demandes = await responseDemandes.json();
                     
@@ -160,7 +175,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         return;
                     }
 
-                    // Vérifier les prêts existants
+                    // Vérification des prêts existants
                     const responsePrets = await fetch("https://bibooks-backend-nnrk.vercel.app/prets");
                     const prets = await responsePrets.json();
                     
@@ -175,7 +190,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         return;
                     }
 
-                    // Sauvegarder le livre dans localStorage pour la page demande_pret
+                    // Sauvegarde pour la page de demande de prêt
                     localStorage.setItem("livreSelectionne", JSON.stringify(livreSelectionne));
                     window.location.href = "demande_pret";
                     
@@ -190,16 +205,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // Affichage des livres similaires
     function afficherLivresSimilaires() {
         const container = document.getElementById("livres-similaires");
         container.innerHTML = "";
 
         if (!livreSelectionne) return;
 
+        // Filtrage des livres par genre (excluant le livre actuel)
         const similaires = livres.filter(
             livre => livre.genre === livreSelectionne.genre &&
                     livre.titre !== livreSelectionne.titre
-        ).slice(0, 4); // Limiter à 4 livres similaires
+        ).slice(0, 4); // Limite à 4 livres
 
         if (similaires.length === 0) {
             container.innerHTML = `
@@ -210,11 +227,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+        // Création des cartes de livres similaires
         similaires.forEach(livre => {
             const bookElement = document.createElement("div");
             bookElement.className = "similar-book";
             
-            // Gestion de l'image pour les livres Google Books
+            // Gestion des images
             let imageSrc = "images/placeholder.jpg";
             if (livre.img) {
                 if (livre.img.startsWith('http://') || livre.img.startsWith('https://')) {
@@ -231,6 +249,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <p class="availability">${livre.exp > 0 ? 'Disponible' : 'Indisponible'}</p>
             `;
 
+            // Navigation vers les détails du livre similaire
             bookElement.addEventListener("click", () => {
                 localStorage.setItem("livreSelectionne", JSON.stringify(livre));
                 window.location.href = "detail";
@@ -240,6 +259,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // Récupération des avis depuis l'API
     async function fetchAvis(livreId) {
         try {
             const res = await fetch(`https://bibooks-backend-nnrk.vercel.app/avis?livre_id=${livreId}`);
@@ -251,6 +271,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // Affichage des avis existants
     function afficherAvis(avisList) {
         const container = document.getElementById("avis-liste");
         container.innerHTML = "";
@@ -264,6 +285,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+        // Création des cartes d'avis
         avisList.forEach(avis => {
             const reviewElement = document.createElement("div");
             reviewElement.className = "review-card";
@@ -282,6 +304,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // Vérification de l'éligibilité pour laisser un avis
     function peutDonnerAvis(prets, utilisateur, livreId) {
         return prets.some(
             p => p.nom === utilisateur.nom && 
@@ -290,6 +313,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
     }
 
+    // Affichage du lien pour laisser un avis
     function afficherLienAvis() {
         const container = document.getElementById("avis-lien-container");
         container.innerHTML = "";
