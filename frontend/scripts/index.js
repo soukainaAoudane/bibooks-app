@@ -6,14 +6,15 @@ const livresParPage = 5;
 let livres = [];
 const urlLivres = "https://bibooks-backend-nnrk.vercel.app/livres";
 
+// Initialisation de la page au chargement
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("DOM chargé - initialisation...");
     
-    // Récupérer l'état de connexion à l'intérieur de l'event listener
+    // Récupération de l'état de connexion
     const connected = localStorage.getItem("connecté");
     const utilisateur = JSON.parse(localStorage.getItem("utilisateur"));
 
-    // Menu hamburger pour mobile
+    // Configuration du menu hamburger pour mobile
     const menuToggle = document.querySelector(".menu-toggle");
     const nav = document.querySelector("nav");
 
@@ -23,28 +24,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Fermer le menu lorsqu'on clique sur un lien
+    // Fermeture du menu lors du clic sur un lien
     document.querySelectorAll("nav a").forEach((link) => {
         link.addEventListener("click", () => {
             if (nav) nav.classList.remove("active");
         });
     });
 
-    // Fetch books from your local server on page load
+    // Chargement des livres depuis l'API
     try {
         const response = await fetch(urlLivres);
         if (!response.ok) {
-            console.warn("Could not load local books.");
+            console.warn("Impossible de charger les livres locaux.");
         } else {
             livres = await response.json();
             afficherNouveautes();
             afficherPopulaires();
         }
     } catch (err) {
-        console.error("Error fetching local books:", err);
+        console.error("Erreur lors du chargement des livres:", err);
     }
 
-    // Gestion de l'authentification
+    // Gestion de l'authentification et des boutons
     const button = document.getElementById("button");
     const buttonIcon = document.getElementById("button-icon");
     const buttonText = document.getElementById("button-text");
@@ -52,10 +53,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const profileBtn = document.getElementById("profile");
 
     if (connected === "oui" && utilisateur) {
+        // Configuration pour utilisateur connecté
         buttonIcon.className = "fas fa-sign-out-alt";
         buttonText.textContent = "Déconnexion";
         nom.textContent = "Bienvenue " + utilisateur.nom;
 
+        // Configuration selon le rôle
         if (utilisateur.role === "admin") {
             profileBtn.innerHTML = '<i class="fas fa-user-shield"></i>';
             profileBtn.title = "Espace Admin";
@@ -74,6 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             window.location.reload();
         };
     } else {
+        // Configuration pour utilisateur non connecté
         if (button) {
             button.onclick = () => (window.location.href = "connexion");
         }
@@ -87,7 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Catégories
+    // Configuration des filtres par catégorie
     document.querySelectorAll(".categorie").forEach((btn) => {
         btn.addEventListener("click", () => {
             const filter = btn.getAttribute("data-genre");
@@ -95,7 +99,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-    // Recherche
+    // Configuration de la recherche
     const searchButton = document.querySelector(".cherches");
     const searchInput = document.getElementById("chercher");
     const suggestions = document.getElementById("suggestions");
@@ -117,7 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
-        // Suggestions de recherche
+        // Affichage des suggestions de recherche
         searchInput.addEventListener("input", (e) => {
             const value = e.target.value.trim();
             if (value.length > 2) {
@@ -128,14 +132,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Cacher les suggestions quand on clique ailleurs
+    // Masquage des suggestions lors d'un clic extérieur
     document.addEventListener("click", (e) => {
         if (!e.target.closest(".search-container") && suggestions) {
             suggestions.style.display = "none";
         }
     });
 
-    // Mode sombre
+    // Configuration du mode sombre
     const sombreBtn = document.getElementById("sombre");
     if (sombreBtn) {
         sombreBtn.addEventListener("click", () => {
@@ -153,7 +157,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Bouton "Voir tous"
+    // Configuration du bouton "Voir tous"
     const voirTousBtn = document.getElementById("voir-tous");
     if (voirTousBtn) {
         voirTousBtn.addEventListener("click", function (e) {
@@ -166,7 +170,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("Initialisation terminée");
 });
 
-// Afficher les suggestions de recherche
+// Affichage des suggestions de recherche depuis Google Books API
 async function showSuggestions(query) {
     try {
         const response = await fetch(
@@ -203,10 +207,11 @@ async function showSuggestions(query) {
             suggestions.style.display = "none";
         }
     } catch (error) {
-        console.error("Error fetching suggestions:", error);
+        console.error("Erreur lors de la récupération des suggestions:", error);
     }
 }
 
+// Fonction de recherche principale
 async function chercher(motCle) {
     const div = document.getElementById("resultats-recherche");
     if (!div) return;
@@ -259,6 +264,7 @@ async function chercher(motCle) {
     }
 }
 
+// Filtrage des livres par genre
 async function filtrer(genre) {
     const div = document.getElementById("resultat-filtre");
     if (!div) return;
@@ -290,6 +296,7 @@ async function filtrer(genre) {
     }
 }
 
+// Affichage d'une page filtrée avec pagination
 function afficherPageFiltree() {
     const div = document.getElementById("resultat-filtre");
     if (!div) return;
@@ -343,6 +350,7 @@ function afficherPageFiltree() {
     });
 }
 
+// Changement de page dans la pagination
 function changerPage(nouvellePage) {
     const totalPages = Math.ceil(livresFiltres.length / livresParPage);
     if (nouvellePage >= 1 && nouvellePage <= totalPages) {
@@ -356,7 +364,7 @@ function changerPage(nouvellePage) {
     }
 }
 
-// Fonction pour sauvegarder un livre Google Books dans la base MySQL
+// Sauvegarde d'un livre Google Books dans la base de données
 async function sauvegarderLivreGoogle(livreGoogle) {
     try {
         // Pour les livres déjà dans la base locale, retourner l'ID existant
@@ -364,7 +372,7 @@ async function sauvegarderLivreGoogle(livreGoogle) {
             return livreGoogle.id;
         }
 
-        // Vérifier si le livre existe déjà dans la base
+        // Vérification de l'existence du livre dans la base
         const response = await fetch(`https://bibooks-backend-nnrk.vercel.app/livres`);
         if (response.ok) {
             const tousLesLivres = await response.json();
@@ -378,7 +386,7 @@ async function sauvegarderLivreGoogle(livreGoogle) {
             }
         }
 
-        // Préparer les données du livre pour l'insertion
+        // Préparation des données pour l'insertion
         const livreData = {
             titre: livreGoogle.titre,
             auteur: livreGoogle.auteur,
@@ -392,7 +400,7 @@ async function sauvegarderLivreGoogle(livreGoogle) {
 
         console.log("Sauvegarde du livre:", livreData);
 
-        // Créer le livre dans la base
+        // Création du livre dans la base
         const responseCreation = await fetch("https://bibooks-backend-nnrk.vercel.app/livres", {
             method: "POST",
             headers: {
@@ -411,11 +419,12 @@ async function sauvegarderLivreGoogle(livreGoogle) {
         
     } catch (error) {
         console.error("Erreur détaillée sauvegarde livre:", error);
-        // En cas d'erreur, on utilise l'ID temporaire pour continuer
+        // En cas d'erreur, utilisation d'un ID temporaire
         return 'temp_' + Date.now();
     }
 }
 
+// Création d'une carte de livre
 function createBookCard(container, livre) {
     const divLivre = document.createElement("div");
     divLivre.className = "livre";
@@ -436,7 +445,7 @@ function createBookCard(container, livre) {
         <p class="livre-auteur">${livre.auteur || 'Auteur non spécifié'}</p>
     `;
 
-    // Récupérer l'état de connexion actuel
+    // Récupération de l'état de connexion actuel
     const connected = localStorage.getItem("connecté");
     const utilisateur = JSON.parse(localStorage.getItem("utilisateur"));
 
@@ -449,31 +458,31 @@ function createBookCard(container, livre) {
         try {
             console.log("Clic sur Voir détails pour:", livre.titre);
             
-            // Pour les livres Google Books, sauvegarder d'abord
+            // Sauvegarde des livres Google Books
             let livreId = livre.id;
-            if (livre.id && livre.id.length > 10) { // C'est un ID Google Books
+            if (livre.id && livre.id.length > 10) { // Identification des IDs Google Books
                 livreId = await sauvegarderLivreGoogle(livre);
             }
             
-            // Mettre à jour l'ID du livre
+            // Mise à jour de l'ID du livre
             livre.id = livreId;
             
-            // Sauvegarder dans localStorage
+            // Sauvegarde dans le localStorage
             localStorage.setItem("livreSelectionne", JSON.stringify(livre));
             console.log("Livre sauvegardé dans localStorage, redirection vers detail");
             
-            // Rediriger
+            // Redirection
             window.location.href = "detail";
         } catch (error) {
             console.error("Erreur:", error);
-            // Même en cas d'erreur, on redirige vers les détails
+            // Redirection même en cas d'erreur
             localStorage.setItem("livreSelectionne", JSON.stringify(livre));
             window.location.href = "detail";
         }
     };
     divLivre.appendChild(details);
 
-    // Bouton "Demander un prêt" (seulement pour les utilisateurs connectés non-admin)
+    // Bouton "Demander un prêt" (réservé aux utilisateurs connectés non-admin)
     if (connected === "oui" && utilisateur && utilisateur.role !== "admin") {
         const btnPret = document.createElement("button");
         btnPret.className = "demander-pret";
@@ -484,24 +493,24 @@ function createBookCard(container, livre) {
             try {
                 console.log("Clic sur Demander un prêt pour:", livre.titre);
                 
-                // Pour les livres Google Books, sauvegarder d'abord
+                // Sauvegarde des livres Google Books
                 let livreId = livre.id;
-                if (livre.id && livre.id.length > 10) { // C'est un ID Google Books
+                if (livre.id && livre.id.length > 10) { // Identification des IDs Google Books
                     livreId = await sauvegarderLivreGoogle(livre);
                 }
                 
-                // Mettre à jour l'ID du livre
+                // Mise à jour de l'ID du livre
                 livre.id = livreId;
                 
-                // Sauvegarder dans localStorage
+                // Sauvegarde dans le localStorage
                 localStorage.setItem("livreSelectionne", JSON.stringify(livre));
                 console.log("Livre sauvegardé dans localStorage, redirection vers demande_pret");
                 
-                // Rediriger
+                // Redirection
                 window.location.href = "demande_pret";
             } catch (error) {
                 console.error("Erreur:", error);
-                // Même en cas d'erreur, on redirige vers la demande de prêt
+                // Redirection même en cas d'erreur
                 localStorage.setItem("livreSelectionne", JSON.stringify(livre));
                 window.location.href = "demande_pret";
             }
@@ -509,28 +518,28 @@ function createBookCard(container, livre) {
         divLivre.appendChild(btnPret);
     }
 
-    // Clic sur la carte du livre
+    // Gestion du clic sur la carte du livre
     divLivre.addEventListener("click", async (e) => {
-        // Éviter de déclencher quand on clique sur les boutons
+        // Éviter le déclenchement lors du clic sur les boutons
         if (e.target.tagName === 'BUTTON') return;
         
         try {
             console.log("Clic sur la carte livre pour:", livre.titre);
             
-            // Pour les livres Google Books, sauvegarder d'abord
+            // Sauvegarde des livres Google Books
             let livreId = livre.id;
-            if (livre.id && livre.id.length > 10) { // C'est un ID Google Books
+            if (livre.id && livre.id.length > 10) { // Identification des IDs Google Books
                 livreId = await sauvegarderLivreGoogle(livre);
             }
             
-            // Mettre à jour l'ID du livre
+            // Mise à jour de l'ID du livre
             livre.id = livreId;
             
-            // Sauvegarder dans localStorage
+            // Sauvegarde dans le localStorage
             localStorage.setItem("livreSelectionne", JSON.stringify(livre));
             console.log("Livre sauvegardé dans localStorage, redirection vers detail");
             
-            // Rediriger
+            // Redirection
             window.location.href = "detail";
         } catch (error) {
             console.error("Erreur:", error);
@@ -542,6 +551,7 @@ function createBookCard(container, livre) {
     container.appendChild(divLivre);
 }
 
+// Affichage des livres populaires
 function afficherPopulaires() {
     const divPopulaires = document.getElementById("populaires");
     if (!divPopulaires) return;
@@ -551,6 +561,7 @@ function afficherPopulaires() {
     livresPopulaires.forEach((livre) => createBookCard(divPopulaires, livre));
 }
 
+// Affichage des nouveautés
 function afficherNouveautes() {
     const divNouveautes = document.getElementById("liste-nouveautes");
     if (!divNouveautes) return;
