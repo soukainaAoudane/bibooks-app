@@ -1,29 +1,34 @@
+// Variables globales pour stocker les données
 let livres = [];
 let demandes = [];
 let prets = [];
 
+// URLs de l'API pour les différentes ressources
 const urlLivres = "https://bibooks-backend-nnrk.vercel.app/livres";
 const urlDemandes = "https://bibooks-backend-nnrk.vercel.app/demandes";
 const urlPrets = "https://bibooks-backend-nnrk.vercel.app/prets";
 
+// Initialisation de la page au chargement
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        // Charger les données
+        // Chargement parallèle des données depuis l'API
         const [resLivres, resDemandes, resPrets] = await Promise.all([
             fetch(urlLivres),
             fetch(urlDemandes),
             fetch(urlPrets)
         ]);
 
+        // Vérification des réponses HTTP
         if (!resLivres.ok || !resDemandes.ok || !resPrets.ok) {
             throw new Error("Erreur lors du chargement des données.");
         }
 
+        // Conversion des réponses en JSON
         livres = await resLivres.json();
         demandes = await resDemandes.json();
         prets = await resPrets.json();
 
-        // Gestion de l'authentification
+        // Gestion de l'authentification utilisateur
         const connecté = localStorage.getItem("connecté");
         const utilisateur = JSON.parse(localStorage.getItem("utilisateur"));
         const button = document.getElementById("button");
@@ -33,11 +38,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const profileBtn = document.getElementById("profile");
         const administration = document.querySelector('.hidden');
 
+        // Configuration selon l'état de connexion
         if (connecté === "oui" && utilisateur) {
             buttonIcon.className = "fas fa-sign-out-alt";
             buttonText.textContent = "Déconnexion";
             nom.textContent = "Bienvenue " + utilisateur.nom;
 
+            // Configuration spécifique selon le rôle
             if (utilisateur.role === "admin") {
                 profileBtn.title = "Espace Admin";
                 profileBtn.onclick = () => (window.location.href = "admin");
@@ -47,17 +54,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 profileBtn.onclick = () => (window.location.href = "profil");
             }
 
+            // Gestion de la déconnexion
             button.onclick = () => {
                 localStorage.removeItem("connecté");
                 localStorage.removeItem("utilisateur");
                 window.location.reload();
             };
         } else {
+            // Redirection vers la connexion si non connecté
             profileBtn.onclick = () => (window.location.href = "connexion");
             button.onclick = () => (window.location.href = "connexion");
         }
 
-        // Remplir le nom de l'utilisateur
+        // Pré-remplissage du nom de l'emprunteur
         if (utilisateur) {
             document.getElementById("nom_emprunteur").value = utilisateur.nom;
         } else {
@@ -66,13 +75,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // Configuration des dates
+        // Configuration des dates avec contraintes
         const today = new Date().toISOString().split('T')[0];
         document.getElementById("date_pret_demande").min = today;
 
         const datePretInput = document.getElementById("date_pret_demande");
         const dateRetourInput = document.getElementById("date_retour_demande");
 
+        // Gestion de la date de retour en fonction de la date de prêt
         datePretInput.addEventListener("change", () => {
             const datePret = new Date(datePretInput.value);
             if (isNaN(datePret)) return;
@@ -83,19 +93,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             dateRetourInput.min = datePretInput.value;
             dateRetourInput.max = maxRetour.toISOString().split('T')[0];
 
+            // Ajustement automatique de la date de retour si nécessaire
             if (dateRetourInput.value < dateRetourInput.min || dateRetourInput.value > dateRetourInput.max) {
                 dateRetourInput.value = dateRetourInput.min;
             }
         });
 
-        // Afficher les livres et gérer la sélection automatique
+        // Initialisation de l'interface
         afficherLivres();
         await gererSelectionAutomatique();
 
         const select = document.getElementById("livre_select_demande");
         select.addEventListener("change", afficherDisponibilite);
 
-        // Mode sombre
+        // Configuration du mode sombre
         const sombreBtn = document.getElementById("sombre");
         sombreBtn.addEventListener("click", () => {
             document.body.classList.toggle("dark-mode");
@@ -109,6 +120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
+        // Restauration du mode sombre depuis le localStorage
         if (localStorage.getItem("darkMode") === "enabled") {
             document.body.classList.add("dark-mode");
             sombreBtn.innerHTML = '<i class="fas fa-sun"></i><span> Mode clair</span>';
@@ -119,7 +131,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Fonction pour gérer la sélection automatique du livre
+// Gestion de la sélection automatique du livre depuis le localStorage
 async function gererSelectionAutomatique() {
     const livreSelectionne = JSON.parse(localStorage.getItem("livreSelectionne"));
     
@@ -136,23 +148,23 @@ async function gererSelectionAutomatique() {
         return;
     }
     
-    // Attendre un peu que la liste soit peuplée
+    // Attente pour s'assurer que la liste est peuplée
     await new Promise(resolve => setTimeout(resolve, 500));
     
     let livreTrouve = false;
     
     console.log("Nombre d'options:", select.options.length);
     
-    // Rechercher le livre dans la liste des options
+    // Recherche du livre dans la liste des options
     for (let i = 0; i < select.options.length; i++) {
         const option = select.options[i];
         
-        // Ignorer l'option vide
+        // Ignorer l'option vide par défaut
         if (option.value === "") continue;
         
         console.log(`Option ${i}:`, option.value, "-", option.text);
         
-        // Vérifier par titre et auteur (méthode principale)
+        // Recherche par titre et auteur
         const optionText = option.text.toLowerCase();
         const titreRecherche = livreSelectionne.titre.toLowerCase();
         const auteurRecherche = livreSelectionne.auteur.toLowerCase();
@@ -166,11 +178,11 @@ async function gererSelectionAutomatique() {
         }
     }
 
-    // Si le livre n'est pas trouvé, l'ajouter comme option Google Books
+    // Ajout du livre comme option Google Books s'il n'est pas trouvé
     if (!livreTrouve) {
         console.log("Ajout du livre comme option Google Books");
         
-        // Vérifier si l'option Google Books existe déjà
+        // Vérification de l'existence de l'option Google Books
         let optionExistante = false;
         for (let i = 0; i < select.options.length; i++) {
             if (select.options[i].value === "google_books") {
@@ -202,10 +214,10 @@ async function gererSelectionAutomatique() {
     }
 }
 
-// Fonction pour sauvegarder un livre Google Books
+// Sauvegarde d'un livre Google Books dans la base de données
 async function sauvegarderLivreSiNecessaire(livre) {
     try {
-        // Vérifier si le livre existe déjà
+        // Vérification de l'existence du livre
         const response = await fetch(urlLivres);
         const tousLesLivres = await response.json();
         
@@ -218,7 +230,7 @@ async function sauvegarderLivreSiNecessaire(livre) {
             return livreExistant.id;
         }
 
-        // Créer le nouveau livre
+        // Préparation des données pour la création
         const nouveauLivre = {
             titre: livre.titre,
             auteur: livre.auteur,
@@ -232,6 +244,7 @@ async function sauvegarderLivreSiNecessaire(livre) {
 
         console.log("Création du livre:", nouveauLivre);
 
+        // Création du livre dans l'API
         const responseCreation = await fetch(urlLivres, {
             method: "POST",
             headers: {
@@ -254,6 +267,7 @@ async function sauvegarderLivreSiNecessaire(livre) {
     }
 }
 
+// Affichage de la liste des livres dans le sélecteur
 function afficherLivres() {
     const select = document.getElementById("livre_select_demande");
     if (!select) return;
@@ -268,6 +282,7 @@ function afficherLivres() {
         const copies = Number(livre.exp) || 0;
         option.setAttribute("data-copies", copies);
 
+        // Désactivation des livres indisponibles
         if (copies <= 0) {
             option.disabled = true;
             option.textContent += " (Indisponible)";
@@ -279,6 +294,7 @@ function afficherLivres() {
     console.log("Livres chargés:", livres.length);
 }
 
+// Affichage de la disponibilité du livre sélectionné
 function afficherDisponibilite() {
     const select = document.getElementById("livre_select_demande");
     const availabilityText = document.getElementById("availability-text");
@@ -293,30 +309,31 @@ function afficherDisponibilite() {
         let copies;
         
         if (selectedValue === "google_books") {
-            // Livre Google Books
+            // Cas d'un livre Google Books
             livre = JSON.parse(localStorage.getItem("livreSelectionne"));
             copies = livre.exp !== undefined ? livre.exp : 1;
             console.log("Livre Google Books sélectionné:", livre.titre);
         } else {
-            // Livre existant
+            // Cas d'un livre existant
             livre = livres[selectedValue];
             copies = Number(livre.exp) || 0;
             console.log("Livre existant sélectionné:", livre.titre);
         }
 
+        // Affichage de l'image du livre
         if (livre && livre.img) {
-    if (livre.img.startsWith('http://') || livre.img.startsWith('https://')) {
-        imageEl.src = livre.img;
-    } else {
-        imageEl.src = `../images/${livre.img}`;
-    }
-    imageEl.alt = `Image du livre ${livre.titre}`;
-    imageEl.style.display = "block";
-} else {
-    imageEl.style.display = "none";
-}
+            if (livre.img.startsWith('http://') || livre.img.startsWith('https://')) {
+                imageEl.src = livre.img;
+            } else {
+                imageEl.src = `../images/${livre.img}`;
+            }
+            imageEl.alt = `Image du livre ${livre.titre}`;
+            imageEl.style.display = "block";
+        } else {
+            imageEl.style.display = "none";
+        }
 
-
+        // Affichage du statut de disponibilité
         if (copies > 0) {
             availabilityText.innerHTML = `<i class="fas fa-check-circle"></i> ${copies} exemplaire(s) disponible(s)`;
             availabilityText.className = "book-availability available";
@@ -330,6 +347,7 @@ function afficherDisponibilite() {
     }
 }
 
+// Gestion de la soumission du formulaire de demande de prêt
 document.getElementById("form-demande").addEventListener("submit", async function (e) {
     e.preventDefault();
 
@@ -340,6 +358,7 @@ document.getElementById("form-demande").addEventListener("submit", async functio
         return;
     }
 
+    // Récupération des valeurs du formulaire
     const email = utilisateur.email;
     const nom = document.getElementById("nom_emprunteur").value.trim();
     const livreValue = document.getElementById("livre_select_demande").value;
@@ -348,18 +367,19 @@ document.getElementById("form-demande").addEventListener("submit", async functio
     const messageEl = document.getElementById("message_demande");
     const submitBtn = document.querySelector(".btn-submit");
 
-    // Réinitialiser le message
+    // Réinitialisation du message
     if (messageEl) {
         messageEl.className = "message";
         messageEl.textContent = "";
     }
 
-    // Validation des champs
+    // Validation des champs obligatoires
     if (!nom || livreValue === "" || !datePret || !dateRetour) {
         showMessage("Veuillez remplir tous les champs.", "error");
         return;
     }
 
+    // Validation des dates
     if (datePret > dateRetour) {
         showMessage("La date de prêt doit être avant la date de retour.", "error");
         return;
@@ -383,9 +403,9 @@ document.getElementById("form-demande").addEventListener("submit", async functio
     let livreId;
 
     try {
-        // Récupérer l'ID du livre selon le type
+        // Traitement selon le type de livre sélectionné
         if (livreValue === "google_books") {
-            // Sauvegarder le livre Google Books
+            // Sauvegarde du livre Google Books
             const livreGoogle = JSON.parse(localStorage.getItem("livreSelectionne"));
             if (!livreGoogle) {
                 showMessage("Livre Google Books non trouvé.", "error");
@@ -396,7 +416,7 @@ document.getElementById("form-demande").addEventListener("submit", async functio
             livreId = await sauvegarderLivreSiNecessaire(livreGoogle);
             livre = { ...livreGoogle, id: livreId };
             
-            // Recharger la liste des livres
+            // Mise à jour de la liste des livres
             const respLivres = await fetch(urlLivres);
             livres = await respLivres.json();
             afficherLivres();
@@ -413,14 +433,14 @@ document.getElementById("form-demande").addEventListener("submit", async functio
         console.log("Livre ID à utiliser:", livreId);
         console.log("Livre sélectionné:", livre);
 
-        // Vérifier la disponibilité
+        // Vérification de la disponibilité
         if (!livre || (Number(livre.exp) || 0) <= 0) {
             showMessage("Ce livre n'est plus disponible.", "error");
             afficherLivres();
             return;
         }
 
-        // Vérifier les prêts existants
+        // Vérification des prêts existants
         const aPretNonRendu = prets.some(
             (pret) =>
                 pret.nom === nom &&
@@ -436,7 +456,7 @@ document.getElementById("form-demande").addEventListener("submit", async functio
             return;
         }
 
-        // Vérifier les demandes existantes
+        // Vérification des demandes existantes
         const demandeExistante = demandes.find(
             d => d.livre_id === livreId &&
                  d.nom === nom &&
@@ -448,32 +468,30 @@ document.getElementById("form-demande").addEventListener("submit", async functio
             return;
         }
 
-
-
-const dateDemande = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
-
-
-console.log("Date demande formatée:", dateDemande);
-        // Préparer les données pour l'API
+        // Formatage de la date de demande
+        const dateDemande = new Date().toISOString().split('T')[0];
+        console.log("Date demande formatée:", dateDemande);
+        
+        // Préparation des données pour l'API
         const demandeData = {
-    nom: nom,
-    livre_id: livreId,
-    date_pret: datePret,
-    date_retour: dateRetour,
-    statut: "en attente",
-    date_demande: dateDemande
+            nom: nom,
+            livre_id: livreId,
+            date_pret: datePret,
+            date_retour: dateRetour,
+            statut: "en attente",
+            date_demande: dateDemande
         };
 
         console.log("Données à envoyer:", demandeData);
 
-        // Désactiver le bouton pendant l'envoi
+        // Désactivation du bouton pendant l'envoi
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.style.opacity = 0.7;
             submitBtn.textContent = "Envoi en cours...";
         }
 
-        // Envoyer la demande
+        // Envoi de la demande à l'API
         const response = await fetch(urlDemandes, {
             method: "POST",
             headers: {
@@ -493,13 +511,13 @@ console.log("Date demande formatée:", dateDemande);
         const resultat = await response.json();
         console.log("Demande créée avec succès:", resultat);
 
-        // Afficher le message de succès
+        // Message de succès
         showMessage(
             `Votre demande pour "${livre.titre}" a été envoyée avec succès. Redirection vers l'accueil...`,
             "success"
         );
         
-        // Envoyer l'email de confirmation (optionnel)
+        // Envoi d'email de confirmation (optionnel)
         try {
             await fetch("https://bibooks-backend-nnrk.vercel.app/demande-pret", {
                 method: "POST",
@@ -514,20 +532,20 @@ console.log("Date demande formatée:", dateDemande);
             console.log("Email de confirmation envoyé");
         } catch (emailError) {
             console.warn("Erreur lors de l'envoi de l'email:", emailError);
-            // Ne pas bloquer le processus principal pour une erreur d'email
+            // Ne pas bloquer le processus pour une erreur d'email
         }
 
-        // Réinitialiser le formulaire
+        // Réinitialisation du formulaire
         this.reset();
         const availabilityText = document.getElementById("availability-text");
         if (availabilityText) {
             availabilityText.textContent = "";
         }
         
-        // Nettoyer le localStorage
+        // Nettoyage du localStorage
         localStorage.removeItem("livreSelectionne");
         
-        // Recharger les données pour mettre à jour les listes
+        // Rechargement des données pour mise à jour
         const [newLivres, newDemandes] = await Promise.all([
             fetch(urlLivres).then(r => r.json()),
             fetch(urlDemandes).then(r => r.json())
@@ -548,7 +566,7 @@ console.log("Date demande formatée:", dateDemande);
             "error"
         );
     } finally {
-        // Réactiver le bouton
+        // Réactivation du bouton
         if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.style.opacity = 1;
@@ -557,12 +575,12 @@ console.log("Date demande formatée:", dateDemande);
     }
 });
 
-// Fonction showMessage améliorée
+// Fonction d'affichage des messages
 function showMessage(text, type) {
     const messageEl = document.getElementById("message_demande");
     if (!messageEl) {
         console.error("Élément message_demande non trouvé");
-        // Créer un message d'urgence
+        // Message d'urgence
         alert(`${type.toUpperCase()}: ${text}`);
         return;
     }

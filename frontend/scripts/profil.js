@@ -1,3 +1,4 @@
+// Variables globales pour stocker les données
 let livres = [];
 let demandes = [];
 let prets = [];
@@ -5,25 +6,29 @@ let utilisateurs = [];
 let utilisateur = JSON.parse(localStorage.getItem("utilisateur")) || {};
 const connecté = localStorage.getItem("connecté");
 
-// Initialisation de la page
+// Initialisation de la page au chargement
 document.addEventListener("DOMContentLoaded", () => {
   verifierCompte();
   chargerDonnees();
   configurerBoutons();
   
+  // Configuration spécifique pour les auteurs
   if (utilisateur.role === 'auteur') {
     document.getElementById('pro').href = 'auteur';
   }
 });
 
+// Fonction utilitaire pour récupérer des données depuis l'API
 async function fetchData(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Erreur lors de la récupération de ${url}`);
   return res.json();
 }
 
+// Chargement de toutes les données nécessaires
 async function chargerDonnees() {
   try {
+    // Récupération parallèle de toutes les données
     [livres, prets, demandes, utilisateurs] = await Promise.all([
       fetchData("https://bibooks-backend-nnrk.vercel.app/livres"),
       fetchData("https://bibooks-backend-nnrk.vercel.app/prets"),
@@ -31,11 +36,14 @@ async function chargerDonnees() {
       fetchData("https://bibooks-backend-nnrk.vercel.app/utilisateurs")
     ]);
 
+    // Affichage des différentes sections
     afficherDemandes(utilisateur);
     afficherEmprunts(prets, livres, utilisateur, demandes);
     verifierEtatUtilisateur(prets, utilisateur);
     afficherLivresRendu(prets, livres, utilisateur);
     afficherFavoris();
+    
+    // Vérification des demandes refusées
     if (demandeRefuse(demandes, utilisateur)) {
       showToast("Votre demande a été refusée", "error");
     }
@@ -45,6 +53,7 @@ async function chargerDonnees() {
   }
 }
 
+// Configuration des boutons selon l'état de connexion
 function configurerBoutons() {
   const button = document.getElementById("button");
   const buttonIcon = document.getElementById("button-icon");
@@ -63,13 +72,14 @@ function configurerBoutons() {
       location.href = "accueil";
     };
 
-    // Afficher les infos utilisateur
+    // Affichage des informations utilisateur
     if (utilisateur.nom) {
       document.getElementById("nom_affichage").textContent = utilisateur.nom;
       document.getElementById("email").textContent = utilisateur.email;
       document.getElementById("nom_modifier").value = utilisateur.nom;
       document.getElementById("email_modifier").value = utilisateur.email;
       
+      // Création des initiales pour l'avatar
       const avatar = document.getElementById("profile-avatar");
       const initials = utilisateur.nom
         .split(" ")
@@ -84,19 +94,21 @@ function configurerBoutons() {
     buttonText.textContent = "Connexion";
     button.onclick = () => (location.href = "connexion");
     
-    // Rediriger immédiatement vers la connexion
+    // Redirection automatique vers la connexion
     showToast("Veuillez vous connecter pour accéder à votre profil", "warning");
     setTimeout(() => {
       location.href = "connexion";
     }, 1500);
-    return; // Arrêter l'exécution pour éviter les erreurs
+    return; // Arrêt de l'exécution pour éviter les erreurs
   }
 
+  // Configuration du formulaire de modification de profil
   document.querySelector(".popup form").onsubmit = async (e) => {
     e.preventDefault();
     await modifier();
   };
 
+  // Configuration du bouton mode sombre
   document.getElementById("sombre").onclick = () => {
     document.body.classList.toggle("dark-mode");
     showToast(
@@ -107,6 +119,7 @@ function configurerBoutons() {
   };
 }
 
+// Vérification des demandes refusées
 function demandeRefuse(demandes, utilisateur) {
   if (localStorage.getItem('notification_refus') === 'true') {
     return false;
@@ -123,6 +136,7 @@ function demandeRefuse(demandes, utilisateur) {
   return demandeRefuseeExistante;
 }
 
+// Affichage des notifications toast
 function showToast(message, type = "success") {
   const toast = document.createElement("div");
   toast.className = `toast toast-${type}`;
@@ -136,6 +150,7 @@ function showToast(message, type = "success") {
   }, 100);
 }
 
+// Fonction de hachage pour les mots de passe
 async function hashage(MotDePasse) {
   const encodeur = new TextEncoder();
   const donnees = encodeur.encode(MotDePasse);
@@ -144,12 +159,14 @@ async function hashage(MotDePasse) {
   return tableau.map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+// Calcul du nombre de jours de retard
 function joursDeRetard(dateRetour) {
   const now = new Date();
   const retour = new Date(dateRetour);
   return Math.floor((now - retour) / (1000 * 60 * 60 * 24));
 }
 
+// Vérification si un compte doit être supprimé
 function compteADelete(prets, utilisateur) {
   return prets.some(
     (pret) =>
@@ -157,6 +174,7 @@ function compteADelete(prets, utilisateur) {
   );
 }
 
+// Vérification périodique du compte utilisateur
 async function verifierCompte() {
   if (!utilisateur.nom) return;
   
@@ -179,6 +197,7 @@ async function verifierCompte() {
   }
 }
 
+// Suppression des prêts d'un utilisateur
 async function supprimerPretsUtilisateur(nom) {
   const prets = await fetchData("https://bibooks-backend-nnrk.vercel.app/prets");
   const pretsASupprimer = prets.filter((pret) => pret.nom === nom);
@@ -190,6 +209,7 @@ async function supprimerPretsUtilisateur(nom) {
   }
 }
 
+// Modification du profil utilisateur
 async function modifier() {
   const nom = document.getElementById("nom_modifier").value.trim();
   const email = document.getElementById("email_modifier").value.trim();
@@ -230,6 +250,7 @@ async function modifier() {
   setTimeout(() => location.reload(), 1500);
 }
 
+// Affichage des emprunts en cours
 function afficherEmprunts(prets, livres, utilisateur, demandes) {
   const container = document.getElementById("mes-emprunts");
   container.innerHTML = "";
@@ -281,6 +302,7 @@ function afficherEmprunts(prets, livres, utilisateur, demandes) {
   });
 }
 
+// Affichage des livres favoris
 async function afficherFavoris() {
   const container = document.getElementById("mes-favories");
   container.innerHTML = "";
@@ -336,6 +358,7 @@ async function afficherFavoris() {
   }
 }
 
+// Suppression d'un livre des favoris
 function supprimerFavori(livreId) {
   const favoris = JSON.parse(localStorage.getItem("favoris")) || [];
   const nouveauxFavoris = favoris.filter(f => 
@@ -347,6 +370,7 @@ function supprimerFavori(livreId) {
   afficherFavoris();
 }
 
+// Affichage des livres déjà rendus
 function afficherLivresRendu(prets, livres, utilisateur) {
   const container = document.getElementById("mes-rendu");
   container.innerHTML = "";
@@ -400,6 +424,7 @@ function afficherLivresRendu(prets, livres, utilisateur) {
   });
 }
 
+// Retour d'un livre emprunté
 async function retourLivre(pretId) {
   if (!confirm("Confirmez-vous le retour de ce livre ?")) return;
   
@@ -437,10 +462,12 @@ async function retourLivre(pretId) {
   }
 }
 
+// Redirection vers la page d'emprunt
 async function emprunterLivre(livreId) {
   window.location.href='demande_pret';
 }
 
+// Vérification si l'utilisateur a un prêt en retard
 function aUnPretEnRetard(prets, utilisateur) {
   const aujourdHui = new Date().toISOString().split("T")[0];
   return prets.some(
@@ -451,6 +478,7 @@ function aUnPretEnRetard(prets, utilisateur) {
   );
 }
 
+// Vérification et gestion de l'état de l'utilisateur
 function verifierEtatUtilisateur(prets, utilisateur) {
   if (aUnPretEnRetard(prets, utilisateur)) {
     bloquerUtilisateur();
@@ -459,6 +487,7 @@ function verifierEtatUtilisateur(prets, utilisateur) {
   }
 }
 
+// Blocage de l'utilisateur en cas de retard
 function bloquerUtilisateur() {
   showToast(
     "Vous avez un prêt en retard. Veuillez le retourner avant de pouvoir continuer.",
@@ -495,6 +524,7 @@ function bloquerUtilisateur() {
   document.querySelectorAll("nav a").forEach((link) => link.classList.add("nav-disabled"));
 }
 
+// Déblocage de l'utilisateur
 function debloquerUtilisateur() {
   const alerte = document.getElementById("alerte-retard");
   if (alerte) alerte.remove();
@@ -511,6 +541,7 @@ function debloquerUtilisateur() {
   document.querySelectorAll("nav a").forEach((link) => link.classList.remove("nav-disabled"));
 }
 
+// Affichage des demandes de prêt
 function afficherDemandes(utilisateur) {
   const container = document.getElementById("mes-demandes");
   const filtreSelect = document.getElementById("filtre-statut-demande");
@@ -594,6 +625,7 @@ function afficherDemandes(utilisateur) {
   });
 }
 
+// Annulation d'une demande de prêt
 async function annulerDemande(demandeId) {
   if (!confirm("Êtes-vous sûr de vouloir annuler cette demande ?")) {
     return;
@@ -622,6 +654,7 @@ async function annulerDemande(demandeId) {
   }
 }
 
+// Fermeture de la popup
 function fermer() {
   document.querySelector(".popup").style.display = "none";
 }
