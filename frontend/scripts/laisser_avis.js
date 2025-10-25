@@ -79,4 +79,5 @@ document.addEventListener("DOMContentLoaded", async function () {
     form.reset();
     window.location.href = "/";
   });
+  
 });

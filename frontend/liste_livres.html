@@ -11,20 +11,31 @@
    <link rel="stylesheet" href="styles/liste_livres.css">
   </head>
   <body>
-    <!-- Header -->
+   <!-- HEADER -->
     <header id="header">
-      <button id="profile" title="profile">
-        <i class="fas fa-cog"></i>
-      </button>
+      
+
+      <h1><i class="fas fa-book-open"></i> BiBooks</h1>
 
       <div class="bouton">
         <button id="button">
           <i id="button-icon" class="fas fa-user"></i>
           <span id="button-text">Connexion/inscription</span>
         </button>
+
         <p id="nom"></p>
+
+        <button id="sombre">
+          <i class="fas fa-moon"></i>
+          <span>Mode sombre</span>
+        </button>
       </div>
+
+      <button id="profile" aria-label="Voir le profil ou l'administration">
+        <i class="fas fa-cog"></i>
+      </button>
     </header>
+
 
     <div class="chercher">
       <h3>Rechercher un livre:</h3>

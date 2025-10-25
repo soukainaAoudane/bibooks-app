@@ -516,34 +516,50 @@ footer p {
   opacity: 0.8;
 }
 
-/* MODE SOMBRE */
+/* MODE SOMBRE - Thème bleu */
 body.dark {
-  background-color: var(--dark);
-  color: var(--text-light);
+  background-color: #001a33; /* Bleu nuit */
+  color: #e6f2ff; /* Bleu très clair */
 }
 
 body.dark #header {
-  background-color: #222;
+  background: linear-gradient(135deg, #00264d 0%, #001f3f 100%); /* Dégradé bleu */
 }
 
 body.dark #profile {
   color: var(--accent);
 }
 
+body.dark #profile:hover {
+  background: rgba(144, 224, 239, 0.1); /* Accent avec transparence */
+}
+
 body.dark #button {
-  background-color: var(--secondary);
+  background: var(--secondary);
+  color: var(--text-light);
 }
 
 body.dark #button:hover {
   background: #0096c7;
+  transform: translateY(-2px);
 }
 
 body.dark #nom {
   color: var(--accent);
 }
 
+body.dark #sombre {
+  background: #ffa500; /* Orange pour le contraste */
+  color: #001a33; /* Texte bleu foncé */
+}
+
+body.dark #sombre:hover {
+  background: #0080ff;
+  transform: translateY(-2px);
+}
+
 body.dark nav {
-  background: #444;
+  background: var(--secondary);
 }
 
 body.dark nav ul li a {
@@ -552,10 +568,11 @@ body.dark nav ul li a {
 
 body.dark nav ul li a:hover {
   color: var(--accent);
+  background: rgba(144, 224, 239, 0.1);
 }
 
 body.dark .chercher {
-  background: linear-gradient(135deg, #222 0%, #444 100%);
+  background: linear-gradient(135deg, #00264d 0%, #001f3f 100%);
 }
 
 body.dark .chercher h1 {
@@ -563,13 +580,19 @@ body.dark .chercher h1 {
 }
 
 body.dark #chercher {
-  background: #555;
-  border: none;
+  background: #00264d; /* Bleu moyen */
+  border: 2px solid var(--secondary);
   color: var(--text-light);
+}
+
+body.dark #chercher:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(144, 224, 239, 0.3);
 }
 
 body.dark .cherches {
   background: var(--secondary);
+  color: var(--text-light);
 }
 
 body.dark .cherches:hover {
@@ -577,7 +600,7 @@ body.dark .cherches:hover {
 }
 
 body.dark section {
-  background: var(--dark);
+  background: #001a33; /* Bleu nuit */
 }
 
 body.dark section h1,
@@ -585,16 +608,38 @@ body.dark section h3 {
   color: var(--accent);
 }
 
+body.dark .accueil {
+  background-image: url("https://bibooks.netlify.app/images/sss.avif");
+  background-color: #001a33; /* Fallback bleu */
+  background-blend-mode: overlay;
+}
+
+body.dark .accueil-content {
+  background: rgba(0, 31, 63, 0.8); /* Bleu foncé transparent */
+  color: var(--text-light);
+}
+
+body.dark .accueil-content h1 {
+  color: var(--accent);
+}
+
 body.dark .accueil .intro {
-  color: #ddd;
+  color: #e6f2ff;
 }
 
 body.dark .livre {
-  background: #444;
+  background: #00264d; /* Bleu moyen */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .livre:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 body.dark .livre img {
-  background: #555;
+  background: #003366; /* Bleu foncé */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 body.dark .livre-titre {
@@ -602,35 +647,96 @@ body.dark .livre-titre {
 }
 
 body.dark .livre-auteur {
-  color: #ccc;
+  color: #b3d9ff; /* Bleu clair */
+}
+
+body.dark .voir-details,
+body.dark .demander-pret {
+  background: var(--secondary);
+  color: var(--text-light);
+}
+
+body.dark .voir-details:hover,
+body.dark .demander-pret:hover {
+  background: var(--accent);
+  color: #001a33; /* Texte bleu foncé au survol */
 }
 
 body.dark .categorie {
   background: var(--secondary);
+  color: var(--text-light);
 }
 
 body.dark .categorie:hover {
-  background: var(--primary);
+  background: var(--accent);
+  color: #001a33; /* Texte bleu foncé au survol */
 }
 
 body.dark footer {
-  background: #222;
+  background: #001f3f; /* Bleu marine */
+  color: var(--text-light);
+}
+
+body.dark .nouveautes {
+  background: #001a33; /* Bleu nuit */
+  border-top: 1px solid #003366;
+  border-bottom: 1px solid #003366;
+}
+
+body.dark .voir-tout {
+  background: var(--secondary);
+  color: var(--text-light);
+}
+
+body.dark .voir-tout:hover {
+  background: var(--accent);
+  color: #001a33; /* Texte bleu foncé au survol */
 }
 
 body.dark .suggestions {
-  background: #444;
+  background: #00264d; /* Bleu moyen */
   color: var(--text-light);
+  border: 1px solid var(--secondary);
 }
 
 body.dark .suggestion-item {
   color: var(--text-light);
-  border-bottom: 1px solid #555;
+  border-bottom: 1px solid #003366; /* Bleu foncé */
 }
 
 body.dark .suggestion-item:hover {
-  background: #555;
+  background: #003366; /* Bleu foncé */
 }
 
+body.dark .pagination-simple button {
+  background: var(--secondary);
+  color: var(--text-light);
+}
+
+body.dark .pagination-simple button:hover:not(:disabled) {
+  background: var(--accent);
+  color: #001a33; /* Texte bleu foncé au survol */
+}
+
+body.dark .pagination-simple button:disabled {
+  background: #003366; /* Bleu foncé */
+  color: #668cff; /* Bleu clair */
+}
+
+body.dark .page-info {
+  color: var(--accent);
+}
+
+body.dark .copyright {
+  border-top: 1px solid #003366; /* Bleu foncé */
+  color: #b3d9ff; /* Bleu clair */
+}
+
+/* Loading en mode sombre */
+body.dark .loading {
+  border: 3px solid #003366; /* Bleu foncé */
+  border-top: 3px solid var(--accent);
+}
 /* PAGINATION SIMPLIFIÉE */
 .pagination-simple {
   display: flex;

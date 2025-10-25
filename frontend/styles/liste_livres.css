@@ -12,17 +12,7 @@
   --success-color: #2a9d8f;
 }
 
-/* Variables pour le mode sombre */
-.dark-mode {
-  --primary-color: #00b4d8;
-  --secondary-color: #0096c7;
-  --dark-color: #333;
-  --light-color: #444;
-  --text-color: #f0f4f8;
-  --text-light: #f0f4f8;
-  --bg-color: #333;
-  --card-bg: rgba(68, 68, 68, 0.8);
-}
+
 
 /* Reset CSS pour une base cohérente */
 * {
@@ -122,6 +112,203 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* Navigation */
+nav {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: var(--secondary);
+  box-shadow: var(--shadow);
+}
+/* Variables pour le mode sombre */
+.dark-mode {
+  --primary-color: #00b4d8;
+  --secondary-color: #0096c7;
+  --dark-color: #001f3f; /* Bleu marine au lieu de #333 */
+  --light-color: #003366; /* Bleu foncé au lieu de #444 */
+  --text-color: #e6f2ff; /* Bleu très clair au lieu de #f0f4f8 */
+  --text-light: #e6f2ff;
+  --bg-color: #001a33; /* Bleu nuit au lieu de #333 */
+  --card-bg: rgba(0, 40, 85, 0.9); /* Bleu foncé transparent au lieu de gris */
+}
+
+/* MODE SOMBRE */
+body.dark-mode {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+body.dark-mode #header {
+  background: linear-gradient(135deg, #00264d 0%, #001f3f 100%); /* Dégradé bleu */
+}
+
+body.dark-mode #profile {
+  color: var(--secondary-color);
+}
+
+body.dark-mode #button {
+  background: var(--secondary-color);
+  color: var(--text-light);
+}
+
+body.dark-mode #button:hover {
+  background: var(--primary-color);
+}
+
+body.dark-mode #nom {
+  color: var(--secondary-color);
+}
+
+/* Bouton mode sombre/clair */
+#sombre {
+  background: var(--secondary-color);
+  border: none;
+  color: var(--text-light);
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#sombre:hover {
+  background: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles spécifiques pour le bouton en mode sombre */
+body.dark-mode #sombre {
+  background: #ffa500;
+  color: #001a33; /* Texte bleu foncé pour contraste */
+}
+
+body.dark-mode #sombre:hover {
+  background: #0080ff;
+}
+
+/* Adaptation des autres éléments en mode sombre */
+body.dark-mode .chercher {
+  background: var(--light-color); /* Utilise le bleu foncé */
+  color: var(--text-color);
+}
+
+body.dark-mode .chercher h3 {
+  color: var(--secondary-color);
+}
+
+body.dark-mode #chercher {
+  background: #00264d; /* Bleu moyen */
+  border: 2px solid var(--secondary-color);
+  color: var(--text-color);
+}
+
+body.dark-mode #chercher:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.3);
+}
+
+body.dark-mode .livre-card {
+  background: var(--light-color); /* Utilise le bleu foncé */
+  color: var(--text-color);
+}
+
+body.dark-mode .livre-card h1 {
+  color: var(--secondary-color);
+}
+
+body.dark-mode .livre-card h3 {
+  color: #b3d9ff; /* Bleu clair */
+}
+
+body.dark-mode .livre-card p {
+  color: #cce5ff; /* Bleu très clair */
+}
+
+body.dark-mode .livre-card .infos strong {
+  color: var(--secondary-color);
+}
+
+/* Images des livres en mode sombre */
+body.dark-mode .livre-card img {
+  background: #00264d; /* Fond bleu pour les images */
+  border: 1px solid var(--secondary-color);
+}
+
+/* Popup en mode sombre */
+body.dark-mode .contenu {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+body.dark-mode .contenu h2,
+body.dark-mode .contenu h3 {
+  color: var(--secondary-color);
+}
+
+body.dark-mode .contenu label {
+  color: var(--secondary-color);
+}
+
+body.dark-mode .contenu input,
+body.dark-mode .contenu textarea,
+body.dark-mode .contenu select {
+  background-color: #00264d; /* Fond bleu pour les inputs */
+  color: var(--text-color);
+  border-color: var(--secondary-color);
+}
+
+/* Section d'informations en mode sombre */
+body.dark-mode .livre-detail .infos {
+  background: var(--light-color);
+}
+
+body.dark-mode .livre-detail .infos strong {
+  color: var(--secondary-color);
+}
+
+/* Bouton d'ajout en mode sombre */
+body.dark-mode #aj a {
+  background: #28a745;
+  color: white;
+}
+
+body.dark-mode #aj a:hover {
+  background: #218838;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 15px 0;
+}
+
+nav ul li a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  border-radius: 20px;
+}
+
+nav ul li a:hover {
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.1);
+}
+
 
 /* Section de recherche */
 .chercher {
@@ -623,4 +810,90 @@ body {
 
 .toast-error {
   background-color: #dc3545;
+}
+
+/* Tablettes */
+@media (max-width: 1024px) {
+  .livres-container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+/* Mobiles - version moyenne */
+@media (max-width: 768px) {
+  #header {
+    padding: 1rem;
+  }
+
+  nav ul {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+    display: none;
+  }
+
+  nav.active ul {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--light);
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .accueil-content {
+    padding: 1.5rem;
+  }
+
+  .search-container {
+    flex-direction: column;
+  }
+
+  #chercher,
+  .cherches {
+    border-radius: 30px;
+  }
+
+  .voir-tout {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Mobiles - version petite */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  #header h1 {
+    font-size: 1.2rem;
+  }
+
+  .bouton {
+    gap: 0.5rem;
+  }
+
+  #button,
+  #sombre {
+    padding: 0.5rem;
+  }
+
+  /* Masquer le texte des boutons sur mobile très petit */
+  #button-text,
+  #sombre span {
+    display: none;
+  }
+
+  .livre {
+    max-width: 100%;
+  }
 }

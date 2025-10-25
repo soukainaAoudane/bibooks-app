@@ -12,6 +12,23 @@ const estUser = utilisateur && utilisateur.role === "user";
 // Initialisation de la page au chargement
 document.addEventListener("DOMContentLoaded", async () => {
   try {
+    const sombreBtn = document.getElementById("sombre");
+    
+    if (sombreBtn) {
+        sombreBtn.addEventListener("click", () => {
+            document.body.classList.toggle("dark-mode"); // Changé de "dark" à "dark-mode"
+            const icon = sombreBtn.querySelector("i");
+            const text = sombreBtn.querySelector("span");
+
+            if (document.body.classList.contains("dark-mode")) {
+                icon.className = "fas fa-sun";
+                text.textContent = "Mode clair";
+            } else {
+                icon.className = "fas fa-moon";
+                text.textContent = "Mode sombre";
+            }
+        });
+    }
     // Récupération des livres depuis l'API
     const response = await fetch(url);
     if (!response.ok) {
@@ -410,4 +427,5 @@ async function updateBook(id, livre) {
       "Erreur lors de la modification du livre";
     document.getElementById("modification").style.color = "red";
   }
+  
 }
