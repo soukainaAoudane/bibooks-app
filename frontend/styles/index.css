@@ -743,7 +743,6 @@
   /* show hamburger */
   .menu-toggle{ display:inline-flex; position:relative; z-index:1205; }
 
-  /* collapse nav into vertical panel by default */
   nav{
     position:fixed;
     left:8px;
@@ -754,7 +753,7 @@
     padding:0;
   }
   nav ul{
-    display:none; /* JS should toggle a class to show */
+    display:none; 
     flex-direction:column;
     gap:10px;
     padding:12px;
@@ -762,7 +761,6 @@
     background:var(--secondary);
     border-radius:8px;
   }
-  /* helper class (if you toggle .open on nav) */
   nav.open ul{ display:flex; }
 
   /* ensure header buttons remain visible */
@@ -785,9 +783,7 @@
   .accueil-content{ width:100%; max-width:96%; padding:12px; }
 }
 
-/* Accessibility focus (keep at end) */
 a:focus,button:focus,input:focus{
   outline:3px solid rgba(0,180,216,0.18);
   outline-offset:2px;
 }
-/* ...existing code... */
