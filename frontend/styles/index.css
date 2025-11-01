@@ -525,7 +525,7 @@
       }
 
       body.dark .chercher {
-        background: linear-gradient(135deg, #222 0%, #444 100%);
+        background: #444
       }
 
       body.dark .chercher h1 {
@@ -537,6 +537,7 @@
         border: none;
         color: var(--text-light);
       }
+      
 
       body.dark .cherches {
         background: var(--secondary);
