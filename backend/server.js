@@ -14,7 +14,8 @@ const dotenv = require("dotenv");
 // Chargement des variables d'environnement
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 // Déclaration des variables utilisées
-const axios = require("axios"); //une librairei qui permet de faire dees requetes htttp
+
+const axios = require("axios"); //une librairie qui permet de faire dees requetes htttp
 const express = require("express");
 const app = express();
 const cors = require("cors");
